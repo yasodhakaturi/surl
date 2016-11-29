@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="shortenURLModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="RIDDATA">
+    <Key>
+      <PropertyRef Name="PK_Rid" />
+    </Key>
+    <Property Name="PK_Rid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ReferenceNumber" Type="nvarchar(max)" />
+    <Property Name="Pwd" Type="nvarchar(max)" />
+    <Property Name="RequestDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="SHORTURLDATA">
+    <Key>
+      <PropertyRef Name="PK_Shorturl" />
+    </Key>
+    <Property Name="PK_Shorturl" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Ipv4" Type="nvarchar(max)" />
+    <Property Name="Ipv6" Type="nvarchar(max)" />
+    <Property Name="Browser" Type="nvarchar" MaxLength="50" />
+    <Property Name="Browser_version" Type="nvarchar" MaxLength="50" />
+    <Property Name="City" Type="nvarchar" MaxLength="50" />
+    <Property Name="Region" Type="nvarchar" MaxLength="50" />
+    <Property Name="Country" Type="nvarchar" MaxLength="50" />
+    <Property Name="CountryCode" Type="nvarchar" MaxLength="50" />
+    <Property Name="Req_url" Type="nvarchar(max)" />
+    <Property Name="UserAgent" Type="nvarchar(max)" />
+    <Property Name="Hostname" Type="nvarchar" MaxLength="50" />
+    <Property Name="DeviceType" Type="nvarchar(max)" />
+    <Property Name="IsMobileDevice" Type="nvarchar" MaxLength="50" />
+    <Property Name="RequestDate" Type="datetime" />
+    <Property Name="FK_UniqueID" Type="int" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="UIDandRIDData">
+    <Key>
+      <PropertyRef Name="PK_UniqueId" />
+    </Key>
+    <Property Name="PK_UniqueId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TypeDiff" Type="nvarchar(max)" />
+    <Property Name="UIDorRID" Type="int" />
+    <Property Name="RequestDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="UIDDATA">
+    <Key>
+      <PropertyRef Name="PK_Uid" />
+    </Key>
+    <Property Name="PK_Uid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ReferenceNumber" Type="nvarchar(max)" />
+    <Property Name="Longurl" Type="nvarchar(max)" />
+    <Property Name="MobileNumber" Type="nvarchar" MaxLength="50" />
+    <Property Name="RequestDate" Type="datetime" />
+  </EntityType>
+  <Association Name="FK_SHORTURLDATA_UIDandRIDData">
+    <End Role="UIDandRIDData" Type="Self.UIDandRIDData" Multiplicity="0..1" />
+    <End Role="SHORTURLDATA" Type="Self.SHORTURLDATA" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UIDandRIDData">
+        <PropertyRef Name="PK_UniqueId" />
+      </Principal>
+      <Dependent Role="SHORTURLDATA">
+        <PropertyRef Name="FK_UniqueID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+  <Function Name="InsertintoUIDRID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="typediff" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="uidorrid" Type="int" Mode="In" />
+  </Function>
+  <Function Name="InsertRIDData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="referencenumber" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="pwd" Type="nvarchar(max)" Mode="In" />
+  </Function>
+  <Function Name="InsertSHORTURLData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ipv4" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="ipv6" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="browser" Type="nvarchar" Mode="In" />
+    <Parameter Name="browser_version" Type="nvarchar" Mode="In" />
+    <Parameter Name="city" Type="nvarchar" Mode="In" />
+    <Parameter Name="Region" Type="nvarchar" Mode="In" />
+    <Parameter Name="country" Type="nvarchar" Mode="In" />
+    <Parameter Name="countrycode" Type="nvarchar" Mode="In" />
+    <Parameter Name="req_url" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="useragent" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="hostname" Type="nvarchar" Mode="In" />
+    <Parameter Name="DeviceType" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="IsMobiledevice" Type="nvarchar" Mode="In" />
+    <Parameter Name="uniqueid" Type="int" Mode="In" />
+  </Function>
+  <Function Name="InsertUIDData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="referencenumber" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="longurl" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="mobilenumber" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <EntityContainer Name="shortenURLModelStoreContainer">
+    <EntitySet Name="RIDDATA" EntityType="Self.RIDDATA" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SHORTURLDATA" EntityType="Self.SHORTURLDATA" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UIDandRIDData" EntityType="Self.UIDandRIDData" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UIDDATA" EntityType="Self.UIDDATA" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_SHORTURLDATA_UIDandRIDData" Association="Self.FK_SHORTURLDATA_UIDandRIDData">
+      <End Role="UIDandRIDData" EntitySet="UIDandRIDData" />
+      <End Role="SHORTURLDATA" EntitySet="SHORTURLDATA" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
