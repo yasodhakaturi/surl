@@ -32,6 +32,7 @@ namespace Analytics
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<UIDandRIDData> UIDandRIDDatas { get; set; }
         public virtual DbSet<UIDDATA> UIDDATAs { get; set; }
+        public virtual DbSet<ErrorLog> ErrorLogs { get; set; }
     
         public virtual int InsertintoUIDRID(string typediff, Nullable<int> uidorrid)
         {

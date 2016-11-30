@@ -181,9 +181,18 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AnalyticsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="ErrorLog.cs">
+      <DependentUpon>AnalyticsModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\BO\ConvertionBO.cs" />
+    <Compile Include="Helpers\BO\DataInsertionBO.cs" />
+    <Compile Include="Helpers\BO\OperationsBO.cs" />
+    <Compile Include="Helpers\BO\PWDDataBO.cs" />
+    <Compile Include="Helpers\Utility\EmailUtil.cs" />
+    <Compile Include="Helpers\Utility\ErrorLogs.cs" />
     <Compile Include="IService1.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
