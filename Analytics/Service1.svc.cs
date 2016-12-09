@@ -20,6 +20,11 @@ using Analytics.Helpers.BO;
 using Analytics.Helpers.Utility;
 using System.Web.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Web.Script.Serialization;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Core.Objects;
+using System.Globalization;
 
 namespace Analytics
 {
@@ -29,8 +34,10 @@ namespace Analytics
     public class Service1 : IService1
     {
         shortenURLEntities dc = new shortenURLEntities();
-
+        SqlConnection lSQLConn = null;
+        SqlCommand lSQLCmd = new SqlCommand();
         int Uniqueid_UID = 0; int Uniqueid_RID = 0; int Uniqueid_SHORTURLDATA = 0; int RID = 0; int UID = 0;
+
         public class error
         {
 
@@ -42,7 +49,18 @@ namespace Analytics
             {
                 if (referencenumber.Trim() != "" && longurl.Trim() != "" && mobilenumber.Trim() != "")
                 {
-
+                    //check reference number in RID table
+                    Uniqueid_RID = (from registree in dc.RIDDATAs
+                                    where registree.ReferenceNumber.Trim() == referencenumber.Trim()
+                                    select registree.PK_Rid).SingleOrDefault();
+                    if (Uniqueid_RID == 0)
+                    {
+                        new DataInsertionBO().InsertRIDdata(referencenumber, "");
+                        Uniqueid_RID = (from registree in dc.RIDDATAs
+                                        where registree.ReferenceNumber.Trim() == referencenumber.Trim()
+                                        select registree.PK_Rid).SingleOrDefault();
+                    }
+                    //check data in UID table
                     Uniqueid_UID = (from registree in dc.UIDDATAs
                                     where registree.ReferenceNumber.Trim() == referencenumber.Trim() &&
                                     registree.Longurl.Trim() == longurl.Trim() &&
@@ -51,7 +69,7 @@ namespace Analytics
                     //if data found in UIDDATA insert data into UIDDATA 
                     if (Uniqueid_UID == 0)
                     {
-                        new DataInsertionBO().InsertUIDdata(referencenumber, longurl, mobilenumber);
+                        new DataInsertionBO().InsertUIDdata(Uniqueid_RID,referencenumber, longurl, mobilenumber);
                         Uniqueid_UID = (from registree in dc.UIDDATAs
                                         where registree.ReferenceNumber.Trim() == referencenumber.Trim() &&
                                         registree.Longurl.Trim() == longurl.Trim() &&
@@ -161,8 +179,15 @@ namespace Analytics
                  string longurl = "";
                  long decodedvalue = new ConvertionBO().BaseToLong(Shorturl);
                  Uniqueid_SHORTURLDATA = Convert.ToInt32(decodedvalue);
+                 //Uniqueid_SHORTURLDATA = Convert.ToInt32(Shorturl);
                  if (new OperationsBO().CheckUniqueid(Uniqueid_SHORTURLDATA, "1"))
                  {
+                     int? Fk_UID = (from u in dc.UIDandRIDDatas
+                                    where u.PK_UniqueId == Uniqueid_SHORTURLDATA && u.TypeDiff=="1"
+                                    select u.UIDorRID).SingleOrDefault();
+                     int? FK_RID = (from u in dc.UIDDATAs
+                                   where u.PK_Uid == Fk_UID
+                                   select u.FK_RID).SingleOrDefault();
                      //retrive ipaddress and browser
                      string ipv4 = new ConvertionBO().GetIP4Address();
                      string ipv6 = HttpContext.Current.Request.UserHostAddress;
@@ -213,7 +238,7 @@ namespace Analytics
                              CountryCode = (string)obj["country_code"];
                          }
                      }
-                     new DataInsertionBO().InsertShortUrldata(ipv4, ipv6, browser, browserversion, City, Region, Country, CountryCode, req_url, useragent, hostname, devicetype, ismobiledevice, Uniqueid_SHORTURLDATA);
+                     new DataInsertionBO().InsertShortUrldata(ipv4, ipv6, browser, browserversion, City, Region, Country, CountryCode, req_url, useragent, hostname, devicetype, ismobiledevice,Fk_UID,FK_RID,Uniqueid_SHORTURLDATA);
                  }
                  WebOperationContext.Current.OutgoingResponse.StatusCode = System.Net.HttpStatusCode.Redirect;
                  if (!longurl.StartsWith("http://") && !longurl.StartsWith("https://"))
@@ -227,9 +252,184 @@ namespace Analytics
                  
              }
 }
+        [DataContract]
+        public class CountsData
+        {
+             [DataMember(EmitDefaultValue = false)]
+            public List<DayWiseData> activity { get; set; }
+            public List<CountryWiseData> locations { get; set; }
+            public List<DeviceWiseData> devices { get; set; }
+            public List<BrowserWiseData> platforms { get; set; }
+
+         }
+        [DataContract]
+        public class DayWiseData
+        {
+           [DataMember(EmitDefaultValue = false, Name = "RequestedDate")]
+            public string RequestedDateStr
+            {
+                get
+                {
+                    if (this.RequestedDate.HasValue)
+                    {
+                       // return this.RequestedDate.Value.ToUniversalTime().ToString("s", CultureInfo.InvariantCulture);
+                        return this.RequestedDate.Value.ToString();
+                    }
+                    else
+                        return null;
+                }
+                set
+                {
+                    // should implement this...
+                }
+            }
+
+            //// this property is not transformed to JSon. Basically hidden
+            [IgnoreDataMember]
+            private DateTime? RequestedDate { get; set; }
+           
+           [DataMember(EmitDefaultValue = false)]
+            public int RequestCount { get; set; }
+
+        }
+        
+        public class CountryWiseData
+        {
+            public string code { get; set; }
+            public int value { get; set; }
+            public string name { get; set; }
+        }
+        public class DeviceWiseData
+        {
+            public string name { get; set; }
+            public int y { get; set; }
+        }
+        public class BrowserWiseData
+        {
+            public string name { get; set; }
+            public int y { get; set; }
+        }
+        public class Summary
+        {
+            public string url { get; set; }
+            public int visits { get; set; }
+            public int? unique_users { get; set; }
+            public int total_users { get; set; }
+        }
+        public Stream GETALLCOUNTS(string Fk_Uniqueid,string DateFrom, string DateTo)
+        {
+            try 
+            { 
+            if (Fk_Uniqueid != "" && Fk_Uniqueid != null)
+            {
+                CountsData countobj = new CountsData();
+                long decodedvalue = new ConvertionBO().BaseToLong(Fk_Uniqueid);
+                Uniqueid_SHORTURLDATA = Convert.ToInt32(decodedvalue);
+                int? rid = (from u in dc.UIDandRIDDatas
+                            where u.PK_UniqueId == Uniqueid_SHORTURLDATA
+                            select u.UIDorRID).SingleOrDefault();
+                string connStr = ConfigurationManager.ConnectionStrings["shortenURLConnectionString"].ConnectionString;
+
+                // create and open a connection object
+                lSQLConn = new SqlConnection(connStr);
+                SqlDataReader myReader;
+                lSQLConn.Open();
+                lSQLCmd.CommandType = CommandType.StoredProcedure;
+                lSQLCmd.CommandText = "spGetALLCOUNTS1";
+                //lSQLCmd.Parameters.Add(new SqlParameter("@Fk_Uniqueid", Uniqueid_SHORTURLDATA));
+                lSQLCmd.Parameters.Add(new SqlParameter("@rid", rid));
+                lSQLCmd.Parameters.Add(new SqlParameter("@DateFrom", DateFrom));
+                lSQLCmd.Parameters.Add(new SqlParameter("@DateTo", DateTo));
+                lSQLCmd.Connection = lSQLConn;
+                myReader = lSQLCmd.ExecuteReader();
 
 
-    
+                List<DayWiseData> activity = ((IObjectContextAdapter)dc)
+                  .ObjectContext
+                  .Translate<DayWiseData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+
+
+                // Move to locations result 
+                myReader.NextResult();
+                List<CountryWiseData> locations = ((IObjectContextAdapter)dc)
+               .ObjectContext
+               .Translate<CountryWiseData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+
+                // Move to devices result 
+                myReader.NextResult();
+                List<DeviceWiseData> devices = ((IObjectContextAdapter)dc)
+              .ObjectContext
+              .Translate<DeviceWiseData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+
+                // Move to platforms result 
+                myReader.NextResult();
+                List<BrowserWiseData> platforms = ((IObjectContextAdapter)dc)
+              .ObjectContext
+              .Translate<BrowserWiseData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+
+                
+                countobj.activity = activity;
+                countobj.locations = locations;
+                countobj.devices = devices;
+                countobj.platforms = platforms;
+
+
+                var s = new JavaScriptSerializer();
+                string jsonClient = s.Serialize(countobj);
+
+                WebOperationContext.Current.OutgoingResponse.ContentType =
+                    "application/json; charset=utf-8";
+                return new MemoryStream(Encoding.UTF8.GetBytes(jsonClient));
+            }
+            else
+            {
+                string jsonClient = "please pass reference number";
+
+                WebOperationContext.Current.OutgoingResponse.ContentType =
+                    "application/json; charset=utf-8";
+                return new MemoryStream(Encoding.UTF8.GetBytes(jsonClient));
+            }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+                string jsonClient = "Exception occurs";
+
+                WebOperationContext.Current.OutgoingResponse.ContentType =
+                    "application/json; charset=utf-8";
+                return new MemoryStream(Encoding.UTF8.GetBytes(jsonClient));
+            }
+        }
+
+        public Stream GETSUMMARY(string Fk_Uniqueid)
+        {
+            Summary s_obj = new Summary();
+            long decodedvalue = new ConvertionBO().BaseToLong(Fk_Uniqueid);
+            Uniqueid_SHORTURLDATA = Convert.ToInt32(decodedvalue);
+            //Uniqueid_SHORTURLDATA = Convert.ToInt32(Fk_Uniqueid);
+            int? rid = (from u in dc.UIDandRIDDatas
+                       where u.PK_UniqueId == Uniqueid_SHORTURLDATA && u.TypeDiff=="2"
+                       select u.UIDorRID).SingleOrDefault();
+            var surl = (from ss in dc.SHORTURLDATAs
+                           where ss.FK_RID == rid
+                           select new{ss.Req_url}).ToList().Take(1);
+            int totalVisits = dc.SHORTURLDATAs.Where(sh => sh.FK_RID == rid).Count();
+            //int totalUsers = dc.SHORTURLDATAs.Where(sh => sh.FK_RID == rid).Count();
+            int totalUsers = dc.UIDDATAs.Where(sh => sh.FK_RID == rid).Count();
+            int? totalUniqueUsers = (from sh in dc.SHORTURLDATAs
+                                    where sh.FK_RID == rid
+                                    select sh.FK_Uid).Distinct().Count();
+            s_obj.url = surl.Select(x => x.Req_url).SingleOrDefault();
+            s_obj.visits = totalVisits;
+            s_obj.total_users = totalUsers;
+            s_obj.unique_users = totalUniqueUsers;
+            var s = new JavaScriptSerializer();
+            string jsonClient = s.Serialize(s_obj);
+
+            WebOperationContext.Current.OutgoingResponse.ContentType =
+                "application/json; charset=utf-8";
+            return new MemoryStream(Encoding.UTF8.GetBytes(jsonClient));
+        }
     
     }
 }

@@ -12,6 +12,10 @@
         <EntityTypeShape EntityType="shortenURLModel.UIDDATA" Width="1.5" PointX="2.75" PointY="5.75" IsExpanded="true" />
         <AssociationConnector Association="shortenURLModel.FK_SHORTURLDATA_UIDandRIDData" ManuallyRouted="false" />
         <EntityTypeShape EntityType="shortenURLModel.ErrorLog" Width="1.5" PointX="5.375" PointY="3.75" />
+        <AssociationConnector Association="shortenURLModel.FK_SHORTURLDATA_RIDDATA" />
+        <AssociationConnector Association="shortenURLModel.FK_UIDDATA_RIDDATA" />
+        <AssociationConnector Association="shortenURLModel.FK_SHORTURLDATA_SHORTURLDATA" />
+        <AssociationConnector Association="shortenURLModel.FK_SHORTURLDATA_UIDDATA" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

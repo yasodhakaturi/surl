@@ -42,6 +42,8 @@
           <Property Name="DeviceType" Type="nvarchar(max)" />
           <Property Name="IsMobileDevice" Type="nvarchar" MaxLength="50" />
           <Property Name="RequestDate" Type="datetime" />
+          <Property Name="FK_Uid" Type="int" />
+          <Property Name="FK_RID" Type="int" />
           <Property Name="FK_UniqueID" Type="int" />
         </EntityType>
         <EntityType Name="sysdiagrams">
@@ -68,11 +70,36 @@
             <PropertyRef Name="PK_Uid" />
           </Key>
           <Property Name="PK_Uid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_RID" Type="int" />
           <Property Name="ReferenceNumber" Type="nvarchar(max)" />
           <Property Name="Longurl" Type="nvarchar(max)" />
           <Property Name="MobileNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="RequestDate" Type="datetime" />
         </EntityType>
+        <Association Name="FK_SHORTURLDATA_RIDDATA">
+          <End Role="RIDDATA" Type="Self.RIDDATA" Multiplicity="0..1" />
+          <End Role="SHORTURLDATA" Type="Self.SHORTURLDATA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RIDDATA">
+              <PropertyRef Name="PK_Rid" />
+            </Principal>
+            <Dependent Role="SHORTURLDATA">
+              <PropertyRef Name="FK_RID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SHORTURLDATA_SHORTURLDATA">
+          <End Role="SHORTURLDATA" Type="Self.SHORTURLDATA" Multiplicity="1" />
+          <End Role="SHORTURLDATA1" Type="Self.SHORTURLDATA" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="SHORTURLDATA">
+              <PropertyRef Name="PK_Shorturl" />
+            </Principal>
+            <Dependent Role="SHORTURLDATA1">
+              <PropertyRef Name="PK_Shorturl" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SHORTURLDATA_UIDandRIDData">
           <End Role="UIDandRIDData" Type="Self.UIDandRIDData" Multiplicity="0..1" />
           <End Role="SHORTURLDATA" Type="Self.SHORTURLDATA" Multiplicity="*" />
@@ -82,6 +109,30 @@
             </Principal>
             <Dependent Role="SHORTURLDATA">
               <PropertyRef Name="FK_UniqueID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SHORTURLDATA_UIDDATA">
+          <End Role="UIDDATA" Type="Self.UIDDATA" Multiplicity="0..1" />
+          <End Role="SHORTURLDATA" Type="Self.SHORTURLDATA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UIDDATA">
+              <PropertyRef Name="PK_Uid" />
+            </Principal>
+            <Dependent Role="SHORTURLDATA">
+              <PropertyRef Name="FK_Uid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UIDDATA_RIDDATA">
+          <End Role="RIDDATA" Type="Self.RIDDATA" Multiplicity="0..1" />
+          <End Role="UIDDATA" Type="Self.UIDDATA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RIDDATA">
+              <PropertyRef Name="PK_Rid" />
+            </Principal>
+            <Dependent Role="UIDDATA">
+              <PropertyRef Name="FK_RID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -111,6 +162,7 @@
           <Parameter Name="uniqueid" Type="int" Mode="In" />
         </Function>
         <Function Name="InsertUIDData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="fk_rid" Type="int" Mode="In" />
           <Parameter Name="referencenumber" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="longurl" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="mobilenumber" Type="nvarchar" Mode="In" />
@@ -145,6 +197,16 @@
           <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spGetALLCOUNTS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="FilterBy" Type="int" Mode="In" />
+          <Parameter Name="DateFrom" Type="datetime" Mode="In" />
+          <Parameter Name="DateTo" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="spGetALLCOUNTS1" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DateFrom" Type="datetime" Mode="In" />
+          <Parameter Name="DateTo" Type="datetime" Mode="In" />
+          <Parameter Name="Fk_Uniqueid" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="shortenURLModelStoreContainer">
           <EntitySet Name="ErrorLog" EntityType="Self.ErrorLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RIDDATA" EntityType="Self.RIDDATA" Schema="dbo" store:Type="Tables" />
@@ -152,9 +214,25 @@
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UIDandRIDData" EntityType="Self.UIDandRIDData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UIDDATA" EntityType="Self.UIDDATA" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_SHORTURLDATA_RIDDATA" Association="Self.FK_SHORTURLDATA_RIDDATA">
+            <End Role="RIDDATA" EntitySet="RIDDATA" />
+            <End Role="SHORTURLDATA" EntitySet="SHORTURLDATA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SHORTURLDATA_SHORTURLDATA" Association="Self.FK_SHORTURLDATA_SHORTURLDATA">
+            <End Role="SHORTURLDATA" EntitySet="SHORTURLDATA" />
+            <End Role="SHORTURLDATA1" EntitySet="SHORTURLDATA" />
+          </AssociationSet>
           <AssociationSet Name="FK_SHORTURLDATA_UIDandRIDData" Association="Self.FK_SHORTURLDATA_UIDandRIDData">
             <End Role="UIDandRIDData" EntitySet="UIDandRIDData" />
             <End Role="SHORTURLDATA" EntitySet="SHORTURLDATA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SHORTURLDATA_UIDDATA" Association="Self.FK_SHORTURLDATA_UIDDATA">
+            <End Role="UIDDATA" EntitySet="UIDDATA" />
+            <End Role="SHORTURLDATA" EntitySet="SHORTURLDATA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UIDDATA_RIDDATA" Association="Self.FK_UIDDATA_RIDDATA">
+            <End Role="RIDDATA" EntitySet="RIDDATA" />
+            <End Role="UIDDATA" EntitySet="UIDDATA" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -169,6 +247,8 @@
           <Property Name="ReferenceNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Pwd" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="RequestDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="SHORTURLDATAs" Relationship="shortenURLModel.FK_SHORTURLDATA_RIDDATA" FromRole="RIDDATA" ToRole="SHORTURLDATA" />
+          <NavigationProperty Name="UIDDATAs" Relationship="shortenURLModel.FK_UIDDATA_RIDDATA" FromRole="RIDDATA" ToRole="UIDDATA" />
         </EntityType>
         <EntityType Name="SHORTURLDATA">
           <Key>
@@ -191,6 +271,12 @@
           <Property Name="UserAgent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsMobileDevice" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Region" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FK_Uid" Type="Int32" />
+          <Property Name="FK_RID" Type="Int32" />
+          <NavigationProperty Name="RIDDATA" Relationship="shortenURLModel.FK_SHORTURLDATA_RIDDATA" FromRole="SHORTURLDATA" ToRole="RIDDATA" />
+          <NavigationProperty Name="SHORTURLDATA1" Relationship="shortenURLModel.FK_SHORTURLDATA_SHORTURLDATA" FromRole="SHORTURLDATA" ToRole="SHORTURLDATA1" />
+          <NavigationProperty Name="SHORTURLDATA2" Relationship="shortenURLModel.FK_SHORTURLDATA_SHORTURLDATA" FromRole="SHORTURLDATA1" ToRole="SHORTURLDATA" />
+          <NavigationProperty Name="UIDDATA" Relationship="shortenURLModel.FK_SHORTURLDATA_UIDDATA" FromRole="SHORTURLDATA" ToRole="UIDDATA" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -221,6 +307,9 @@
           <Property Name="Longurl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="MobileNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="RequestDate" Type="DateTime" Precision="3" />
+          <Property Name="FK_RID" Type="Int32" />
+          <NavigationProperty Name="RIDDATA" Relationship="shortenURLModel.FK_UIDDATA_RIDDATA" FromRole="UIDDATA" ToRole="RIDDATA" />
+          <NavigationProperty Name="SHORTURLDATAs" Relationship="shortenURLModel.FK_SHORTURLDATA_UIDDATA" FromRole="UIDDATA" ToRole="SHORTURLDATA" />
         </EntityType>
         <Association Name="FK_SHORTURLDATA_UIDandRIDData">
           <End Role="UIDandRIDData" Type="Self.UIDandRIDData" Multiplicity="0..1" />
@@ -269,6 +358,7 @@
             <Parameter Name="uniqueid" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="InsertUIDData">
+            <Parameter Name="fk_rid" Mode="In" Type="Int32" />
             <Parameter Name="referencenumber" Mode="In" Type="String" />
             <Parameter Name="longurl" Mode="In" Type="String" />
             <Parameter Name="mobilenumber" Mode="In" Type="String" />
@@ -304,6 +394,32 @@
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
           <EntitySet Name="ErrorLogs" EntityType="shortenURLModel.ErrorLog" />
+          <FunctionImport Name="spGetALLCOUNTS" ReturnType="Collection(shortenURLModel.spGetALLCOUNTS_Result)" >
+            <Parameter Name="FilterBy" Mode="In" Type="Int32" />
+            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="DateTo" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="spGetALLCOUNTS1" ReturnType="Collection(shortenURLModel.spGetALLCOUNTS1_Result)">
+            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="DateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="Fk_Uniqueid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <AssociationSet Name="FK_SHORTURLDATA_RIDDATA" Association="shortenURLModel.FK_SHORTURLDATA_RIDDATA">
+            <End Role="RIDDATA" EntitySet="RIDDATAs" />
+            <End Role="SHORTURLDATA" EntitySet="SHORTURLDATAs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UIDDATA_RIDDATA" Association="shortenURLModel.FK_UIDDATA_RIDDATA">
+            <End Role="RIDDATA" EntitySet="RIDDATAs" />
+            <End Role="UIDDATA" EntitySet="UIDDATAs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SHORTURLDATA_SHORTURLDATA" Association="shortenURLModel.FK_SHORTURLDATA_SHORTURLDATA">
+            <End Role="SHORTURLDATA" EntitySet="SHORTURLDATAs" />
+            <End Role="SHORTURLDATA1" EntitySet="SHORTURLDATAs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SHORTURLDATA_UIDDATA" Association="shortenURLModel.FK_SHORTURLDATA_UIDDATA">
+            <End Role="UIDDATA" EntitySet="UIDDATAs" />
+            <End Role="SHORTURLDATA" EntitySet="SHORTURLDATAs" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -325,6 +441,62 @@
           <Property Name="StackTrace" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ErrorMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
+        <ComplexType Name="spGetALLCOUNTS_Result">
+          <Property Type="Int32" Name="year" Nullable="true" />
+          <Property Type="Int32" Name="count" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetALLCOUNTS1_Result">
+          <Property Type="DateTime" Name="Date" Nullable="true" />
+          <Property Type="Int32" Name="RequestCount" Nullable="true" />
+        </ComplexType>
+        <Association Name="FK_SHORTURLDATA_RIDDATA">
+          <End Type="shortenURLModel.RIDDATA" Role="RIDDATA" Multiplicity="0..1" />
+          <End Type="shortenURLModel.SHORTURLDATA" Role="SHORTURLDATA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RIDDATA">
+              <PropertyRef Name="PK_Rid" />
+            </Principal>
+            <Dependent Role="SHORTURLDATA">
+              <PropertyRef Name="FK_RID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UIDDATA_RIDDATA">
+          <End Type="shortenURLModel.RIDDATA" Role="RIDDATA" Multiplicity="0..1" />
+          <End Type="shortenURLModel.UIDDATA" Role="UIDDATA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RIDDATA">
+              <PropertyRef Name="PK_Rid" />
+            </Principal>
+            <Dependent Role="UIDDATA">
+              <PropertyRef Name="FK_RID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SHORTURLDATA_SHORTURLDATA">
+          <End Type="shortenURLModel.SHORTURLDATA" Role="SHORTURLDATA" Multiplicity="1" />
+          <End Type="shortenURLModel.SHORTURLDATA" Role="SHORTURLDATA1" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="SHORTURLDATA">
+              <PropertyRef Name="PK_Shorturl" />
+            </Principal>
+            <Dependent Role="SHORTURLDATA1">
+              <PropertyRef Name="PK_Shorturl" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SHORTURLDATA_UIDDATA">
+          <End Type="shortenURLModel.UIDDATA" Role="UIDDATA" Multiplicity="0..1" />
+          <End Type="shortenURLModel.SHORTURLDATA" Role="SHORTURLDATA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UIDDATA">
+              <PropertyRef Name="PK_Uid" />
+            </Principal>
+            <Dependent Role="SHORTURLDATA">
+              <PropertyRef Name="FK_Uid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -344,6 +516,8 @@
           <EntitySetMapping Name="SHORTURLDATAs">
             <EntityTypeMapping TypeName="shortenURLModel.SHORTURLDATA">
               <MappingFragment StoreEntitySet="SHORTURLDATA">
+                <ScalarProperty Name="FK_RID" ColumnName="FK_RID" />
+                <ScalarProperty Name="FK_Uid" ColumnName="FK_Uid" />
                 <ScalarProperty Name="Region" ColumnName="Region" />
                 <ScalarProperty Name="IsMobileDevice" ColumnName="IsMobileDevice" />
                 <ScalarProperty Name="UserAgent" ColumnName="UserAgent" />
@@ -387,6 +561,7 @@
           <EntitySetMapping Name="UIDDATAs">
             <EntityTypeMapping TypeName="shortenURLModel.UIDDATA">
               <MappingFragment StoreEntitySet="UIDDATA">
+                <ScalarProperty Name="FK_RID" ColumnName="FK_RID" />
                 <ScalarProperty Name="PK_Uid" ColumnName="PK_Uid" />
                 <ScalarProperty Name="ReferenceNumber" ColumnName="ReferenceNumber" />
                 <ScalarProperty Name="Longurl" ColumnName="Longurl" />
@@ -433,6 +608,22 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spGetALLCOUNTS" FunctionName="shortenURLModel.Store.spGetALLCOUNTS">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="shortenURLModel.spGetALLCOUNTS_Result">
+                <ScalarProperty Name="year" ColumnName="year" />
+                <ScalarProperty Name="count" ColumnName="count" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetALLCOUNTS1" FunctionName="shortenURLModel.Store.spGetALLCOUNTS1">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="shortenURLModel.spGetALLCOUNTS1_Result">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="RequestCount" ColumnName="RequestCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

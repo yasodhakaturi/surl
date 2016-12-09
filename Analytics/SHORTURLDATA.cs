@@ -30,7 +30,13 @@ namespace Analytics
         public string UserAgent { get; set; }
         public string IsMobileDevice { get; set; }
         public string Region { get; set; }
+        public Nullable<int> FK_Uid { get; set; }
+        public Nullable<int> FK_RID { get; set; }
     
         public virtual UIDandRIDData UIDandRIDData { get; set; }
+        public virtual RIDDATA RIDDATA { get; set; }
+        public virtual SHORTURLDATA SHORTURLDATA1 { get; set; }
+        public virtual SHORTURLDATA SHORTURLDATA2 { get; set; }
+        public virtual UIDDATA UIDDATA { get; set; }
     }
 }

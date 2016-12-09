@@ -10,8 +10,10 @@ namespace Analytics.Helpers.BO
     public class ConvertionBO
     {
         shortenURLEntities dc = new shortenURLEntities();
+       // private static readonly char[] BaseChars =
+       //"0123456789ABCDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmopqrstuvwxyz-.!~*'_".ToCharArray();
         private static readonly char[] BaseChars =
-       "0123456789ABCDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmopqrstuvwxyz-.!~*'_".ToCharArray();
+        "gSYmAQiPeWfq0Ov~rbuyU9dkT3hcsK5IH*pz8Z4o!RxD1BFwXE-JtVj2lG'_aM7.6LC".ToCharArray();
         private static readonly Dictionary<char, int> CharValues = BaseChars
                    .Select((c, i) => new { Char = c, Index = i })
                    .ToDictionary(c => c.Char, c => c.Index);

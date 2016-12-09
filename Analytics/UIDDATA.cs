@@ -14,10 +14,21 @@ namespace Analytics
     
     public partial class UIDDATA
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public UIDDATA()
+        {
+            this.SHORTURLDATAs = new HashSet<SHORTURLDATA>();
+        }
+    
         public int PK_Uid { get; set; }
         public string ReferenceNumber { get; set; }
         public string Longurl { get; set; }
         public string MobileNumber { get; set; }
         public Nullable<System.DateTime> RequestDate { get; set; }
+        public Nullable<int> FK_RID { get; set; }
+    
+        public virtual RIDDATA RIDDATA { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SHORTURLDATA> SHORTURLDATAs { get; set; }
     }
 }

@@ -14,6 +14,9 @@ namespace Analytics.Controllers
 
         public ActionResult Index()
         {
+            //var rnd = new Random();
+            //string unsuffled = "0123456789ABCDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmopqrstuvwxyz-.!~*'_";
+            //string shuffled = new string(unsuffled.OrderBy(r => rnd.Next()).ToArray());
             return View();
         }
 
@@ -51,27 +54,57 @@ namespace Analytics.Controllers
         
         public ActionResult Login()
         {
-            string rid_param="";
-            if (Request.UrlReferrer != null)
-                rid_param = Request.UrlReferrer.LocalPath;
-            else
-                rid_param = Request.Path;
-            if (rid_param.Contains("/"))
-                rid_param = rid_param.Replace("/", "");
-            if (rid_param.Contains(@"\"))
-                rid_param = rid_param.Replace(@"\", "");
-            rid_param = rid_param.Trim();
-            long decodedvalue = new ConvertionBO().BaseToLong(rid_param);
-            int rid_shorturl = Convert.ToInt32(decodedvalue);
-
-            PWDDataBO obj = new OperationsBO().GetUIDRIDDATA(rid_shorturl);
-            if (obj != null && obj.typediff == "2" && obj.pwd!="" && obj.pwd!=null)
+            try
             {
-                return View();
+                string rid_param = ""; int rid_shorturl = 0; int rid_cookie = 0;
+                //if (Convert.ToBoolean(chkRemember) == true)
+                //{
+                HttpCookie Logincookie = Request.Cookies["AnalyticsLogin"];
+                    
+                if (Logincookie != null)
+                    {
+                        byte[] hash = Helper.GetHashKey("superadmin@moozup.com" + "Moozup");
+                        string credentials = Helper.DecryptQueryString(hash, Logincookie.Value);
+                        string[] cred = credentials.Split('~');
+                         rid_param = cred[0];
+                        string password = cred[1];
+                        rid_cookie = Convert.ToInt32(rid_param);
+
+                    }
+                //}
+                    //if (rid_param == "" && rid_shorturl == 0)
+                    //{
+                        if (Request.UrlReferrer != null)
+                            rid_param = Request.UrlReferrer.LocalPath;
+                        else
+                            rid_param = Request.Path;
+                        if (rid_param.Contains("/"))
+                            rid_param = rid_param.Replace("/", "");
+                        if (rid_param.Contains(@"\"))
+                            rid_param = rid_param.Replace(@"\", "");
+                        rid_param = rid_param.Trim();
+                        long decodedvalue = new ConvertionBO().BaseToLong(rid_param);
+                        rid_shorturl = Convert.ToInt32(decodedvalue);
+                    //}
+            PWDDataBO obj = new OperationsBO().GetUIDRIDDATA(rid_shorturl);
+            if (obj != null && obj.typediff == "2" && obj.pwd != "" && obj.pwd != null)
+            {
+                if (Logincookie == null)
+                    return View();
+                else
+                {
+                    if (rid_shorturl == rid_cookie)
+                        Response.Redirect("~/Analytics/Analytics?rid=" + rid_shorturl);
+                    else
+                        return View();
+                }
+
             }
             else if (obj != null && obj.typediff == "2" && (obj.pwd == "" || obj.pwd == null))
             {
-                Response.Redirect("~/Analytics/Index?rid=" + rid_shorturl); 
+                //Response.Redirect("~/Analytics/Index?rid=" + rid_shorturl); 
+                Response.Redirect("~/Analytics/Analytics?rid=" + rid_shorturl); 
+
             }
             else if (obj != null && obj.typediff == "1")
             {
@@ -79,20 +112,21 @@ namespace Analytics.Controllers
                 new OperationsBO().Monitize(rid_param);
             }
             return View();
+            }
+            catch (Exception ex)
+            {
+
+                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+                return View();
+                //return new HttpStatusCodeResult(400, ex.Message).ToString();
+            }
         }
 
         public string Validate(string password, string chkRemember)
         {
             try
             {
-                if (Convert.ToBoolean(chkRemember) == true)
-                {
-                    HttpCookie Logincookie = Request.Cookies["AnalyticsLogin"];
-                    if (Logincookie != null)
-                    {
-                        //do logic here ..later
-                    }
-                }
+                
                 if (password != null)
                 {
                     string rid_param = "";
@@ -116,7 +150,19 @@ namespace Analytics.Controllers
                             if (rid_value != 0)
                                 if (new OperationsBO().CheckPassword_RIDDATA(rid_value, password))
                                 {
-                                    return "Success~/../Analytics/Index?rid=" + rid_shorturl;
+                                    if (Convert.ToBoolean(chkRemember) == true)
+                                    {
+                                        byte[] hash = Helper.GetHashKey("superadmin@moozup.com" + "Moozup");
+                                        string credentials = rid_value + "~" + password+"~"+chkRemember;
+                                        HttpCookie cookie = new HttpCookie("AnalyticsLogin");
+                                        string cookievalue = Helper.Encrypt(hash, credentials);
+                                        cookie.Value = cookievalue;
+                                        cookie.Expires = DateTime.Now.AddYears(1);
+                                        Response.Cookies.Add(cookie);
+                                    }
+                                    //return "Success~/../Analytics/Index?rid=" + rid_shorturl;
+                                    return "Success~/../Analytics/Analytics?rid=" + rid_shorturl;
+
                                 }
                         }
                         //else if (obj != null && obj.TypeDiff == "1")

@@ -121,8 +121,12 @@ namespace Analytics
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertSHORTURLData", ipv4Parameter, ipv6Parameter, browserParameter, browser_versionParameter, cityParameter, regionParameter, countryParameter, countrycodeParameter, req_urlParameter, useragentParameter, hostnameParameter, deviceTypeParameter, isMobiledeviceParameter, uniqueidParameter);
         }
     
-        public virtual int InsertUIDData(string referencenumber, string longurl, string mobilenumber)
+        public virtual int InsertUIDData(Nullable<int> fk_rid, string referencenumber, string longurl, string mobilenumber)
         {
+            var fk_ridParameter = fk_rid.HasValue ?
+                new ObjectParameter("fk_rid", fk_rid) :
+                new ObjectParameter("fk_rid", typeof(int));
+    
             var referencenumberParameter = referencenumber != null ?
                 new ObjectParameter("referencenumber", referencenumber) :
                 new ObjectParameter("referencenumber", typeof(string));
@@ -135,7 +139,7 @@ namespace Analytics
                 new ObjectParameter("mobilenumber", mobilenumber) :
                 new ObjectParameter("mobilenumber", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertUIDData", referencenumberParameter, longurlParameter, mobilenumberParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertUIDData", fk_ridParameter, referencenumberParameter, longurlParameter, mobilenumberParameter);
         }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
@@ -239,6 +243,40 @@ namespace Analytics
         public virtual int sp_upgraddiagrams()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
+        }
+    
+        public virtual ObjectResult<spGetALLCOUNTS_Result> spGetALLCOUNTS(Nullable<int> filterBy, Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo)
+        {
+            var filterByParameter = filterBy.HasValue ?
+                new ObjectParameter("FilterBy", filterBy) :
+                new ObjectParameter("FilterBy", typeof(int));
+    
+            var dateFromParameter = dateFrom.HasValue ?
+                new ObjectParameter("DateFrom", dateFrom) :
+                new ObjectParameter("DateFrom", typeof(System.DateTime));
+    
+            var dateToParameter = dateTo.HasValue ?
+                new ObjectParameter("DateTo", dateTo) :
+                new ObjectParameter("DateTo", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetALLCOUNTS_Result>("spGetALLCOUNTS", filterByParameter, dateFromParameter, dateToParameter);
+        }
+    
+        public virtual ObjectResult<spGetALLCOUNTS1_Result> spGetALLCOUNTS1(Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo, Nullable<int> fk_Uniqueid)
+        {
+            var dateFromParameter = dateFrom.HasValue ?
+                new ObjectParameter("DateFrom", dateFrom) :
+                new ObjectParameter("DateFrom", typeof(System.DateTime));
+    
+            var dateToParameter = dateTo.HasValue ?
+                new ObjectParameter("DateTo", dateTo) :
+                new ObjectParameter("DateTo", typeof(System.DateTime));
+    
+            var fk_UniqueidParameter = fk_Uniqueid.HasValue ?
+                new ObjectParameter("Fk_Uniqueid", fk_Uniqueid) :
+                new ObjectParameter("Fk_Uniqueid", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetALLCOUNTS1_Result>("spGetALLCOUNTS1", dateFromParameter, dateToParameter, fk_UniqueidParameter);
         }
     }
 }

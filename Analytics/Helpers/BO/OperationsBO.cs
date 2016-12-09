@@ -2,6 +2,9 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -106,15 +109,16 @@ namespace Analytics.Helpers.BO
 
                 
                 PWDDataBO obj = (from uniid in dc.UIDandRIDDatas
-                               join uidtable in dc.RIDDATAs on uniid.UIDorRID equals uidtable.PK_Rid
                                where uniid.PK_UniqueId == Uniqueid_UIDRID 
                                select new PWDDataBO
                              {
                                  typediff=uniid.TypeDiff,
-                
-                                 pwd=uidtable.Pwd,
                                  UIDorRID=uniid.UIDorRID
                              }).SingleOrDefault();
+                string pwd = (from r in dc.RIDDATAs
+                              where r.PK_Rid == obj.UIDorRID && obj.typediff == "2"
+                              select r.Pwd).SingleOrDefault();
+                obj.pwd = pwd;
                 if (obj != null)
                     return obj;
                 else
@@ -163,6 +167,12 @@ namespace Analytics.Helpers.BO
                 int Uniqueid_SHORTURLDATA = Convert.ToInt32(decodedvalue);
                 if (new OperationsBO().CheckUniqueid(Uniqueid_SHORTURLDATA, "1"))
                 {
+                    int? Fk_UID = (from u in dc.UIDandRIDDatas
+                                   where u.PK_UniqueId == Uniqueid_SHORTURLDATA && u.TypeDiff == "1"
+                                   select u.UIDorRID).SingleOrDefault();
+                    int? FK_RID = (from u in dc.UIDDATAs
+                                   where u.PK_Uid == Fk_UID
+                                   select u.FK_RID).SingleOrDefault();
                     //retrive ipaddress and browser
                     string ipv4 = new ConvertionBO().GetIP4Address();
                     string ipv6 = HttpContext.Current.Request.UserHostAddress;
@@ -212,7 +222,7 @@ namespace Analytics.Helpers.BO
                             CountryCode = (string)obj["country_code"];
                         }
                     }
-                    new DataInsertionBO().InsertShortUrldata(ipv4, ipv6, browser, browserversion, City, Region, Country, CountryCode, req_url, useragent, hostname, devicetype, ismobiledevice, Uniqueid_SHORTURLDATA);
+                    new DataInsertionBO().InsertShortUrldata(ipv4, ipv6, browser, browserversion, City, Region, Country, CountryCode, req_url, useragent, hostname, devicetype, ismobiledevice,Fk_UID,FK_RID, Uniqueid_SHORTURLDATA);
                 }
                 //WebOperationContext.Current.OutgoingResponse.StatusCode = System.Net.HttpStatusCode.Redirect;
                 //if (!longurl.StartsWith("http://") && !longurl.StartsWith("https://"))
@@ -232,6 +242,127 @@ namespace Analytics.Helpers.BO
 
             }
         }
+        //public CountsData GetCountsData(SqlDataReader myReader,string filterBy,string DateFrom,string DateTo)
+        //{
+
+        //    CountsData countobj = new CountsData();
+        //    if (filterBy != "" && DateFrom == "" && DateTo == "")
+        //    {
+        //        if (filterBy == "Year")
+        //        {
+        //            List<YearData> YearsDataObj = ((IObjectContextAdapter)dc)
+        //                                .ObjectContext
+        //                                .Translate<YearData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+        //            //countobj.YearsData = YearsDataObj;
+                   
+        //        }
+        //        if (filterBy == "Month")
+        //        {
+        //            List<MonthData> MonthDataObj = ((IObjectContextAdapter)dc)
+        //                                .ObjectContext
+        //                                .Translate<MonthData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+        //            //countobj.MonthsData = MonthDataObj;
+        //        }
+        //        if (filterBy == "CurrentMonth")
+        //        {
+        //            List<CurrentMonthData> CurrentMonthDataObj = ((IObjectContextAdapter)dc)
+        //             .ObjectContext
+        //             .Translate<CurrentMonthData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+
+        //            //countobj.CurrentMonthData = CurrentMonthDataObj;
+        //        }
+        //        if (filterBy == "Today")
+        //        {
+        //            List<TodayData> TodayDataObj = ((IObjectContextAdapter)dc)
+        //            .ObjectContext
+        //            .Translate<TodayData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+        //            //countobj.TodaysData = TodayDataObj;
+        //        }
+        //    }
+
+        //    else if (filterBy == "" && DateFrom == "" && DateTo == "")
+        //    {
+        //        List<YearData> YearsDataObj = ((IObjectContextAdapter)dc)
+        //            .ObjectContext
+        //            .Translate<YearData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+
+
+        //        // Move to Month result 
+        //        myReader.NextResult();
+        //        List<MonthData> MonthDataObj = ((IObjectContextAdapter)dc)
+        //            .ObjectContext
+        //            .Translate<MonthData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+
+        //        // Move to CurrentMonth result 
+        //        myReader.NextResult();
+        //        List<CurrentMonthData> CurrentMonthDataObj = ((IObjectContextAdapter)dc)
+        //            .ObjectContext
+        //            .Translate<CurrentMonthData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+
+        //        // Move to TodayData result 
+        //        myReader.NextResult();
+        //        List<TodayData> TodayDataObj = ((IObjectContextAdapter)dc)
+        //            .ObjectContext
+        //            .Translate<TodayData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+
+        //        // Move to YesterDayData result 
+        //        myReader.NextResult();
+        //        List<YesterDayData> YesterDayDataObj = ((IObjectContextAdapter)dc)
+        //            .ObjectContext
+        //            .Translate<YesterDayData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+
+        //        // Move to Last7DaysData result 
+        //        myReader.NextResult();
+        //        List<Last7DaysData> Last7DaysDataObj = ((IObjectContextAdapter)dc)
+        //            .ObjectContext
+        //            .Translate<Last7DaysData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+
+        //        // Move to BrowsersData result 
+        //        myReader.NextResult();
+        //        List<BrowsersData> BrowsersDataObj = ((IObjectContextAdapter)dc)
+        //            .ObjectContext
+        //            .Translate<BrowsersData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+
+        //        // Move to CountryData result 
+        //        myReader.NextResult();
+        //        List<CountryData> CountryDataObj = ((IObjectContextAdapter)dc)
+        //            .ObjectContext
+        //            .Translate<CountryData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+
+        //        // Move to CityData result 
+        //        myReader.NextResult();
+        //        List<CityData> CityDataObj = ((IObjectContextAdapter)dc)
+        //            .ObjectContext
+        //            .Translate<CityData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+
+        //        // Move to RegionData result 
+        //        myReader.NextResult();
+        //        List<RegionData> RegionDataObj = ((IObjectContextAdapter)dc)
+        //            .ObjectContext
+        //            .Translate<RegionData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+
+        //        // Move to DeviceTypeData result 
+        //        myReader.NextResult();
+        //        List<DeviceTypeData> DeviceTypeDataObj = ((IObjectContextAdapter)dc)
+        //            .ObjectContext
+        //            .Translate<DeviceTypeData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
+
+
+        //        //countobj.YearsData = YearsDataObj;
+        //        //countobj.MonthsData = MonthDataObj;
+        //        //countobj.CurrentMonthData = CurrentMonthDataObj;
+        //        //countobj.TodaysData = TodayDataObj;
+        //        //countobj.YesterdaysData = YesterDayDataObj;
+        //        //countobj.Last7DaysData = Last7DaysDataObj;
+        //        //countobj.BrowsersData = BrowsersDataObj;
+        //        //countobj.CountriesData = CountryDataObj;
+        //        //countobj.CitiesData = CityDataObj;
+        //        //countobj.RegionsData = RegionDataObj;
+        //        //countobj.DevicesData = DeviceTypeDataObj;
+        //    }
+        //    return countobj;
+        //}
+
     
     }
 }
