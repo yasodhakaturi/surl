@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -76,6 +77,13 @@ namespace Analytics.Helpers.Utility
                     byte[] decryptedData = decryptionStream.ToArray();
                     return UTF8Encoding.UTF8.GetString(decryptedData, 0, decryptedData.Length);
                 }
+            }
+        }
+        public static string ConnectionString
+        {
+            get
+            {
+                return ConfigurationManager.ConnectionStrings["shortenURLConnectionString"].ToString();
             }
         }
         //internal static string Decrypt(byte[] key, string encryptedString)

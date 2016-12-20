@@ -25,12 +25,18 @@ using System.Web.Script.Serialization;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Core.Objects;
 using System.Globalization;
+using System.Web.Hosting;
+using System.Web.Configuration;
+using System.Web.Security;
 
 namespace Analytics
 {
     
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in code, svc and config file together.
     // NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
+     [ServiceBehavior(IncludeExceptionDetailInFaults = true, InstanceContextMode = InstanceContextMode.PerCall, ConcurrencyMode = ConcurrencyMode.Single)]
+        [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
+        
     public class Service1 : IService1
     {
         shortenURLEntities dc = new shortenURLEntities();
@@ -53,43 +59,57 @@ namespace Analytics
                     Uniqueid_RID = (from registree in dc.RIDDATAs
                                     where registree.ReferenceNumber.Trim() == referencenumber.Trim()
                                     select registree.PK_Rid).SingleOrDefault();
-                    if (Uniqueid_RID == 0)
+                    //if (Uniqueid_RID == 0)
+                    //{
+                    //    new DataInsertionBO().InsertRIDdata(referencenumber, "");
+                    //    Uniqueid_RID = (from registree in dc.RIDDATAs
+                    //                    where registree.ReferenceNumber.Trim() == referencenumber.Trim()
+                    //                    select registree.PK_Rid).SingleOrDefault();
+                    //}
+                    if (Uniqueid_RID != 0)
                     {
-                        new DataInsertionBO().InsertRIDdata(referencenumber, "");
-                        Uniqueid_RID = (from registree in dc.RIDDATAs
-                                        where registree.ReferenceNumber.Trim() == referencenumber.Trim()
-                                        select registree.PK_Rid).SingleOrDefault();
-                    }
-                    //check data in UID table
-                    Uniqueid_UID = (from registree in dc.UIDDATAs
-                                    where registree.ReferenceNumber.Trim() == referencenumber.Trim() &&
-                                    registree.Longurl.Trim() == longurl.Trim() &&
-                                    registree.MobileNumber.Trim() == mobilenumber.Trim()
-                                    select registree.PK_Uid).SingleOrDefault();
-                    //if data found in UIDDATA insert data into UIDDATA 
-                    if (Uniqueid_UID == 0)
-                    {
-                        new DataInsertionBO().InsertUIDdata(Uniqueid_RID,referencenumber, longurl, mobilenumber);
+                        //check data in UID table
                         Uniqueid_UID = (from registree in dc.UIDDATAs
                                         where registree.ReferenceNumber.Trim() == referencenumber.Trim() &&
                                         registree.Longurl.Trim() == longurl.Trim() &&
                                         registree.MobileNumber.Trim() == mobilenumber.Trim()
                                         select registree.PK_Uid).SingleOrDefault();
+                        //if data found in UIDDATA insert data into UIDDATA 
+                        if (Uniqueid_UID == 0)
+                        {
+                            new DataInsertionBO().InsertUIDdata(Uniqueid_RID, referencenumber, longurl, mobilenumber);
+                            Uniqueid_UID = (from registree in dc.UIDDATAs
+                                            where registree.ReferenceNumber.Trim() == referencenumber.Trim() &&
+                                            registree.Longurl.Trim() == longurl.Trim() &&
+                                            registree.MobileNumber.Trim() == mobilenumber.Trim()
+                                            select registree.PK_Uid).SingleOrDefault();
+                        }
+
+                        //if data found in uiddata table get data frim UIDRIDDATA 
+                        UID = new OperationsBO().GetUniqueid(Uniqueid_UID, "1");
+
+                        UID_UIDRID = UID.ToString();
+                        //convert uid to base64 format    
+                        string base64value = new ConvertionBO().LongToBase(Convert.ToInt64(UID));
+                        //update record with base64 value
+                        UIDandRIDData obj = (from u in dc.UIDandRIDDatas
+                                             where u.PK_UniqueId == UID
+                                             select u).SingleOrDefault();
+                        obj.Base64Value = base64value;
+                        dc.SaveChanges();
+                        return base64value;
+
                     }
-
-                    //if data found in uiddata table get data frim UIDRIDDATA 
-                    UID = new OperationsBO().GetUniqueid(Uniqueid_UID, "1");
-
-                    UID_UIDRID = UID.ToString();
-                    //convert uid to base64 format    
-                    string base64value = new ConvertionBO().LongToBase(Convert.ToInt64(UID));
-                    return base64value;
-
+                    else
+                    {
+                        UID_UIDRID = "NULL";
+                        return "uniqueid not found";
+                    }
                 }
                 else
                 {
                     UID_UIDRID = "NULL";
-                    return "uniqueid not found";
+                    return "Referencenumber not valid";
                 }
             }
             catch (Exception ex)
@@ -102,64 +122,82 @@ namespace Analytics
             }
        }
 
-        public string GETRID(string ReferenceNumber, string Password, out string RID_UIDRIID)
+        public string GETRID(string ReferenceNumber, string Password, string api_key, out string RID_UIDRIID)
 
          {
              try
              {
-                 if (ReferenceNumber.Trim() != "" && Password.Trim() != "")
-                 {
-                     Uniqueid_RID = (from registree in dc.RIDDATAs
-                                     where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim() &&
-                                             registree.Pwd.Trim() == Password.Trim()
-                                     select registree.PK_Rid).SingleOrDefault();
-                     if (Uniqueid_RID == 0)
-                     {
-                         new DataInsertionBO().InsertRIDdata(ReferenceNumber, Password);
-                         Uniqueid_RID = (from registree in dc.RIDDATAs
-                                         where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim() &&
-                                         registree.Pwd.Trim() == Password.Trim()
-                                         select registree.PK_Rid).SingleOrDefault();
-                     }
+                 int clientid = 0;
+                  clientid = (from c in dc.Clients
+                                 where c.APIKey == api_key
+                                 select c.PK_ClientID).SingleOrDefault();
+                  if (clientid != 0)
+                  {
+                      if (ReferenceNumber.Trim() != "" && Password.Trim() != "")
+                      {
+                          Uniqueid_RID = (from registree in dc.RIDDATAs
+                                          where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim() &&
+                                                  registree.Pwd.Trim() == Password.Trim()
+                                          select registree.PK_Rid).SingleOrDefault();
 
-                     //if data found in uiddata table get data frim UIDRIDDATA 
-                     RID = (from uniqueid1 in dc.UIDandRIDDatas
-                            where uniqueid1.TypeDiff == "2" &&
-                            uniqueid1.UIDorRID == Uniqueid_RID
-                            select uniqueid1.PK_UniqueId).SingleOrDefault();
+                          if (Uniqueid_RID == 0)
+                          {
+                              new DataInsertionBO().InsertRIDdata(ReferenceNumber, Password,clientid);
+                              Uniqueid_RID = (from registree in dc.RIDDATAs
+                                              where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim() &&
+                                              registree.Pwd.Trim() == Password.Trim()
+                                              select registree.PK_Rid).SingleOrDefault();
+                          }
 
-                 }
-                 else if (ReferenceNumber.Trim() != "" && Password.Trim() == "")
-                 {
-                     Uniqueid_RID = (from registree in dc.RIDDATAs
-                                     where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim()
-                                     select registree.PK_Rid).SingleOrDefault();
-                     if (Uniqueid_RID == 0)
-                     {
-                         new DataInsertionBO().InsertRIDdata(ReferenceNumber, "");
-                         Uniqueid_RID = (from registree in dc.RIDDATAs
-                                         where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim()
-                                         select registree.PK_Rid).SingleOrDefault();
-                     }
-                     //if data found in uiddata table get data frim UIDRIDDATA 
-                     RID = new OperationsBO().GetUniqueid(Uniqueid_RID, "2");
+                          //if data found in uiddata table get data frim UIDRIDDATA 
+                          RID = (from uniqueid1 in dc.UIDandRIDDatas
+                                 where uniqueid1.TypeDiff == "2" &&
+                                 uniqueid1.UIDorRID == Uniqueid_RID
+                                 select uniqueid1.PK_UniqueId).SingleOrDefault();
 
-                 }
-                 if (Uniqueid_RID != 0)
-                 {
+                      }
+                      else if (ReferenceNumber.Trim() != "" && Password.Trim() == "")
+                      {
+                          Uniqueid_RID = (from registree in dc.RIDDATAs
+                                          where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim()
+                                          select registree.PK_Rid).SingleOrDefault();
+                          if (Uniqueid_RID == 0)
+                          {
+                              new DataInsertionBO().InsertRIDdata(ReferenceNumber, "",clientid);
+                              Uniqueid_RID = (from registree in dc.RIDDATAs
+                                              where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim()
+                                              select registree.PK_Rid).SingleOrDefault();
+                          }
+                          //if data found in uiddata table get data frim UIDRIDDATA 
+                          RID = new OperationsBO().GetUniqueid(Uniqueid_RID, "2");
 
-                     RID_UIDRIID = Uniqueid_RID.ToString();
-                     string base64value = new ConvertionBO().LongToBase(Convert.ToInt64(RID));
-                     return base64value;
+                      }
+                      if (Uniqueid_RID != 0)
+                      {
 
-                 }
-                 else
-                 {
+                          RID_UIDRIID = Uniqueid_RID.ToString();
+                          string base64value = new ConvertionBO().LongToBase(Convert.ToInt64(RID));
+                          //update record with base64 value
+                          UIDandRIDData obj = (from u in dc.UIDandRIDDatas
+                                               where u.PK_UniqueId == RID
+                                               select u).SingleOrDefault();
+                          obj.Base64Value = base64value;
+                          dc.SaveChanges();
+                          return base64value;
 
-                     RID_UIDRIID = "NULL";
-                     return "ReferenceID not found";
-                 }
+                      }
+                      else
+                      {
 
+                          RID_UIDRIID = "NULL";
+                          return "ReferenceID not found";
+                      }
+                  }
+                  else
+                  {
+                      RID_UIDRIID = "NULL";
+                      return "Please Pass valid APiKey";
+                  }
              }
              catch (Exception ex)
              {
@@ -188,6 +226,9 @@ namespace Analytics
                      int? FK_RID = (from u in dc.UIDDATAs
                                    where u.PK_Uid == Fk_UID
                                    select u.FK_RID).SingleOrDefault();
+                     int? FK_clientid = (from r in dc.RIDDATAs
+                                     where r.PK_Rid == FK_RID
+                                     select r.FK_ClientId).SingleOrDefault();
                      //retrive ipaddress and browser
                      string ipv4 = new ConvertionBO().GetIP4Address();
                      string ipv6 = HttpContext.Current.Request.UserHostAddress;
@@ -238,7 +279,7 @@ namespace Analytics
                              CountryCode = (string)obj["country_code"];
                          }
                      }
-                     new DataInsertionBO().InsertShortUrldata(ipv4, ipv6, browser, browserversion, City, Region, Country, CountryCode, req_url, useragent, hostname, devicetype, ismobiledevice,Fk_UID,FK_RID,Uniqueid_SHORTURLDATA);
+                     new DataInsertionBO().InsertShortUrldata(ipv4, ipv6, browser, browserversion, City, Region, Country, CountryCode, req_url, useragent, hostname, devicetype, ismobiledevice, Fk_UID, FK_RID, FK_clientid, Uniqueid_SHORTURLDATA);
                  }
                  WebOperationContext.Current.OutgoingResponse.StatusCode = System.Net.HttpStatusCode.Redirect;
                  if (!longurl.StartsWith("http://") && !longurl.StartsWith("https://"))
@@ -403,33 +444,220 @@ namespace Analytics
 
         public Stream GETSUMMARY(string Fk_Uniqueid)
         {
-            Summary s_obj = new Summary();
-            long decodedvalue = new ConvertionBO().BaseToLong(Fk_Uniqueid);
-            Uniqueid_SHORTURLDATA = Convert.ToInt32(decodedvalue);
-            //Uniqueid_SHORTURLDATA = Convert.ToInt32(Fk_Uniqueid);
-            int? rid = (from u in dc.UIDandRIDDatas
-                       where u.PK_UniqueId == Uniqueid_SHORTURLDATA && u.TypeDiff=="2"
-                       select u.UIDorRID).SingleOrDefault();
-            var surl = (from ss in dc.SHORTURLDATAs
-                           where ss.FK_RID == rid
-                           select new{ss.Req_url}).ToList().Take(1);
-            int totalVisits = dc.SHORTURLDATAs.Where(sh => sh.FK_RID == rid).Count();
-            //int totalUsers = dc.SHORTURLDATAs.Where(sh => sh.FK_RID == rid).Count();
-            int totalUsers = dc.UIDDATAs.Where(sh => sh.FK_RID == rid).Count();
-            int? totalUniqueUsers = (from sh in dc.SHORTURLDATAs
-                                    where sh.FK_RID == rid
-                                    select sh.FK_Uid).Distinct().Count();
-            s_obj.url = surl.Select(x => x.Req_url).SingleOrDefault();
-            s_obj.visits = totalVisits;
-            s_obj.total_users = totalUsers;
-            s_obj.unique_users = totalUniqueUsers;
-            var s = new JavaScriptSerializer();
-            string jsonClient = s.Serialize(s_obj);
+            try
+            {
+                Summary s_obj = new Summary();
+                long decodedvalue = new ConvertionBO().BaseToLong(Fk_Uniqueid);
+                Uniqueid_SHORTURLDATA = Convert.ToInt32(decodedvalue);
+                //Uniqueid_SHORTURLDATA = Convert.ToInt32(Fk_Uniqueid);
+                int? rid = (from u in dc.UIDandRIDDatas
+                            where u.PK_UniqueId == Uniqueid_SHORTURLDATA && u.TypeDiff == "2"
+                            select u.UIDorRID).SingleOrDefault();
+                var surl = (from ss in dc.SHORTURLDATAs
+                            where ss.FK_RID == rid
+                            select new { ss.Req_url }).ToList().Take(1);
+                int totalVisits = dc.SHORTURLDATAs.Where(sh => sh.FK_RID == rid).Count();
+                //int totalUsers = dc.SHORTURLDATAs.Where(sh => sh.FK_RID == rid).Count();
+                int totalUsers = dc.UIDDATAs.Where(sh => sh.FK_RID == rid).Count();
+                int? totalUniqueUsers = (from sh in dc.SHORTURLDATAs
+                                         where sh.FK_RID == rid
+                                         select sh.FK_Uid).Distinct().Count();
+                s_obj.url = surl.Select(x => x.Req_url).SingleOrDefault();
+                s_obj.visits = totalVisits;
+                s_obj.total_users = totalUsers;
+                s_obj.unique_users = totalUniqueUsers;
+                var s = new JavaScriptSerializer();
+                string jsonClient = s.Serialize(s_obj);
 
-            WebOperationContext.Current.OutgoingResponse.ContentType =
-                "application/json; charset=utf-8";
-            return new MemoryStream(Encoding.UTF8.GetBytes(jsonClient));
+                WebOperationContext.Current.OutgoingResponse.ContentType =
+                    "application/json; charset=utf-8";
+                return new MemoryStream(Encoding.UTF8.GetBytes(jsonClient));
+            }
+            catch (Exception ex)
+            {
+                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+                string jsonClient = "Exception occurs";
+
+                WebOperationContext.Current.OutgoingResponse.ContentType =
+                    "application/json; charset=utf-8";
+                return new MemoryStream(Encoding.UTF8.GetBytes(jsonClient));
+            }
         }
-    
+
+
+        public string Authenticate_Token(Stream api_key)
+        {
+            string parameters = new StreamReader(api_key).ReadToEnd(); //email1;
+            JObject jObject = JObject.Parse(parameters);
+            string apikey = (string)jObject["_apikey"];
+            bool check = ValidateAPIKey(apikey);
+            //need to return token
+            string token = "";
+            return token;
+        }
+
+
+        bool ValidateAPIKey(string key)
+        {
+
+            //string key = HttpContext.Current.Request.QueryString["apikey"];
+            //if (string.IsNullOrEmpty(key))
+            //   key = HttpContext.Current.Request.Headers["apikey"];
+            if (!string.IsNullOrEmpty(key))
+            {
+                Guid apiKey;
+                Guid hardKey = new Guid("F5D14784-2D9E-4F57-A69E-50FB0551940A");
+                // Convert the string into a Guid and validate it
+                if (!Guid.TryParse(key, out apiKey) || !apiKey.Equals(hardKey)) //we are not validating yet just hard code one guid
+                {
+                    //throw new System.ServiceModel.Web.WebFaultException<string>("Invalid API Key", HttpStatusCode.Forbidden);
+                    return false;
+                }
+                else
+                    return false;
+            }
+            else
+                return false;
+                //throw new System.ServiceModel.Web.WebFaultException<string>("Please Provide  API Key", HttpStatusCode.Forbidden);
+
+        }
+
+
+        public string IsAuthorized(string username, string password, string apikey)
+        {
+            MembershipUser user = Membership.GetAllUsers()[username];
+
+            Configuration config = ConfigurationManager.OpenExeConfiguration(HostingEnvironment.MapPath("~") + "\\web.config");
+
+            SessionStateSection sessionStateConfig = (SessionStateSection)config.SectionGroups.Get("system.web").Sections.Get("sessionState");
+
+            InMemoryInstances instance = InMemoryInstances.Instance;
+            // Check for session state timeout (could use a constant here instead if you don't want to rely on the config).
+            if (user.LastLoginDate.AddMinutes(sessionStateConfig.Timeout.TotalMinutes) < DateTime.Now)
+            {
+                // Remove token from the singleton in this instance, effectively a logout.                
+                instance.removeTokenUserPair(username);
+                return "User Unauthorized - login has expired!";
+            }
+            if (!instance.checkTokenUserPair(username, apikey))
+                return "User Unauthorized - not a valid token!";
+
+            return "Success - User is Authorized!";
+
+        }
+        public string AuthenticateUser(string username, string encryptedPassword)
+        {
+            //string pwd = Decrypt(encryptedPassword);
+            string pwd = "";
+            if (Membership.ValidateUser(username, pwd))
+            {
+                // Not sure if this is actually needed, but reading some documentation I think it's a safe bet to do here anyway.
+                Membership.GetAllUsers()[username].LastLoginDate = DateTime.Now;
+
+                // Send back a token!
+                Guid token = Guid.NewGuid();
+
+                // Store a token for this username.
+                InMemoryInstances instance = InMemoryInstances.Instance;
+                instance.removeTokenUserPair(username); //Because we don't implement a "Logout" method.
+                instance.addTokenUserPair(username, token.ToString());
+
+                return token.ToString();
+            }
+
+            return "Error - User was not able to be validated!";
+        }
+
+
+
+         public class InMemoryInstances
+    {
+        private static volatile InMemoryInstances instance;
+        private static object syncRoot = new Object();
+
+        private Dictionary<string, string> usersAndTokens = null;
+
+        private InMemoryInstances() 
+        {
+            usersAndTokens = new Dictionary<string, string>();
+        }
+
+        public static InMemoryInstances Instance
+        {
+            get 
+            {
+                if (instance == null) 
+                {
+                    lock (syncRoot)                  
+                    {
+                        if (instance == null) 
+                            instance = new InMemoryInstances();
+                    }
+                }
+
+                return instance;
+            }
+        }
+
+        public void addTokenUserPair(string username, string token)
+        {
+            usersAndTokens.Add(username, token);
+        }
+
+        public bool checkTokenUserPair(string username, string token)
+        {
+            if (usersAndTokens.ContainsKey(username)) {
+                string value = usersAndTokens[username];
+                if (value.Equals(token))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public void removeTokenUserPair(string username)
+        {
+            usersAndTokens.Remove(username);
+        }
+    }
+
+
+
+
+
+
+
+
+            /// <summary>
+            /// Initializes a new instance of the REST
+            /// </summary>
+            //public Service1()
+            //{
+            //    ValidateKey(); //since we have InstanceContextMode = InstanceContextMode.PerCall, this is called per every api call yay!!!
+
+            //}
+
+            //void ValidateKey()
+            //{
+
+            //    string key = HttpContext.Current.Request.QueryString["apikey"];
+            //    if (string.IsNullOrEmpty(key))
+            //        key = HttpContext.Current.Request.Headers["apikey"];
+            //    if (!string.IsNullOrEmpty(key))
+            //    {
+            //        Guid apiKey;
+            //        Guid hardKey = new Guid("F5D14784-2D9E-4F57-A69E-50FB0551940A");
+            //        // Convert the string into a Guid and validate it
+            //        if (!Guid.TryParse(key, out apiKey) || !apiKey.Equals(hardKey)) //we are not validating yet just hard code one guid
+            //        {
+            //            throw new System.ServiceModel.Web.WebFaultException<string>("Invalid API Key", HttpStatusCode.Forbidden);
+            //        }
+            //    }
+            //    else
+            //        throw new System.ServiceModel.Web.WebFaultException<string>("Please Provide  API Key", HttpStatusCode.Forbidden);
+
+            //}
+
+
     }
 }

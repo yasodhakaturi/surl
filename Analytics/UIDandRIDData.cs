@@ -24,6 +24,7 @@ namespace Analytics
         public string TypeDiff { get; set; }
         public Nullable<int> UIDorRID { get; set; }
         public Nullable<System.DateTime> RequestDate { get; set; }
+        public string Base64Value { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SHORTURLDATA> SHORTURLDATAs { get; set; }

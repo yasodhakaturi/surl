@@ -12,6 +12,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Analytics.Models;
 
+
 namespace Analytics
 {
     public class EmailService : IIdentityMessageService

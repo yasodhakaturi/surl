@@ -42,19 +42,41 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Activation" />
     <Reference Include="System.ServiceModel.Channels" />
     <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.3\lib\net45\System.Web.Cors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.3\lib\net45\System.Web.Http.Cors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -174,29 +196,48 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AnalyticsModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="App_Start\ApplicationUser.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Client.cs">
+      <DependentUpon>AnalyticsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AnalyticsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="ErrorLog.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\BO\BaseEntity.cs" />
+    <Compile Include="Helpers\BO\BrowserWiseData.cs" />
     <Compile Include="Helpers\BO\ConvertionBO.cs" />
+    <Compile Include="Helpers\BO\CountryWiseData.cs" />
+    <Compile Include="Helpers\BO\CountsData.cs" />
     <Compile Include="Helpers\BO\DataInsertionBO.cs" />
+    <Compile Include="Helpers\BO\DayWiseData.cs" />
+    <Compile Include="Helpers\BO\DeviceWiseData.cs" />
     <Compile Include="Helpers\BO\OperationsBO.cs" />
+    <Compile Include="Helpers\BO\OptionsModule.cs" />
     <Compile Include="Helpers\BO\PWDDataBO.cs" />
+    <Compile Include="Helpers\BO\ShouldSerializeContractResolver.cs" />
+    <Compile Include="Helpers\BO\ShouldSerializeContractResolver1.cs" />
     <Compile Include="Helpers\Utility\EmailUtil.cs" />
     <Compile Include="Helpers\Utility\ErrorLogs.cs" />
+    <Compile Include="Helpers\Utility\Helper.cs" />
+    <Compile Include="Helpers\Utility\SqlHelper.cs" />
     <Compile Include="IService1.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CampaignView.cs" />
+    <Compile Include="Models\ClientView.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RIDDATA.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
@@ -205,6 +246,12 @@
       <DependentUpon>Service1.svc</DependentUpon>
     </Compile>
     <Compile Include="SHORTURLDATA.cs">
+      <DependentUpon>AnalyticsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="spGetALLCOUNTS1_Result.cs">
+      <DependentUpon>AnalyticsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="spGetALLCOUNTS_Result.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
     <Compile Include="sp_helpdiagramdefinition_Result.cs">
@@ -232,6 +279,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\APIKey.xml" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
@@ -293,9 +341,12 @@
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Analytics\Index.cshtml" />
     <Content Include="Views\Shared\_analyticsLayout.cshtml" />
+    <Content Include="Views\Analytics\Analytics.cshtml" />
+    <Content Include="Views\Admin\AdminLogin.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -328,7 +379,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>50955</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:55492/</IISUrl>
+          <IISUrl>http://localhost:8080/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

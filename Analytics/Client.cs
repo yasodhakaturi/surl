@@ -9,29 +9,30 @@
 
 namespace Analytics
 {
+    using Analytics.Helpers;
     using System;
     using System.Collections.Generic;
-    
-    public partial class RIDDATA
+
+    public partial class Client : BaseEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public RIDDATA()
+        public Client()
         {
+            this.RIDDATAs = new HashSet<RIDDATA>();
             this.SHORTURLDATAs = new HashSet<SHORTURLDATA>();
-            this.UIDDATAs = new HashSet<UIDDATA>();
         }
     
-        public int PK_Rid { get; set; }
-        public string ReferenceNumber { get; set; }
-        public string Pwd { get; set; }
-        public Nullable<System.DateTime> RequestDate { get; set; }
-        public Nullable<int> FK_ClientId { get; set; }
+        public int PK_ClientID { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
+        public string Email { get; set; }
+        public string APIKey { get; set; }
         public Nullable<bool> IsActive { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SHORTURLDATA> SHORTURLDATAs { get; set; }
+        public virtual ICollection<RIDDATA> RIDDATAs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UIDDATA> UIDDATAs { get; set; }
-        public virtual Client Client { get; set; }
+        public virtual ICollection<SHORTURLDATA> SHORTURLDATAs { get; set; }
     }
 }

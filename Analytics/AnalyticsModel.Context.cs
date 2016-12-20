@@ -33,6 +33,7 @@ namespace Analytics
         public virtual DbSet<UIDandRIDData> UIDandRIDDatas { get; set; }
         public virtual DbSet<UIDDATA> UIDDATAs { get; set; }
         public virtual DbSet<ErrorLog> ErrorLogs { get; set; }
+        public virtual DbSet<Client> Clients { get; set; }
     
         public virtual int InsertintoUIDRID(string typediff, Nullable<int> uidorrid)
         {
@@ -47,7 +48,7 @@ namespace Analytics
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertintoUIDRID", typediffParameter, uidorridParameter);
         }
     
-        public virtual int InsertRIDData(string referencenumber, string pwd)
+        public virtual int InsertRIDData(string referencenumber, string pwd, Nullable<int> clientid)
         {
             var referencenumberParameter = referencenumber != null ?
                 new ObjectParameter("referencenumber", referencenumber) :
@@ -57,10 +58,14 @@ namespace Analytics
                 new ObjectParameter("pwd", pwd) :
                 new ObjectParameter("pwd", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertRIDData", referencenumberParameter, pwdParameter);
+            var clientidParameter = clientid.HasValue ?
+                new ObjectParameter("clientid", clientid) :
+                new ObjectParameter("clientid", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertRIDData", referencenumberParameter, pwdParameter, clientidParameter);
         }
     
-        public virtual int InsertSHORTURLData(string ipv4, string ipv6, string browser, string browser_version, string city, string region, string country, string countrycode, string req_url, string useragent, string hostname, string deviceType, string isMobiledevice, Nullable<int> uniqueid)
+        public virtual int InsertSHORTURLData(string ipv4, string ipv6, string browser, string browser_version, string city, string region, string country, string countrycode, string req_url, string useragent, string hostname, string deviceType, string isMobiledevice, Nullable<int> fk_uid, Nullable<int> fk_rid, Nullable<int> fK_clientid, Nullable<int> uniqueid)
         {
             var ipv4Parameter = ipv4 != null ?
                 new ObjectParameter("ipv4", ipv4) :
@@ -114,11 +119,23 @@ namespace Analytics
                 new ObjectParameter("IsMobiledevice", isMobiledevice) :
                 new ObjectParameter("IsMobiledevice", typeof(string));
     
+            var fk_uidParameter = fk_uid.HasValue ?
+                new ObjectParameter("fk_uid", fk_uid) :
+                new ObjectParameter("fk_uid", typeof(int));
+    
+            var fk_ridParameter = fk_rid.HasValue ?
+                new ObjectParameter("fk_rid", fk_rid) :
+                new ObjectParameter("fk_rid", typeof(int));
+    
+            var fK_clientidParameter = fK_clientid.HasValue ?
+                new ObjectParameter("FK_clientid", fK_clientid) :
+                new ObjectParameter("FK_clientid", typeof(int));
+    
             var uniqueidParameter = uniqueid.HasValue ?
                 new ObjectParameter("uniqueid", uniqueid) :
                 new ObjectParameter("uniqueid", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertSHORTURLData", ipv4Parameter, ipv6Parameter, browserParameter, browser_versionParameter, cityParameter, regionParameter, countryParameter, countrycodeParameter, req_urlParameter, useragentParameter, hostnameParameter, deviceTypeParameter, isMobiledeviceParameter, uniqueidParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertSHORTURLData", ipv4Parameter, ipv6Parameter, browserParameter, browser_versionParameter, cityParameter, regionParameter, countryParameter, countrycodeParameter, req_urlParameter, useragentParameter, hostnameParameter, deviceTypeParameter, isMobiledeviceParameter, fk_uidParameter, fk_ridParameter, fK_clientidParameter, uniqueidParameter);
         }
     
         public virtual int InsertUIDData(Nullable<int> fk_rid, string referencenumber, string longurl, string mobilenumber)
@@ -262,7 +279,7 @@ namespace Analytics
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetALLCOUNTS_Result>("spGetALLCOUNTS", filterByParameter, dateFromParameter, dateToParameter);
         }
     
-        public virtual ObjectResult<spGetALLCOUNTS1_Result> spGetALLCOUNTS1(Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo, Nullable<int> fk_Uniqueid)
+        public virtual ObjectResult<spGetALLCOUNTS1_Result> spGetALLCOUNTS1(Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo, Nullable<int> rid)
         {
             var dateFromParameter = dateFrom.HasValue ?
                 new ObjectParameter("DateFrom", dateFrom) :
@@ -272,11 +289,11 @@ namespace Analytics
                 new ObjectParameter("DateTo", dateTo) :
                 new ObjectParameter("DateTo", typeof(System.DateTime));
     
-            var fk_UniqueidParameter = fk_Uniqueid.HasValue ?
-                new ObjectParameter("Fk_Uniqueid", fk_Uniqueid) :
-                new ObjectParameter("Fk_Uniqueid", typeof(int));
+            var ridParameter = rid.HasValue ?
+                new ObjectParameter("rid", rid) :
+                new ObjectParameter("rid", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetALLCOUNTS1_Result>("spGetALLCOUNTS1", dateFromParameter, dateToParameter, fk_UniqueidParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetALLCOUNTS1_Result>("spGetALLCOUNTS1", dateFromParameter, dateToParameter, ridParameter);
         }
     }
 }

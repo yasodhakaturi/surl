@@ -2,12 +2,14 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.ServiceModel.Web;
 using System.Web;
 
@@ -173,6 +175,9 @@ namespace Analytics.Helpers.BO
                     int? FK_RID = (from u in dc.UIDDATAs
                                    where u.PK_Uid == Fk_UID
                                    select u.FK_RID).SingleOrDefault();
+                    int? FK_clientid = (from r in dc.RIDDATAs
+                                        where r.PK_Rid == FK_RID
+                                        select r.FK_ClientId).SingleOrDefault();
                     //retrive ipaddress and browser
                     string ipv4 = new ConvertionBO().GetIP4Address();
                     string ipv6 = HttpContext.Current.Request.UserHostAddress;
@@ -222,7 +227,7 @@ namespace Analytics.Helpers.BO
                             CountryCode = (string)obj["country_code"];
                         }
                     }
-                    new DataInsertionBO().InsertShortUrldata(ipv4, ipv6, browser, browserversion, City, Region, Country, CountryCode, req_url, useragent, hostname, devicetype, ismobiledevice,Fk_UID,FK_RID, Uniqueid_SHORTURLDATA);
+                    new DataInsertionBO().InsertShortUrldata(ipv4, ipv6, browser, browserversion, City, Region, Country, CountryCode, req_url, useragent, hostname, devicetype, ismobiledevice,Fk_UID,FK_RID,FK_clientid, Uniqueid_SHORTURLDATA);
                 }
                 //WebOperationContext.Current.OutgoingResponse.StatusCode = System.Net.HttpStatusCode.Redirect;
                 //if (!longurl.StartsWith("http://") && !longurl.StartsWith("https://"))
@@ -242,6 +247,72 @@ namespace Analytics.Helpers.BO
 
             }
         }
+
+
+        public string GetApiKey()
+        {
+            string APIKey="";
+            using (var cryptoProvider = new RNGCryptoServiceProvider())
+            {
+                byte[] secretKeyByteArray = new byte[32]; //256 bit
+                cryptoProvider.GetBytes(secretKeyByteArray);
+                APIKey = Convert.ToBase64String(secretKeyByteArray);
+            }
+            return APIKey;
+        }
+        public bool CheckClientEmail(string email)
+        {
+            Client obj = new Client();bool check=false;
+            obj = dc.Clients.Where(c => c.Email == email).Select(x => x).SingleOrDefault();
+            if (obj != null)
+                check = true;
+            //else
+            //    check = false;
+            return check;
+
+        }
+
+        public void UpdateClient(string username,string email,bool? isactive)
+        {
+            try
+            {
+                //string strQuery = "Update MMPersonMessage set Status = 'R' where FKMessageId = (" + messageid + ") and FKToPersonId = (" + personid + ")";
+
+                string strQuery = "Update Client set UserName = '" + username + "' ,IsActive='" + isactive + "' where Email ='" + email + "'";
+                SqlHelper.ExecuteNonQuery(Helper.ConnectionString, CommandType.Text, strQuery);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+            }
+        }
+
+
+        public bool CheckReferenceNumber(string referencenumber)
+        {
+            RIDDATA obj = new RIDDATA(); bool check = false;
+            obj = dc.RIDDATAs.Where(c => c.ReferenceNumber == referencenumber).Select(x => x).SingleOrDefault();
+            if (obj != null)
+                check = true;
+            //else
+            //    check = false;
+            return check;
+
+        }
+
+        public void UpdateCampaign(string referencenumber, string password, bool? isactive)
+        {
+            try
+            {
+                string strQuery = "Update RIDDATA set Pwd=" + password + ",IsActive=" + isactive + " where ReferenceNumber =" + referencenumber + "";
+                SqlHelper.ExecuteNonQuery(Helper.ConnectionString, CommandType.Text, strQuery);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+            }
+        }
+
         //public CountsData GetCountsData(SqlDataReader myReader,string filterBy,string DateFrom,string DateTo)
         //{
 

@@ -53,6 +53,7 @@ namespace Analytics.Controllers
         //}
         
         public ActionResult Login()
+        
         {
             try
             {
@@ -61,16 +62,16 @@ namespace Analytics.Controllers
                 //{
                 HttpCookie Logincookie = Request.Cookies["AnalyticsLogin"];
                     
-                if (Logincookie != null)
-                    {
-                        byte[] hash = Helper.GetHashKey("superadmin@moozup.com" + "Moozup");
-                        string credentials = Helper.DecryptQueryString(hash, Logincookie.Value);
-                        string[] cred = credentials.Split('~');
-                         rid_param = cred[0];
-                        string password = cred[1];
-                        rid_cookie = Convert.ToInt32(rid_param);
+                //if (Logincookie != null)
+                //    {
+                //        byte[] hash = Helper.GetHashKey("yasodha.bitra@gmail.com" + "Analytics");
+                //        string credentials = Helper.DecryptQueryString(hash, Logincookie.Value);
+                //        string[] cred = credentials.Split('~');
+                //         rid_param = cred[0];
+                //        string password = cred[1];
+                //        rid_cookie = Convert.ToInt32(rid_param);
 
-                    }
+                //    }
                 //}
                     //if (rid_param == "" && rid_shorturl == 0)
                     //{
