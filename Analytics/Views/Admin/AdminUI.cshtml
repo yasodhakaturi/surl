@@ -5,7 +5,16 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"> <!-- Page title set in pageTitle directive -->
     <title page-title>biTRAZ :: trace your link</title> <!-- Place favicon.ico and apple-touch-icon.png in the root directory --> <!--<link rel="shortcut icon" type="image/ico" href="favicon.ico" />-->
     <link rel="stylesheet" href="../dist/admin/styles/vendor.css" type="text/css">
-    <link rel="stylesheet" href="../dist/admin/styles/style.css" type="text/css">  <!-- Body --> <!-- appCtrl controller with serveral data used in theme on diferent view -->
+    <link rel="stylesheet" href="../dist/admin/styles/style.css" type="text/css">  
+    <script type="text/javascript">(function () {
+            window.appConfig = {
+                env:'dev',
+                appPath: '',
+                apiUrl: 'http://localhost:3000',
+                userInfo: {Id: null, UserName: '', isAdmin: false, isClient: false, isReadOnly: true}
+            }
+        })();</script>
+    <!-- Body --> <!-- appCtrl controller with serveral data used in theme on diferent view -->
     <body ng-controller="appCtrl" class="{{$state.current.data.specialClass}} fixed-navbar hide-sidebar">
         <!-- Simple splash screen--> <div class="splash">
             <div class="color-line"></div>

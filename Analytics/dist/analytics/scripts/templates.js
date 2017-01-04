@@ -2,7 +2,7 @@ angular.module('bitraz.template', ['views/analytics/analytics.html', 'views/anal
 
 angular.module("views/analytics/analytics.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/analytics/analytics.html",
-    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12 text-right\"> <span> Choose a Campaign</span> <select name=\"selectedCampaign\" ng-model=\"$ctrl.selectedCampaign\"> <option value=\"5\"> Current Campaign: 01/01/2017 - till date <option value=\"4\"> Last Campaign: 12/01/2016 - 12/31/2016 <option value=\"3\"> Older Campaign: 12/01/2016 - 12/31/2016 <option value=\"2\"> Older Campaign: 12/01/2016 - 12/31/2016 </select> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> <analytics-layout campaign-id=\"$ctrl.selectedCampaign\"></analytics-layout> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> </div> </div> </div> </div>");
+    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12 text-right\"> <span> Choose a Campaign</span> <select name=\"selectedCampaign\" ng-model=\"selectedCampaign\"> <option value=\"5\"> Current Campaign: 01/01/2017 - till date <option value=\"4\"> Last Campaign: 12/01/2016 - 12/31/2016 <option value=\"3\"> Older Campaign: 12/01/2016 - 12/31/2016 <option value=\"2\"> Older Campaign: 12/01/2016 - 12/31/2016 </select> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> <analytics-layout campaign-id=\"rid && rid.id\" data-range=\"selectedCampaign\"></analytics-layout> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> </div> </div> </div> </div>");
 }]);
 
 angular.module("views/analytics/archieves.html", []).run(["$templateCache", function($templateCache) {
@@ -43,29 +43,66 @@ angular.module("views/common/dashboard/dashboard_tmpl.html", []).run(["$template
 angular.module("views/common/directives/analytics_layout.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/common/directives/analytics_layout.html",
     "<section class=\"anlaytics-layout-container \" style=\"padding-top:0px;\">\n" +
-    "    <div class=\"refresh-block pull-right\" style=\"padding-bottom: 5px;\">\n" +
-    "        View Refreshes in {{$ctrl.timeLeft}} Seconds <a ng-click=\"$ctrl.resetTime()\"><i class=\"fa fa-refresh\"></i></a>\n" +
+    "    <div class=\"row\" style=\"padding-bottom: 5px;\">\n" +
+    "        <div class=\"col-lg-12 refresh-block\">\n" +
+    "            <span class=\"pull-right\">\n" +
+    "                View Refreshes in {{$ctrl.timeLeft}} Seconds <a ng-click=\"$ctrl.resetTime()\"><i class=\"fa fa-refresh\"></i></a>\n" +
+    "            </span>\n" +
+    "\n" +
+    "        </div>\n" +
     "    </div>\n" +
     "    <div class=\"row\">\n" +
-    "        <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "            <div class=\"panel panel-default\">\n" +
-    "                <div class=\"panel-body tile_count\">\n" +
-    "                    <div class=\"col-md-4 col-sm-4 col-xs-4 tile_stats_count\">\n" +
-    "                        <span class=\"count_top\"><i class=\"fa fa-eye\"></i> Total Visits</span>\n" +
-    "                        <div class=\"count\" id=\"visits_total\">{{$ctrl.summary.visits}}</div>\n" +
-    "                        <span class=\"count_bottom\"><i class=\"green\"><span id=\"visits_percentage\"></span>% </i> From last day</span>\n" +
-    "                    </div>\n" +
-    "                    <div class=\"col-md-4 col-sm-4 col-xs-4 tile_stats_count\">\n" +
-    "                        <span class=\"count_top\"><i class=\"fa fa-user\"></i> Unique User Visits</span>\n" +
-    "                        <div class=\"count\" id=\"unique_users_total\">{{$ctrl.summary.unique_users}}</div>\n" +
-    "                        <span class=\"count_bottom\"><i class=\"green\"><span id=\"unique_users_percentage\"></span>% </i> From last day</span>\n" +
-    "                    </div>\n" +
-    "                    <div class=\"col-md-4 col-sm-4 col-xs-4 tile_stats_count\">\n" +
-    "                        <span class=\"count_top\"><i class=\"fa fa-users\"></i> Total Users</span>\n" +
-    "                        <div class=\"count green\" id=\"total_users\">{{$ctrl.summary.total_users}}</div>\n" +
-    "                        <span class=\"count_bottom\">&nbsp;</span>\n" +
-    "                    </div>\n" +
+    "        <div class=\"col-lg-4\">\n" +
+    "            <div class=\"hpanel\">\n" +
+    "                <div class=\"panel-body text-center h-200\">\n" +
+    "                    <i class=\"pe-7s-graph1 fa-4x\"></i>\n" +
+    "\n" +
+    "                    <h1 class=\"m-xs\">{{$ctrl.summary.visits}}</h1>\n" +
+    "\n" +
+    "                    <h3 class=\"font-extra-bold no-margins text-success\">\n" +
+    "                        Total Visits\n" +
+    "                    </h3>\n" +
+    "                    <small>Total visits to the campaign.</small>\n" +
     "                </div>\n" +
+    "                <!--<div class=\"panel-footer\">-->\n" +
+    "                <!--This is standard panel footer-->\n" +
+    "                <!--</div>-->\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "\n" +
+    "        <div class=\"col-lg-4\">\n" +
+    "            <div class=\"hpanel\">\n" +
+    "                <div class=\"panel-body text-center h-200\">\n" +
+    "                    <i class=\"fa fa-user-o fa-4x\"></i>\n" +
+    "\n" +
+    "                    <h1 class=\"m-xs\">{{$ctrl.summary.unique_users}}</h1>\n" +
+    "\n" +
+    "                    <h3 class=\"font-extra-bold no-margins text-success\">\n" +
+    "                        Unique User Visits\n" +
+    "                    </h3>\n" +
+    "                    <small>unique users visited to campaign.</small>\n" +
+    "                </div>\n" +
+    "                <!--<div class=\"panel-footer\">-->\n" +
+    "                <!--This is standard panel footer-->\n" +
+    "                <!--</div>-->\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "\n" +
+    "        <div class=\"col-lg-4\">\n" +
+    "            <div class=\"hpanel\">\n" +
+    "                <div class=\"panel-body text-center h-200\">\n" +
+    "                    <i class=\"fa fa-users fa-4x\"></i>\n" +
+    "\n" +
+    "                    <h1 class=\"m-xs\">{{$ctrl.summary.total_users}}</h1>\n" +
+    "\n" +
+    "                    <h3 class=\"font-extra-bold no-margins text-success\">\n" +
+    "                        Total Users\n" +
+    "                    </h3>\n" +
+    "                    <small>Total users visited to campaign.</small>\n" +
+    "                </div>\n" +
+    "                <!--<div class=\"panel-footer\">-->\n" +
+    "                <!--This is standard panel footer-->\n" +
+    "                <!--</div>-->\n" +
     "            </div>\n" +
     "        </div>\n" +
     "    </div>\n" +
@@ -84,7 +121,7 @@ angular.module("views/common/directives/analytics_layout.html", []).run(["$templ
     "                                    <div id=\"reportrange\" class=\"pull-right\" style=\"background: #fff; cursor: pointer; padding: 5px 10px; border: 0px solid #ccc; width: 100%;\">\n" +
     "                                        <i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i>\n" +
     "                                        <span style=\"display: inline-block;width: calc(100% - 30px);\"><input date-range-picker id=\"daterange3\" name=\"daterange3\" class=\"form-control date-picker\" type=\"text\"\n" +
-    "                                                     ng-model=\"date\" options=\"opts\" required/></span> <b class=\"caret\"></b>\n" +
+    "                                                                                                             ng-model=\"date\" options=\"opts\" required/></span> <b class=\"caret\"></b>\n" +
     "\n" +
     "                                    </div>\n" +
     "                                </div>\n" +
