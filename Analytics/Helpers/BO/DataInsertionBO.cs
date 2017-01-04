@@ -1,4 +1,5 @@
 ﻿using Analytics.Helpers.Utility;
+using Analytics.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

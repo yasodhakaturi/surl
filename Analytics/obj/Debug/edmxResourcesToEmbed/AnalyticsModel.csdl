@@ -7,12 +7,13 @@
     <Property Name="PK_Rid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="ReferenceNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="Pwd" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="RequestDate" Type="DateTime" Precision="3" />
     <NavigationProperty Name="SHORTURLDATAs" Relationship="shortenURLModel.FK_SHORTURLDATA_RIDDATA" FromRole="RIDDATA" ToRole="SHORTURLDATA" />
     <NavigationProperty Name="UIDDATAs" Relationship="shortenURLModel.FK_UIDDATA_RIDDATA" FromRole="RIDDATA" ToRole="UIDDATA" />
     <Property Name="FK_ClientId" Type="Int32" />
     <NavigationProperty Name="Client" Relationship="shortenURLModel.FK_RIDDATA_Client" FromRole="RIDDATA" ToRole="Client" />
     <Property Name="IsActive" Type="Boolean" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
   </EntityType>
   <EntityType Name="SHORTURLDATA">
     <Key>
@@ -29,7 +30,6 @@
     <Property Name="Req_url" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="Hostname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="DeviceType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="RequestDate" Type="DateTime" Precision="3" />
     <Property Name="FK_UniqueID" Type="Int32" />
     <NavigationProperty Name="UIDandRIDData" Relationship="Self.FK_SHORTURLDATA_UIDandRIDData" FromRole="SHORTURLDATA" ToRole="UIDandRIDData" />
     <Property Name="UserAgent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -43,6 +43,7 @@
     <NavigationProperty Name="UIDDATA" Relationship="shortenURLModel.FK_SHORTURLDATA_UIDDATA" FromRole="SHORTURLDATA" ToRole="UIDDATA" />
     <Property Name="FK_ClientID" Type="Int32" />
     <NavigationProperty Name="Client" Relationship="shortenURLModel.FK_SHORTURLDATA_Client" FromRole="SHORTURLDATA" ToRole="Client" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
   </EntityType>
   <EntityType Name="sysdiagram">
     <Key>
@@ -61,9 +62,10 @@
     <Property Name="PK_UniqueId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="TypeDiff" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="UIDorRID" Type="Int32" />
-    <Property Name="RequestDate" Type="DateTime" Precision="3" />
     <NavigationProperty Name="SHORTURLDATAs" Relationship="Self.FK_SHORTURLDATA_UIDandRIDData" FromRole="UIDandRIDData" ToRole="SHORTURLDATA" />
     <Property Name="Base64Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
   </EntityType>
   <EntityType Name="UIDDATA">
     <Key>
@@ -73,10 +75,11 @@
     <Property Name="ReferenceNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="Longurl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="MobileNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="RequestDate" Type="DateTime" Precision="3" />
     <Property Name="FK_RID" Type="Int32" />
     <NavigationProperty Name="RIDDATA" Relationship="shortenURLModel.FK_UIDDATA_RIDDATA" FromRole="UIDDATA" ToRole="RIDDATA" />
     <NavigationProperty Name="SHORTURLDATAs" Relationship="shortenURLModel.FK_SHORTURLDATA_UIDDATA" FromRole="UIDDATA" ToRole="SHORTURLDATA" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
   </EntityType>
   <Association Name="FK_SHORTURLDATA_UIDandRIDData">
     <End Role="UIDandRIDData" Type="Self.UIDandRIDData" Multiplicity="0..1" />
@@ -290,6 +293,10 @@
     <Property Name="IsActive" Type="Boolean" />
     <Property Name="CreatedDate" Type="DateTime" Precision="3" />
     <NavigationProperty Name="SHORTURLDATAs" Relationship="shortenURLModel.FK_SHORTURLDATA_Client" FromRole="Client" ToRole="SHORTURLDATA" />
+    <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+    <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LoginDate" Type="DateTime" Precision="3" />
+    <Property Name="LoginCount" Type="Int32" />
   </EntityType>
   <Association Name="FK_RIDDATA_Client">
     <End Type="shortenURLModel.Client" Role="Client" Multiplicity="0..1" />

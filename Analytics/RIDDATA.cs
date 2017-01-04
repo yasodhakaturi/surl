@@ -9,10 +9,11 @@
 
 namespace Analytics
 {
+    using Analytics.Helpers;
     using System;
     using System.Collections.Generic;
-    
-    public partial class RIDDATA
+
+    public partial class RIDDATA : BaseEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public RIDDATA()
@@ -24,9 +25,10 @@ namespace Analytics
         public int PK_Rid { get; set; }
         public string ReferenceNumber { get; set; }
         public string Pwd { get; set; }
-        public Nullable<System.DateTime> RequestDate { get; set; }
         public Nullable<int> FK_ClientId { get; set; }
         public Nullable<bool> IsActive { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<System.DateTime> UpdatedDate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SHORTURLDATA> SHORTURLDATAs { get; set; }

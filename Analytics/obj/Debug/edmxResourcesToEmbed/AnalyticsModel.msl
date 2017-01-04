@@ -4,18 +4,20 @@
     <EntitySetMapping Name="RIDDATAs">
       <EntityTypeMapping TypeName="shortenURLModel.RIDDATA">
         <MappingFragment StoreEntitySet="RIDDATA">
+          <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
           <ScalarProperty Name="IsActive" ColumnName="IsActive" />
           <ScalarProperty Name="FK_ClientId" ColumnName="FK_ClientId" />
           <ScalarProperty Name="PK_Rid" ColumnName="PK_Rid" />
           <ScalarProperty Name="ReferenceNumber" ColumnName="ReferenceNumber" />
           <ScalarProperty Name="Pwd" ColumnName="Pwd" />
-          <ScalarProperty Name="RequestDate" ColumnName="RequestDate" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="SHORTURLDATAs">
       <EntityTypeMapping TypeName="shortenURLModel.SHORTURLDATA">
         <MappingFragment StoreEntitySet="SHORTURLDATA">
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
           <ScalarProperty Name="FK_ClientID" ColumnName="FK_ClientID" />
           <ScalarProperty Name="FK_RID" ColumnName="FK_RID" />
           <ScalarProperty Name="FK_Uid" ColumnName="FK_Uid" />
@@ -33,7 +35,6 @@
           <ScalarProperty Name="Req_url" ColumnName="Req_url" />
           <ScalarProperty Name="Hostname" ColumnName="Hostname" />
           <ScalarProperty Name="DeviceType" ColumnName="DeviceType" />
-          <ScalarProperty Name="RequestDate" ColumnName="RequestDate" />
           <ScalarProperty Name="FK_UniqueID" ColumnName="FK_UniqueID" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -52,23 +53,25 @@
     <EntitySetMapping Name="UIDandRIDDatas">
       <EntityTypeMapping TypeName="shortenURLModel.UIDandRIDData">
         <MappingFragment StoreEntitySet="UIDandRIDData">
+          <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
           <ScalarProperty Name="Base64Value" ColumnName="Base64Value" />
           <ScalarProperty Name="PK_UniqueId" ColumnName="PK_UniqueId" />
           <ScalarProperty Name="TypeDiff" ColumnName="TypeDiff" />
           <ScalarProperty Name="UIDorRID" ColumnName="UIDorRID" />
-          <ScalarProperty Name="RequestDate" ColumnName="RequestDate" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="UIDDATAs">
       <EntityTypeMapping TypeName="shortenURLModel.UIDDATA">
         <MappingFragment StoreEntitySet="UIDDATA">
+          <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
           <ScalarProperty Name="FK_RID" ColumnName="FK_RID" />
           <ScalarProperty Name="PK_Uid" ColumnName="PK_Uid" />
           <ScalarProperty Name="ReferenceNumber" ColumnName="ReferenceNumber" />
           <ScalarProperty Name="Longurl" ColumnName="Longurl" />
           <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
-          <ScalarProperty Name="RequestDate" ColumnName="RequestDate" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -129,6 +132,10 @@
     <EntitySetMapping Name="Clients">
       <EntityTypeMapping TypeName="shortenURLModel.Client">
         <MappingFragment StoreEntitySet="Client">
+          <ScalarProperty Name="LoginCount" ColumnName="LoginCount" />
+          <ScalarProperty Name="LoginDate" ColumnName="LoginDate" />
+          <ScalarProperty Name="Role" ColumnName="Role" />
+          <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
           <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
           <ScalarProperty Name="IsActive" ColumnName="IsActive" />
           <ScalarProperty Name="APIKey" ColumnName="APIKey" />

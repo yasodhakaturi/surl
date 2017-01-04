@@ -14,11 +14,18 @@ namespace Analytics
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
            // routes.MapMvcAttributeRoutes();
 
-            routes.MapRoute(
-                name: "Admin",
-                url: "admin",
-                defaults: new { controller = "Admin", action = "AdminLogin" }
-            );
+            //routes.MapRoute(
+            //    name: "Admin",
+            //    url: "admin",
+            //    defaults: new { controller = "Admin", action = "AdminLogin" }
+            //);
+
+            //routes.MapRoute(
+            //    name: "Admin",
+            //    url: "admin/{name}",
+            //    defaults: new { controller = "Admin", action = "Admin" }
+            //);
+    
 
             routes.MapRoute(
            name: "Login",

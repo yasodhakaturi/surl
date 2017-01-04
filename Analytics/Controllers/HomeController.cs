@@ -147,6 +147,9 @@ namespace Analytics.Controllers
                         if (obj != null && obj.typediff == "2")
                         {
                             rid_value = obj.UIDorRID;
+                            int? clientid = dc.RIDDATAs.Where(x => x.PK_Rid == rid_value).Select(y => y.FK_ClientId).SingleOrDefault();
+                            Client clientobj = dc.Clients.Where(x => x.PK_ClientID == clientid).SingleOrDefault();
+                            string userdata = clientobj.PK_ClientID + "^" + clientobj.UserName + "^" + clientobj.Role;
                             Session["rid"] = rid_value;
                             if (rid_value != 0)
                                 if (new OperationsBO().CheckPassword_RIDDATA(rid_value, password))

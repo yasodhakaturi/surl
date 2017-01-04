@@ -13,9 +13,13 @@
           <Property Name="UserName" Type="nvarchar" MaxLength="50" />
           <Property Name="Password" Type="nvarchar" MaxLength="50" />
           <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Role" Type="nvarchar" MaxLength="50" />
+          <Property Name="LoginDate" Type="datetime" />
+          <Property Name="LoginCount" Type="int" />
           <Property Name="APIKey" Type="nvarchar(max)" />
           <Property Name="IsActive" Type="bit" />
           <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UpdatedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="ErrorLog">
           <Key>
@@ -34,7 +38,8 @@
           <Property Name="ReferenceNumber" Type="nvarchar(max)" />
           <Property Name="Pwd" Type="nvarchar(max)" />
           <Property Name="IsActive" Type="bit" />
-          <Property Name="RequestDate" Type="datetime" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="FK_ClientId" Type="int" />
         </EntityType>
         <EntityType Name="SHORTURLDATA">
@@ -55,7 +60,7 @@
           <Property Name="Hostname" Type="nvarchar" MaxLength="50" />
           <Property Name="DeviceType" Type="nvarchar(max)" />
           <Property Name="IsMobileDevice" Type="nvarchar" MaxLength="50" />
-          <Property Name="RequestDate" Type="datetime" />
+          <Property Name="CreatedDate" Type="datetime" />
           <Property Name="FK_Uid" Type="int" />
           <Property Name="FK_RID" Type="int" />
           <Property Name="FK_ClientID" Type="int" />
@@ -78,7 +83,8 @@
           <Property Name="PK_UniqueId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TypeDiff" Type="nvarchar(max)" />
           <Property Name="UIDorRID" Type="int" />
-          <Property Name="RequestDate" Type="datetime" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="Base64Value" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="UIDDATA">
@@ -90,7 +96,8 @@
           <Property Name="ReferenceNumber" Type="nvarchar(max)" />
           <Property Name="Longurl" Type="nvarchar(max)" />
           <Property Name="MobileNumber" Type="nvarchar" MaxLength="50" />
-          <Property Name="RequestDate" Type="datetime" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UpdatedDate" Type="datetime" />
         </EntityType>
         <Association Name="FK_RIDDATA_Client">
           <End Role="Client" Type="Self.Client" Multiplicity="0..1" />
@@ -315,12 +322,13 @@
           <Property Name="PK_Rid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ReferenceNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Pwd" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="RequestDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="SHORTURLDATAs" Relationship="shortenURLModel.FK_SHORTURLDATA_RIDDATA" FromRole="RIDDATA" ToRole="SHORTURLDATA" />
           <NavigationProperty Name="UIDDATAs" Relationship="shortenURLModel.FK_UIDDATA_RIDDATA" FromRole="RIDDATA" ToRole="UIDDATA" />
           <Property Name="FK_ClientId" Type="Int32" />
           <NavigationProperty Name="Client" Relationship="shortenURLModel.FK_RIDDATA_Client" FromRole="RIDDATA" ToRole="Client" />
           <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="SHORTURLDATA">
           <Key>
@@ -337,7 +345,6 @@
           <Property Name="Req_url" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Hostname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="DeviceType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="RequestDate" Type="DateTime" Precision="3" />
           <Property Name="FK_UniqueID" Type="Int32" />
           <NavigationProperty Name="UIDandRIDData" Relationship="Self.FK_SHORTURLDATA_UIDandRIDData" FromRole="SHORTURLDATA" ToRole="UIDandRIDData" />
           <Property Name="UserAgent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -351,6 +358,7 @@
           <NavigationProperty Name="UIDDATA" Relationship="shortenURLModel.FK_SHORTURLDATA_UIDDATA" FromRole="SHORTURLDATA" ToRole="UIDDATA" />
           <Property Name="FK_ClientID" Type="Int32" />
           <NavigationProperty Name="Client" Relationship="shortenURLModel.FK_SHORTURLDATA_Client" FromRole="SHORTURLDATA" ToRole="Client" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -369,9 +377,10 @@
           <Property Name="PK_UniqueId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TypeDiff" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="UIDorRID" Type="Int32" />
-          <Property Name="RequestDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="SHORTURLDATAs" Relationship="Self.FK_SHORTURLDATA_UIDandRIDData" FromRole="UIDandRIDData" ToRole="SHORTURLDATA" />
           <Property Name="Base64Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="UIDDATA">
           <Key>
@@ -381,10 +390,11 @@
           <Property Name="ReferenceNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Longurl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="MobileNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="RequestDate" Type="DateTime" Precision="3" />
           <Property Name="FK_RID" Type="Int32" />
           <NavigationProperty Name="RIDDATA" Relationship="shortenURLModel.FK_UIDDATA_RIDDATA" FromRole="UIDDATA" ToRole="RIDDATA" />
           <NavigationProperty Name="SHORTURLDATAs" Relationship="shortenURLModel.FK_SHORTURLDATA_UIDDATA" FromRole="UIDDATA" ToRole="SHORTURLDATA" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_SHORTURLDATA_UIDandRIDData">
           <End Role="UIDandRIDData" Type="Self.UIDandRIDData" Multiplicity="0..1" />
@@ -598,6 +608,10 @@
           <Property Name="IsActive" Type="Boolean" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="SHORTURLDATAs" Relationship="shortenURLModel.FK_SHORTURLDATA_Client" FromRole="Client" ToRole="SHORTURLDATA" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LoginDate" Type="DateTime" Precision="3" />
+          <Property Name="LoginCount" Type="Int32" />
         </EntityType>
         <Association Name="FK_RIDDATA_Client">
           <End Type="shortenURLModel.Client" Role="Client" Multiplicity="0..1" />
@@ -632,18 +646,20 @@
           <EntitySetMapping Name="RIDDATAs">
             <EntityTypeMapping TypeName="shortenURLModel.RIDDATA">
               <MappingFragment StoreEntitySet="RIDDATA">
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="FK_ClientId" ColumnName="FK_ClientId" />
                 <ScalarProperty Name="PK_Rid" ColumnName="PK_Rid" />
                 <ScalarProperty Name="ReferenceNumber" ColumnName="ReferenceNumber" />
                 <ScalarProperty Name="Pwd" ColumnName="Pwd" />
-                <ScalarProperty Name="RequestDate" ColumnName="RequestDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="SHORTURLDATAs">
             <EntityTypeMapping TypeName="shortenURLModel.SHORTURLDATA">
               <MappingFragment StoreEntitySet="SHORTURLDATA">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="FK_ClientID" ColumnName="FK_ClientID" />
                 <ScalarProperty Name="FK_RID" ColumnName="FK_RID" />
                 <ScalarProperty Name="FK_Uid" ColumnName="FK_Uid" />
@@ -661,7 +677,6 @@
                 <ScalarProperty Name="Req_url" ColumnName="Req_url" />
                 <ScalarProperty Name="Hostname" ColumnName="Hostname" />
                 <ScalarProperty Name="DeviceType" ColumnName="DeviceType" />
-                <ScalarProperty Name="RequestDate" ColumnName="RequestDate" />
                 <ScalarProperty Name="FK_UniqueID" ColumnName="FK_UniqueID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -680,23 +695,25 @@
           <EntitySetMapping Name="UIDandRIDDatas">
             <EntityTypeMapping TypeName="shortenURLModel.UIDandRIDData">
               <MappingFragment StoreEntitySet="UIDandRIDData">
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="Base64Value" ColumnName="Base64Value" />
                 <ScalarProperty Name="PK_UniqueId" ColumnName="PK_UniqueId" />
                 <ScalarProperty Name="TypeDiff" ColumnName="TypeDiff" />
                 <ScalarProperty Name="UIDorRID" ColumnName="UIDorRID" />
-                <ScalarProperty Name="RequestDate" ColumnName="RequestDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="UIDDATAs">
             <EntityTypeMapping TypeName="shortenURLModel.UIDDATA">
               <MappingFragment StoreEntitySet="UIDDATA">
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="FK_RID" ColumnName="FK_RID" />
                 <ScalarProperty Name="PK_Uid" ColumnName="PK_Uid" />
                 <ScalarProperty Name="ReferenceNumber" ColumnName="ReferenceNumber" />
                 <ScalarProperty Name="Longurl" ColumnName="Longurl" />
                 <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
-                <ScalarProperty Name="RequestDate" ColumnName="RequestDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -757,6 +774,10 @@
           <EntitySetMapping Name="Clients">
             <EntityTypeMapping TypeName="shortenURLModel.Client">
               <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="LoginCount" ColumnName="LoginCount" />
+                <ScalarProperty Name="LoginDate" ColumnName="LoginDate" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="APIKey" ColumnName="APIKey" />

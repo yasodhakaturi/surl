@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Analytics.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
 namespace Analytics.Models
 {
-    public class CampaignView
+    public class CampaignView : BaseEntity
     {
         public int id { get; set; }
         public string ReferenceNumber { get; set; }

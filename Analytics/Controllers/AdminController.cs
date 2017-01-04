@@ -32,36 +32,40 @@ namespace Analytics.Controllers
         //{
         //    return View();
         //}
+        public ActionResult Admin()
+      {
+          return View();
+      }
       public ActionResult AdminLogin()
         {
-            string strResult = string.Empty;
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:55492/admin/Users");
-            // HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:2053/Services/MoozupService.svc/StatusUpdate/28879/1134");
-            request.Method = "POST";
-            request.ContentType = "application/json; charset=utf-8";
-            request.KeepAlive = true;
-            request.Timeout = 100000;
-            UTF8Encoding utfenc = new UTF8Encoding();
-            //byte[] bytes = Encoding.ASCII.GetBytes("shivadeepakv@meraevents.com");
-            // byte[] bytes = Encoding.ASCII.GetBytes("this is test status");
-            Stream os = null;
-            //ADDClientView p = new ADDClientView();
-            ClientView obj = new ClientView();
-            obj.UserName = "chitra";
-            //obj.Password = "chitra";
-            obj.Email = "chitra1@gmail.com";
-            //p.obj = obj;
-            string val = JsonConvert.SerializeObject(obj);
-            byte[] bytes = Encoding.ASCII.GetBytes(val);
-            request.ContentLength = bytes.Length;
-            os = request.GetRequestStream();
-            os.Write(bytes, 0, bytes.Length);
-            HttpWebResponse webResponse = (HttpWebResponse)request.GetResponse();
-            Stream responseStream = webResponse.GetResponseStream();
-            StreamReader responseStreamReader = new StreamReader(responseStream);
-            strResult = responseStreamReader.ReadToEnd();//parse token from result
-            responseStreamReader.Close();
-            webResponse.Close(); 
+            //string strResult = string.Empty;
+            //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:55492/admin/Users");
+            //// HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:2053/Services/MoozupService.svc/StatusUpdate/28879/1134");
+            //request.Method = "POST";
+            //request.ContentType = "application/json; charset=utf-8";
+            //request.KeepAlive = true;
+            //request.Timeout = 100000;
+            //UTF8Encoding utfenc = new UTF8Encoding();
+            ////byte[] bytes = Encoding.ASCII.GetBytes("shivadeepakv@meraevents.com");
+            //// byte[] bytes = Encoding.ASCII.GetBytes("this is test status");
+            //Stream os = null;
+            ////ADDClientView p = new ADDClientView();
+            //ClientView obj = new ClientView();
+            //obj.UserName = "chitra";
+            ////obj.Password = "chitra";
+            //obj.Email = "chitra1@gmail.com";
+            ////p.obj = obj;
+            //string val = JsonConvert.SerializeObject(obj);
+            //byte[] bytes = Encoding.ASCII.GetBytes(val);
+            //request.ContentLength = bytes.Length;
+            //os = request.GetRequestStream();
+            //os.Write(bytes, 0, bytes.Length);
+            //HttpWebResponse webResponse = (HttpWebResponse)request.GetResponse();
+            //Stream responseStream = webResponse.GetResponseStream();
+            //StreamReader responseStreamReader = new StreamReader(responseStream);
+            //strResult = responseStreamReader.ReadToEnd();//parse token from result
+            //responseStreamReader.Close();
+            //webResponse.Close(); 
          return View();
 
         }
@@ -120,7 +124,7 @@ namespace Analytics.Controllers
                 }
                 else if (objclient != null && objclient.Email!=null)
                 {
-                    bool isEmailExists = new OperationsBO().CheckClientEmail(objclient.Email);
+                    bool isEmailExists = new OperationsBO().CheckClientEmail1(objclient.Email);
                     if (isEmailExists == false)
                     {
                         //add client details
@@ -137,7 +141,7 @@ namespace Analytics.Controllers
                 if (id != 0 && id != null && objclient != null)
                 {
                     //update cleint detials
-                    bool isEmailExists = new OperationsBO().CheckClientEmail(objclient.Email);
+                    bool isEmailExists = new OperationsBO().CheckClientEmail1(objclient.Email);
                     if(isEmailExists==true)
                     new OperationsBO().UpdateClient(objclient.UserName, objclient.Email,objclient.IsActive);
                     return Json(objclient, JsonRequestBehavior.AllowGet);
@@ -254,7 +258,7 @@ namespace Analytics.Controllers
 
         public void UpdateClient(string username, string email, string password,bool? isactive)
     {
-        bool isEmailExists = new OperationsBO().CheckClientEmail(email);
+        bool isEmailExists = new OperationsBO().CheckClientEmail1(email);
 
         new OperationsBO().UpdateClient(username,email,isactive);
 

@@ -9,10 +9,10 @@ namespace Analytics.Controllers
     public class AnalyticsController : Controller
     {
         // GET: Analytics
-        public ActionResult Index()
-        {
-            return View();
-        }
+        //public ActionResult Index()
+        //{
+        //    return View();
+        //}
         public ActionResult Analytics()
         {
             return View();

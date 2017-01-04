@@ -1,9 +1,22 @@
-﻿
+﻿@inherits System.Web.Mvc.WebViewPage
 @{
     Layout = null;
 }
 
-<!DOCTYPE html>
+@*<!DOCTYPE html>
+<body ng-app="inlinedTemplates">
+    <div class="container">
+        <h1>Inlined Angular Templates</h1>
+        <hr />
+        <div ng-view></div>
+    </div>
+
+    @Html.Action("Template", "AngularTemplates", new { name="login" })
+
+
+
+
+</body>*@
 <html lang="en">
 
 <head>
@@ -94,9 +107,7 @@
                     <div class="panel-body">
                         <form role="form">
                             <fieldset>
-                                @*<div class="form-group">
-                                    <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
-                                </div>*@
+                               
                                 <div class="form-group">
                                     <input id="txtPassword" class="form-control" placeholder="Password" name="password" type="password" value="">
                                 </div>

@@ -8,9 +8,13 @@
     <Property Name="UserName" Type="nvarchar" MaxLength="50" />
     <Property Name="Password" Type="nvarchar" MaxLength="50" />
     <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Role" Type="nvarchar" MaxLength="50" />
+    <Property Name="LoginDate" Type="datetime" />
+    <Property Name="LoginCount" Type="int" />
     <Property Name="APIKey" Type="nvarchar(max)" />
     <Property Name="IsActive" Type="bit" />
     <Property Name="CreatedDate" Type="datetime" />
+    <Property Name="UpdatedDate" Type="datetime" />
   </EntityType>
   <EntityType Name="ErrorLog">
     <Key>
@@ -29,7 +33,8 @@
     <Property Name="ReferenceNumber" Type="nvarchar(max)" />
     <Property Name="Pwd" Type="nvarchar(max)" />
     <Property Name="IsActive" Type="bit" />
-    <Property Name="RequestDate" Type="datetime" />
+    <Property Name="CreatedDate" Type="datetime" />
+    <Property Name="UpdatedDate" Type="datetime" />
     <Property Name="FK_ClientId" Type="int" />
   </EntityType>
   <EntityType Name="SHORTURLDATA">
@@ -50,7 +55,7 @@
     <Property Name="Hostname" Type="nvarchar" MaxLength="50" />
     <Property Name="DeviceType" Type="nvarchar(max)" />
     <Property Name="IsMobileDevice" Type="nvarchar" MaxLength="50" />
-    <Property Name="RequestDate" Type="datetime" />
+    <Property Name="CreatedDate" Type="datetime" />
     <Property Name="FK_Uid" Type="int" />
     <Property Name="FK_RID" Type="int" />
     <Property Name="FK_ClientID" Type="int" />
@@ -73,7 +78,8 @@
     <Property Name="PK_UniqueId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="TypeDiff" Type="nvarchar(max)" />
     <Property Name="UIDorRID" Type="int" />
-    <Property Name="RequestDate" Type="datetime" />
+    <Property Name="CreatedDate" Type="datetime" />
+    <Property Name="UpdatedDate" Type="datetime" />
     <Property Name="Base64Value" Type="nvarchar(max)" />
   </EntityType>
   <EntityType Name="UIDDATA">
@@ -85,7 +91,8 @@
     <Property Name="ReferenceNumber" Type="nvarchar(max)" />
     <Property Name="Longurl" Type="nvarchar(max)" />
     <Property Name="MobileNumber" Type="nvarchar" MaxLength="50" />
-    <Property Name="RequestDate" Type="datetime" />
+    <Property Name="CreatedDate" Type="datetime" />
+    <Property Name="UpdatedDate" Type="datetime" />
   </EntityType>
   <Association Name="FK_RIDDATA_Client">
     <End Role="Client" Type="Self.Client" Multiplicity="0..1" />

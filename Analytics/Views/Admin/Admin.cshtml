@@ -1,0 +1,11 @@
+﻿@inherits System.Web.Mvc.WebViewPage
+@{
+    Layout = null;
+}
+
+    @*@Html.Action("Inline", "AngularTemplates")*@
+    @*@Html.Action("Template", "AngularTemplates", new { name = "admin" })*@
+    @*@Html.Action("Template", "AngularTemplates", new { name = "AdminUI" })*@
+
+    @Html.Partial("~/Views/Admin/AdminUI.cshtml")
+    @*@Html.Partial("../dist/admin/admin.cshtml")*@
