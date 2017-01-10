@@ -1,4 +1,4 @@
-angular.module("bitraz.dashboard", [])
+angular.module("bitraz.dashboard", ['ui.router'])
   .component("dashboardLayout", {
     templateUrl: "views/common/dashboard/dashboard_tmpl.html",
     bindings: {
@@ -34,7 +34,7 @@ angular.module("bitraz.dashboard", [])
       };
 
       $ctrl.$onChanges = (changes)=>{
-        if(changes.data && !changes.data.isFirstChange()){
+        if(changes.config && !changes.config.isFirstChange()){
           $ctrl.getSummary();
         }
       }

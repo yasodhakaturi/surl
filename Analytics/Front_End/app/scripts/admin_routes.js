@@ -41,7 +41,7 @@ angular.module('routes', [
           template: '<div ui-view="header" class="header-container"></div><div ui-view="body"></div>',
           controller: "AppController"
         })
-        .state('bitraz.admin', {
+        .state('bitraz.main', {
           //Astract state is activated implicitly when one of its descendants are activated.
           abstract: true,
           //sticky state continue running even after it is "exited". controller of a Sticky State are retained.
@@ -55,7 +55,7 @@ angular.module('routes', [
           }
         })
         // Dashboard - Main page
-        .state('bitraz.admin.index', {
+        .state('bitraz.main.index', {
           url: "/index",
 
           data: {
@@ -70,8 +70,8 @@ angular.module('routes', [
             }
           }
         })
-        .state('bitraz.admin.analytics', {
-          url: "/analytics",
+        .state('bitraz.main.analytics', {
+          url: "/analytics?rid",
           data: {
             pageTitle: 'Analytics',
             activeMenu:'analytics',
@@ -79,12 +79,12 @@ angular.module('routes', [
           },
           views: {
             "body@bitraz": {
-              templateUrl: "views/admin/analytics.html",
+              templateUrl: "views/common/analytics.html",
               controller: "AnalyticsController"
             }
           }
         })
-        .state('bitraz.admin.campaigns', {
+        .state('bitraz.main.campaigns', {
           url: "/campaigns",
           data: {
             pageTitle: 'Campaigns',
@@ -98,7 +98,7 @@ angular.module('routes', [
             }
           }
         })
-        .state('bitraz.admin.users', {
+        .state('bitraz.main.users', {
           url: "/users",
           data: {
             pageTitle: 'Users',
@@ -112,7 +112,7 @@ angular.module('routes', [
             }
           }
         })
-        .state('bitraz.admin.archieves', {
+        .state('bitraz.main.archieves', {
           url: "/archieves",
           data: {
             pageTitle: 'Archieves',
@@ -126,7 +126,7 @@ angular.module('routes', [
             }
           }
         })
-        .state('bitraz.admin.settings', {
+        .state('bitraz.main.settings', {
           url: "/settings",
           data: {
             pageTitle: 'Settings',
@@ -140,7 +140,7 @@ angular.module('routes', [
             }
           }
         })
-        .state('bitraz.admin.login', {
+        .state('bitraz.main.login', {
           url: "/login?redirect_url",
           data: {
             pageTitle: 'Login',
@@ -162,14 +162,14 @@ angular.module('routes', [
     $rootScope.pageLoading = false;
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toStateParams, fromState, fromStateParams) {
       console.log(toState, toStateParams, fromState, fromStateParams, $location)
-      var isAuthenticationRequired = toState.data
+      $rootScope.isAuthenticationRequired = toState.data
         && toState.data.requiresLogin
         && ( _.isNull($rootScope.userInfo && $rootScope.userInfo.Id) || _.isUndefined($rootScope.userInfo && $rootScope.userInfo.Id) );
 
-      if ( isAuthenticationRequired ) {
+      if ( $rootScope.isAuthenticationRequired ) {
         event.preventDefault();
         console.log("#!" + $location.$$url)
-        $state.go('bitraz.admin.login', {redirect_url: $location.$$absUrl});
+        $state.go('bitraz.main.login', {redirect_url: $location.$$absUrl});
       }
     });
   });

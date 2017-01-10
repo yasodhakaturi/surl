@@ -25,7 +25,7 @@ module.exports = function (grunt) {
         connect: {
             options: {
                 port: 3300,
-                hostname: 'localhost',
+                hostname: '192.168.1.66',
                 livereload: 35730
             },
             livereload: {
@@ -46,7 +46,7 @@ module.exports = function (grunt) {
             dist: {
                 options: {
                     open: true,
-                    base: 'dist/'
+                    base: '../dist/'
                 }
             }
         },

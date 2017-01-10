@@ -1,7 +1,7 @@
 angular
   .module('bitraz.common.controllers', ['bitraz.auth'])
-  .controller('LoginController', LoginController);
-
+  .controller('LoginController', LoginController)
+  .controller('AnalyticsController', AnalyticsController);
 
 
 function LoginController($rootScope, $scope, AuthService, appConfig, $state, $location, $window) {
@@ -16,18 +16,22 @@ function LoginController($rootScope, $scope, AuthService, appConfig, $state, $lo
     if($scope.loginForm.$valid){
       AuthService.login({uname: $scope.uname, password: $scope.pswd}).$promise.then((res)=>{
         if(res.error){
-          $scope.loginError = res.error;
+          $scope.loginError = res.error && res.error.message;
         }else{
           $rootScope.userInfo = res.user_info;
           if($state.params.redirect_url){
             $window.location.href = $state.params.redirect_url ? $state.params.redirect_url : '/';
           }else{
-            $location.path(res.redirect_url || '/');
+            if(res.redirect_url){
+              $window.location.href = res.redirect_url || '/';
+            }else{
+              $location.path('/');
+            }
           }
         }
 
       }, (err)=>{
-        $scope.loginError = err.error;
+        $scope.loginError =  err.error && err.error.message;
       });
       $scope.loading = false;
     }else{
@@ -41,6 +45,52 @@ function LoginController($rootScope, $scope, AuthService, appConfig, $state, $lo
       $scope.loading = false;
     }
   }
+
+}
+
+function AnalyticsController($rootScope, $state, $scope, CampaignService, $location, $window, $interval) {
+  $scope.isLoaded = false;
+  $scope.selectedCampaign = $state.params.rid || 0;
+
+  $scope.init = () => {
+    CampaignService.getCampaigns().$promise.then((res)=>{
+      if(res.error){
+        if(res.error.redirect_url){
+          $window.location.href = res.error.redirect_url || '/';
+        }else{
+          $location.path('/')
+        }
+      }else{
+        if(res.campaigns){
+          $scope.campaigns = res.campaigns;
+
+          if(_.indexOf(_.map($scope.campaigns, 'rid'), $scope.selectedCampaign) < 0){
+            $scope.selectedCampaign = $scope.campaigns[0].rid;
+            $state.go('.', {rid: $scope.selectedCampaign}, {notify: false});
+          }
+          $scope.isLoaded = true;
+        }
+      }
+    },(err)=>{
+      if(err.redirect_url){
+        $window.location.href = err.redirect_url || '/';
+      }else{
+        $location.path('/')
+      }
+    });
+
+    $scope.campaignChange = (val) => {
+      $state.go('.', {rid: val}, {notify: false})
+    }
+
+  };
+
+
+
+  if(!( _.isNull($rootScope.userInfo && $rootScope.userInfo.Id) || _.isUndefined($rootScope.userInfo && $rootScope.userInfo.Id))){
+    $scope.init();
+  }
+
 
 }
 

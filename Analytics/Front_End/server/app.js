@@ -74,6 +74,9 @@ app.all("*", function (req, res, next) {
  else if( /\/api\/AnalyticsApi\/GETALLCOUNTS/.exec(p)){
    var rid = require("./mock_data/chance/analytics");
    res.json( rid.getCounts() );
+ }else if( /\/api\/CampaignApi\/List/.exec(p)){
+   var rid = require("./mock_data/chance/campaigns");
+   res.json( rid.list() );
  }
 
  else if( /\/Auth\/Login/.exec(p)){
@@ -89,5 +92,5 @@ app.all("*", function (req, res, next) {
   }
 });
 
-app.listen(process.env.PORT || 3301);
-console.log("Server started: http://localhost:3301/");
+app.listen(process.env.PORT || 3301, '192.168.1.66');
+console.log("Server started: http://192.168.1.66:3301/");

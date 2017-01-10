@@ -4,10 +4,8 @@ angular.module("bitraz")
     bindings: {
       campaignId: "<"
     },
-    controller: ["$scope", "$rootScope", "$uibModal", "$timeout", "highchartsNG", "RidService", function ($scope, $rootScope, $uibModal, $timeout, highchartsNG, RidService) {
+    controller: ["$scope", "$rootScope", "$uibModal", "$timeout", "highchartsNG", "RidService", "$interval", function ($scope, $rootScope, $uibModal, $timeout, highchartsNG, RidService, $interval) {
       let $ctrl = this;
-    console.log('analytics layout', $ctrl.campaignId);
-
       $scope.data = {
         "activity": [],
         "locations": [],
@@ -284,10 +282,17 @@ angular.module("bitraz")
                 }
         ]
       };
-
+      var timer;
       $ctrl.$onInit = () => {
-        $ctrl.params = {Uniqueid: $ctrl.campaignId, DateFrom: $scope.date.startDate.format('YYYY-MM-DD'), DateTo: $scope.date.endDate.format('YYYY-MM-DD')}
+        $ctrl.params = {Uniqueid: $ctrl.campaignId, DateFrom: $scope.date.startDate.format('YYYY-MM-DD'), DateTo: $scope.date.endDate.format('YYYY-MM-DD')};
         $ctrl.loadData($ctrl.params);
+      };
+
+      $ctrl.$onChanges = (changes) => {
+        if(changes.campaignId && !changes.campaignId.isFirstChange()){
+          $ctrl.params.Uniqueid = changes.campaignId.currentValue;
+          $ctrl.loadData($ctrl.params);
+        }
       };
 
       $ctrl.refreshCharts = () => {
@@ -301,23 +306,22 @@ angular.module("bitraz")
         $ctrl.dashboardConfig = {
           type:'campaign',
           userId: $rootScope.userInfo.Id,
-          campaignId: params.campaignId
+          campaignId: params.Uniqueid
         };
-        RidService.getSummary({Uniqueid: params.campaignId}).$promise.then((resp)=>{
-          $ctrl.summary = resp;
-          $ctrl.reflow();
-        }, (err)=>{
-          console.log("failed to load summary", err);
-        });
-
+        if(timer){
+          $interval.cancel(timer);
+        }
         RidService.getCounts(params).$promise.then((resp)=>{
           $scope.data = resp;
           $ctrl.refreshCharts();
           $ctrl.reflow();
+          timer = $interval(function(){
+            $ctrl.resetTime();
+          },60000);
         }, (err)=>{
           console.log("failed to load summary", err);
         });
-        $timeout($ctrl.tick, tickInterval);
+        // $timeout($ctrl.tick, tickInterval);
       };
 
       $ctrl.reflow = () => {
@@ -328,22 +332,24 @@ angular.module("bitraz")
         });
       };
 
-      var tickInterval = 1000;
-      var timeLimit = 60;
 
-      $ctrl.tick = () => {
-        $ctrl.timeLeft--;
-        if($ctrl.timeLeft == 0){
-          $ctrl.resetTime();
-        }else{
-          $timeout($ctrl.tick, tickInterval);
-        }
-      };
 
-      $ctrl.timeLeft = timeLimit;
+      // var tickInterval = 1000;
+      // var timeLimit = 60;
+      //
+      // $ctrl.tick = () => {
+      //   $ctrl.timeLeft--;
+      //   if($ctrl.timeLeft == 0){
+      //     $ctrl.resetTime();
+      //   }else{
+      //     $timeout($ctrl.tick, tickInterval);
+      //   }
+      // };
+
+      // $ctrl.timeLeft = timeLimit;
 
       $ctrl.resetTime = () => {
-        $ctrl.timeLeft = timeLimit;
+        // $ctrl.timeLeft = timeLimit;
         $ctrl.$onInit();
       };
 

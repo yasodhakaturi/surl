@@ -1,4 +1,9 @@
-angular.module('bitraz.template', ['views/common/dashboard/activities_tmpl.html', 'views/common/dashboard/dashboard_tmpl.html', 'views/common/dashboard/logged_users_tmpl.html', 'views/common/dashboard/recent_campaigns_tmpl.html', 'views/common/dashboard/total_campaigns_tmpl.html', 'views/common/dashboard/total_users_tmpl.html', 'views/common/dashboard/total_visits_tmpl.html', 'views/common/dashboard/urls_generated_tmpl.html', 'views/common/directives/analytics_layout.html', 'views/common/header-dashboard.html', 'views/common/login.html', 'views/common/navigation.html', 'views/common/panel_tools.html', 'views/index/analytics.html', 'views/index/clients.html', 'views/index/contact.html', 'views/index/features.html', 'views/index/index.html', 'views/index/index_header.html']);
+angular.module('bitraz.template', ['views/common/analytics.html', 'views/common/dashboard/activities_tmpl.html', 'views/common/dashboard/dashboard_tmpl.html', 'views/common/dashboard/logged_users_tmpl.html', 'views/common/dashboard/recent_campaigns_tmpl.html', 'views/common/dashboard/total_campaigns_tmpl.html', 'views/common/dashboard/total_users_tmpl.html', 'views/common/dashboard/total_visits_tmpl.html', 'views/common/dashboard/urls_generated_tmpl.html', 'views/common/directives/analytics_layout.html', 'views/common/header-dashboard.html', 'views/common/login.html', 'views/common/navigation.html', 'views/common/panel_tools.html', 'views/index/analytics.html', 'views/index/clients.html', 'views/index/contact.html', 'views/index/features.html', 'views/index/index.html', 'views/index/index_header.html']);
+
+angular.module("views/common/analytics.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("views/common/analytics.html",
+    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\" ng-if=\"isLoaded\"> <div class=\"row\"> <div class=\"col-lg-12 text-right\"> <span> Choose a Campaign</span> <select name=\"selectedCampaign\" ng-model=\"selectedCampaign\" ng-change=\"campaignChange(selectedCampaign)\"> <option value=\"{{campaign.rid}}\" ng-repeat=\"campaign in campaigns\" ng-selected=\"campaign.rid == selectedCampaign\"> {{campaign.title || \"Campaign (\" + campaign.rid + \")\"}} : {{campaign.createdOn | date: 'mm.dd.yyyy'}} - {{campaign.inActiveDate | date: 'mm.dd.yyyy' || 'Till Date'}} </select> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> <analytics-layout campaign-id=\"selectedCampaign\"></analytics-layout> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> </div> </div> </div> </div>");
+}]);
 
 angular.module("views/common/dashboard/activities_tmpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/common/dashboard/activities_tmpl.html",
@@ -12,8 +17,8 @@ angular.module("views/common/dashboard/activities_tmpl.html", []).run(["$templat
     "\n" +
     "        <div class=\"pull-right\">\n" +
     "            <a ng-click=\"$ctrl.show('today')\" class=\"btn btn-xs btn-default\" ng-class=\"{'text-success': $ctrl.state == 'today'}\">Today</a>\n" +
-    "            <a ng-click=\"$ctrl.show('week')\" class=\"btn btn-xs btn-default \" ng-class=\"{'text-success': $ctrl.state == 'week'}\">Week</a>\n" +
-    "            <a ng-click=\"$ctrl.show('month')\" class=\"btn btn-xs btn-default\" ng-class=\"{'text-success': $ctrl.state == 'month'}\">Month</a>\n" +
+    "            <a ng-click=\"$ctrl.show('week')\" class=\"btn btn-xs btn-default \" ng-class=\"{'text-success': $ctrl.state == 'week'}\">7 Days</a>\n" +
+    "            <a ng-click=\"$ctrl.show('month')\" class=\"btn btn-xs btn-default\" ng-class=\"{'text-success': $ctrl.state == 'month'}\">30 Days</a>\n" +
     "        </div>\n" +
     "        <div class=\"panel-title\">Last Activity</div>\n" +
     "        <div class=\"list-item-container\" style=\"width: 100%\">\n" +
@@ -166,7 +171,7 @@ angular.module("views/common/dashboard/recent_campaigns_tmpl.html", []).run(["$t
     "                </thead>\n" +
     "                <tbody>\n" +
     "                <tr ng-if=\"$ctrl.data.length > 0\" ng-repeat=\"campaign in $ctrl.data\">\n" +
-    "                    <td><a class=\"text-success\">{{campaign.title || \"Campaign (\" + campaign.rid + \")\"}}</a>\n" +
+    "                    <td><a class=\"text-success\" ui-sref=\"bitraz.main.analytics({rid:campaign.rid })\">{{campaign.title || \"Campaign (\" + campaign.rid + \")\"}}</a>\n" +
     "                        <br/>\n" +
     "                        <small><i class=\"fa fa-clock-o\"></i> Created {{campaign.createdOn | date: 'mm.dd.yyyy'}}</small>\n" +
     "                        <small ng-if=\"campaign.inActiveDate\"><i class=\"fa fa-clock-o\"></i> Ended {{campaign.inActiveDate | date: 'mm.dd.yyyy'}}</small>\n" +
@@ -202,12 +207,12 @@ angular.module("views/common/dashboard/total_campaigns_tmpl.html", []).run(["$te
     "                    </span>\n" +
     "            <div class=\"row\">\n" +
     "                <div class=\"col-xs-6\">\n" +
-    "                    <small class=\"stats-label\">This Week</small>\n" +
+    "                    <small class=\"stats-label\">7 Days</small>\n" +
     "                    <h4>{{$ctrl.data.campaignsWeek || 0}}</h4>\n" +
     "                </div>\n" +
     "\n" +
     "                <div class=\"col-xs-6\">\n" +
-    "                    <small class=\"stats-label\">This Month</small>\n" +
+    "                    <small class=\"stats-label\">30 days</small>\n" +
     "                    <h4>{{$ctrl.data.campaignsMonth || 0}}</h4>\n" +
     "                </div>\n" +
     "            </div>\n" +
@@ -251,7 +256,7 @@ angular.module("views/common/dashboard/total_users_tmpl.html", []).run(["$templa
     "                </div>\n" +
     "\n" +
     "                <div class=\"col-xs-4\">\n" +
-    "                    <small class=\"stats-label\">This Week</small>\n" +
+    "                    <small class=\"stats-label\">7 Days</small>\n" +
     "                    <h4>{{$ctrl.data.uniqueUsersWeek || 0}}/<span class=\"text-success\">{{$ctrl.data.usersWeek || 0}}</span></h4>\n" +
     "                </div>\n" +
     "            </div>\n" +
@@ -295,7 +300,7 @@ angular.module("views/common/dashboard/total_visits_tmpl.html", []).run(["$templ
     "                </div>\n" +
     "\n" +
     "                <div class=\"col-xs-4\">\n" +
-    "                    <small class=\"stats-label\">This Week</small>\n" +
+    "                    <small class=\"stats-label\">7 Days</small>\n" +
     "                    <h4>{{$ctrl.data.uniqueVisitsWeek || 0}}/<span class=\"text-success\">{{$ctrl.data.visitsWeek || 0}}</span></h4>\n" +
     "                </div>\n" +
     "            </div>\n" +
@@ -327,7 +332,8 @@ angular.module("views/common/directives/analytics_layout.html", []).run(["$templ
     "    <div class=\"row\" style=\"padding-bottom: 5px;\">\n" +
     "        <div class=\"col-lg-12 refresh-block\">\n" +
     "            <span class=\"pull-right\">\n" +
-    "                View Refreshes in {{$ctrl.timeLeft}} Seconds <a ng-click=\"$ctrl.resetTime()\"><i class=\"fa fa-refresh\"></i></a>\n" +
+    "                <!--View Refreshes in {{$ctrl.timeLeft}} Seconds <a ng-click=\"$ctrl.resetTime()\"><i class=\"fa fa-refresh\"></i></a>-->\n" +
+    "                Refresh View <a ng-click=\"$ctrl.resetTime()\"><i class=\"fa fa-refresh\"></i></a>\n" +
     "            </span>\n" +
     "\n" +
     "        </div>\n" +

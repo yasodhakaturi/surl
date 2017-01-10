@@ -1,7 +1,6 @@
 var chance = require("chance").Chance();
 
 exports.login = function(request){
-  console.log(request.body)
   var role;
   switch(request.body.uname){
     case 'demo':
@@ -30,9 +29,9 @@ exports.login = function(request){
       return {user_info: {Id: 1, user_role:role, user_name:request.body.uname}, redirected_url:'/Admin'};
     }
   }else if(role){
-    return {'error': 'Invalid Credentials'}
+    return {'error': {"message": 'Invalid Credentials'}}
   }else{
-    return {'error': 'Invalid Credentials'}
+    return {'error': {"message": 'Invalid Credentials'}}
   }
 
 };

@@ -36,7 +36,7 @@
             window.appConfig = {
                 env:'local',
                 appUrl: {admin: '', analytics:'', landing: ''},
-                apiUrl: '',
+                apiUrl: 'http://192.168.1.66:3301',
                 userInfo: {Id: null, UserName: '', isAdmin: false, isClient: false, isReadOnly: true}
             }
         })();
@@ -119,9 +119,9 @@
 <script src="scripts/services/analytics/analytics_services.js"></script>
 <script src="scripts/services/common/auth_service.js"></script>
 <script src="scripts/services/common/rid_service.js"></script>
+<script src="scripts/services/common/campaign_service.js"></script>
 
 <script src="scripts/directives/common/analytics/layout/analytics_layout.js"></script>
-
 <script src="scripts/directives/common/analytics/dashboard/layout.js"></script>
 <script src="scripts/directives/common/analytics/dashboard/urls_generated.js"></script>
 <script src="scripts/directives/common/analytics/dashboard/total_users.js"></script>

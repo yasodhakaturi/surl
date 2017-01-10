@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
     <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css"/>
     <link rel="stylesheet" href="bower_components/angular-bootstrap/ui-bootstrap-csp.css"/>
+    <link rel="stylesheet" href="bower_components/bootstrap-daterangepicker/daterangepicker.css"/>
+    <link rel="stylesheet" href="bower_components/highcharts/css/highcharts.css"/>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -34,7 +36,7 @@
             window.appConfig = {
                 env:'local',
                 appUrl: {admin: '', analytics:'', landing: ''},
-                apiUrl: '',
+                apiUrl: 'http://192.168.1.66:3301',
                 userInfo: {Id: null, UserName: '', isAdmin: false, isClient: false, isReadOnly: true}
             }
         })();
@@ -112,6 +114,7 @@
 <script src="scripts/services/admin/admin_services.js"></script>
 <script src="scripts/services/common/auth_service.js"></script>
 <script src="scripts/services/common/rid_service.js"></script>
+<script src="scripts/services/common/campaign_service.js"></script>
 <script src="scripts/directives/common/analytics/layout/analytics_layout.js"></script>
 <script src="scripts/directives/common/analytics/dashboard/layout.js"></script>
 <script src="scripts/directives/common/analytics/dashboard/urls_generated.js"></script>

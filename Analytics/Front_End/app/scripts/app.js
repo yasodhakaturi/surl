@@ -16,7 +16,7 @@
                 return {admin: 'http://localhost:3301/admin.html', analytics: 'http://localhost:3301/analytics.html', landing: 'http://localhost:3301/index.html'};
             }
         })(),
-        apiEndPoint: window.appConfig.env == 'local' ? 'http://192.168.1.66:3301' : (window.appConfig.apiUrl || 'http://192.168.1.66:3301'),
+        apiEndPoint: window.appConfig.env == 'local' ? window.appConfig.apiUrl || 'http://192.168.1.64:3301' : (window.appConfig.apiUrl || 'http://192.168.1.66:3301'),
         userInfo: window.appConfig.userInfo || {},
 
             // apiEndPoint: 'http://192.168.1.64:8080'

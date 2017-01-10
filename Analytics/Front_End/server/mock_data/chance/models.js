@@ -11,6 +11,15 @@ exports.adminUserModel = function(){
     }
 };
 
+exports.campaignModel = function(){
+  return {
+    "id": chance.integer({min: 100, max: 99999}),
+    "rid": chance.string({length: 10,pool: 'abcdefghijklmnopqrstuv'}) ,
+    "title": chance.sentence({words: 2}),
+    "createdOn": chance.date({string: true, american: true}),
+    "inActiveDate": chance.date({string: true, american: true})
+  }
+};
 
 //
 // exports.accusedProductModel = function(){
