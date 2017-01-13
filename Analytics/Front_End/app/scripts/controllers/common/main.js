@@ -19,6 +19,7 @@ function LoginController($rootScope, $scope, AuthService, appConfig, $state, $lo
           $scope.loginError = res.error && res.error.message;
         }else{
           $rootScope.userInfo = res.user_info;
+          $rootScope.userInfo.user_id = $rootScope.userInfo.user_id || null;
           if($state.params.redirect_url){
             $window.location.href = $state.params.redirect_url ? $state.params.redirect_url : '/';
           }else{
