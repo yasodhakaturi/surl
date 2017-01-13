@@ -25,7 +25,7 @@ angular.module("bitraz.dashboard", ['ui.router'])
 
       $ctrl.getParams = ()=> {
         if($ctrl.config.userId){$ctrl.params.cid = $ctrl.config.userId;}
-        if($ctrl.config.campaignId){$ctrl.params.campaignId = $ctrl.config.campaignId;}else{ delete $ctrl.params.campaignId;}
+        if($ctrl.config.campaignId){$ctrl.params.rid = $ctrl.config.campaignId;}else{ delete $ctrl.params.rid;}
         return $ctrl.params;
       };
 

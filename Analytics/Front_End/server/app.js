@@ -66,15 +66,15 @@ app.all("*", function (req, res, next) {
     res.json( rid.post() );
   }
 
- else if( /\/api\/AnalyticsApi\/GETSUMMARY/.exec(p)){
+ else if( /\/Analytics\/GETSummary/.exec(p)){
    var rid = require("./mock_data/chance/analytics");
    res.json( rid.getSummary() );
  }
 
- else if( /\/api\/AnalyticsApi\/GETALLCOUNTS/.exec(p)){
+ else if( /\/Analytics\/GETAllCounts/.exec(p)){
    var rid = require("./mock_data/chance/analytics");
    res.json( rid.getCounts() );
- }else if( /\/api\/CampaignApi\/List/.exec(p)){
+ }else if( /\/Analytics\/GETAllCampaigns/.exec(p)){
    var rid = require("./mock_data/chance/campaigns");
    res.json( rid.list() );
  }

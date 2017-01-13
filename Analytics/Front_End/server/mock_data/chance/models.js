@@ -17,7 +17,7 @@ exports.campaignModel = function(){
     "rid": chance.string({length: 10,pool: 'abcdefghijklmnopqrstuv'}) ,
     "title": chance.sentence({words: 2}),
     "createdOn": chance.date({string: true, american: true}),
-    "inActiveDate": chance.date({string: true, american: true})
+    "endDate": chance.date({string: true, american: true})
   }
 };
 

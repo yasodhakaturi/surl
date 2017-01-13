@@ -206,7 +206,7 @@ angular.module("views/common/dashboard/recent_campaigns_tmpl.html", []).run(["$t
     "                </thead>\n" +
     "                <tbody>\n" +
     "                <tr ng-if=\"$ctrl.data.length > 0\" ng-repeat=\"campaign in $ctrl.data\">\n" +
-    "                    <td><a class=\"text-success\">{{campaign.title || \"Campaign (\" + campaign.rid + \")\"}}</a>\n" +
+    "                    <td><a class=\"text-success\" ui-sref=\"bitraz.main.analytics({rid:campaign.rid})\">{{campaign.title || \"Campaign (\" + campaign.rid + \")\"}}</a>\n" +
     "                        <br/>\n" +
     "                        <small><i class=\"fa fa-clock-o\"></i> Created {{campaign.createdOn | date: 'MM.dd.yyyy'}}</small>\n" +
     "                        <small ng-if=\"campaign.endDate\"><i class=\"fa fa-clock-o\"></i> Ended {{campaign.endDate | date: 'MM.dd.yyyy'}}</small>\n" +
@@ -291,7 +291,7 @@ angular.module("views/common/dashboard/total_users_tmpl.html", []).run(["$templa
     "                </div>\n" +
     "\n" +
     "                <div class=\"col-xs-4\">\n" +
-    "                    <small class=\"stats-label\">This Week</small>\n" +
+    "                    <small class=\"stats-label\">Last 7 Days</small>\n" +
     "                    <h4>{{$ctrl.data.uniqueUsersLast7days || 0}}/<span class=\"text-success\">{{$ctrl.data.usersLast7days || 0}}</span></h4>\n" +
     "                </div>\n" +
     "            </div>\n" +
@@ -335,7 +335,7 @@ angular.module("views/common/dashboard/total_visits_tmpl.html", []).run(["$templ
     "                </div>\n" +
     "\n" +
     "                <div class=\"col-xs-4\">\n" +
-    "                    <small class=\"stats-label\">This Week</small>\n" +
+    "                    <small class=\"stats-label\">Last 7 Days</small>\n" +
     "                    <h4>{{$ctrl.data.uniqueVisitsLast7days || 0}}/<span class=\"text-success\">{{$ctrl.data.visitsLast7days || 0}}</span></h4>\n" +
     "                </div>\n" +
     "            </div>\n" +

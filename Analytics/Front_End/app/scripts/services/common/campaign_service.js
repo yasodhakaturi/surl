@@ -1,14 +1,14 @@
 angular.module('bitraz.campaigns', ["ngResource"])
   .service('CampaignService', ["$resource", 'appConfig', function ($resource, appConfig) {
-    return $resource(appConfig.apiEndPoint + '/api/CampaignApi/', {}, {
+    return $resource(appConfig.apiEndPoint + '/Analytics/GETAllCampaigns/', {}, {
       getCampaigns: {
         method: 'get',
-        url: appConfig.apiEndPoint + '/api/CampaignApi/List'
+        url: appConfig.apiEndPoint + '/Analytics/GETAllCampaigns'
       },
 
       getDetails: {
         method: 'get',
-        url: appConfig.apiEndPoint + '/api/CampaignApi/Details/:id'
+        url: appConfig.apiEndPoint + '/Analytics/GETAllCampaigns/:id'
       }
     }, {
       stripTrailingSlashes: false

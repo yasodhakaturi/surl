@@ -284,13 +284,13 @@ angular.module("bitraz")
       };
       var timer;
       $ctrl.$onInit = () => {
-        $ctrl.params = {Uniqueid: $ctrl.campaignId, DateFrom: $scope.date.startDate.format('YYYY-MM-DD'), DateTo: $scope.date.endDate.format('YYYY-MM-DD')};
+        $ctrl.params = {rid: $ctrl.campaignId, DateFrom: $scope.date.startDate.format('YYYY-MM-DD'), DateTo: $scope.date.endDate.format('YYYY-MM-DD')};
         $ctrl.loadData($ctrl.params);
       };
 
       $ctrl.$onChanges = (changes) => {
         if(changes.campaignId && !changes.campaignId.isFirstChange()){
-          $ctrl.params.Uniqueid = changes.campaignId.currentValue;
+          $ctrl.params.rid = changes.campaignId.currentValue;
           $ctrl.loadData($ctrl.params);
         }
       };
@@ -306,7 +306,7 @@ angular.module("bitraz")
         $ctrl.dashboardConfig = {
           type:'campaign',
           userId: $rootScope.userInfo.user_id,
-          campaignId: params.Uniqueid
+          campaignId: params.rid
         };
         if(timer){
           $interval.cancel(timer);

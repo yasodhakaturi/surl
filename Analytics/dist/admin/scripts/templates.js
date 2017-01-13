@@ -7,7 +7,7 @@ angular.module("views/admin/admin.html", []).run(["$templateCache", function($te
 
 angular.module("views/admin/analytics.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/admin/analytics.html",
-    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12 text-right\"> <span> Choose a Campaign</span> <select name=\"selectedCampaign\" ng-model=\"selectedCampaign\"> <option value=\"{{campaign.rid}}\" ng-repeat=\"campaign in campaigns\"> {{campaign.title || \"Campaign (\" + campaign.rid + \")\"}} : {{campaign.createdOn | date: 'mm.dd.yyyy'}} - {{campaign.inActiveDate | date: 'mm.dd.yyyy' || 'Till Date'}} </select> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> <analytics-layout campaign-id=\"selectedCampaign\" data-range=\"selectedCampaign\"></analytics-layout> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> </div> </div> </div> </div>");
+    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12 text-right\"> <span> Choose a Campaign</span> <select name=\"selectedCampaign\" ng-model=\"selectedCampaign\"> <option value=\"{{campaign.rid}}\" ng-repeat=\"campaign in campaigns\"> {{campaign.title || \"Campaign (\" + campaign.rid + \")\"}} : {{campaign.createdOn | date: 'MM/dd/yyyy'}} - {{campaign.endDate | date: 'MM/dd/yyyy' || 'Till Date'}} </select> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> <analytics-layout campaign-id=\"selectedCampaign\" data-range=\"selectedCampaign\"></analytics-layout> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> </div> </div> </div> </div>");
 }]);
 
 angular.module("views/admin/archieves.html", []).run(["$templateCache", function($templateCache) {
@@ -419,7 +419,7 @@ angular.module("views/common/dashboard/recent_campaigns_tmpl.html", []).run(["$t
     "                </thead>\n" +
     "                <tbody>\n" +
     "                <tr ng-if=\"$ctrl.data.length > 0\" ng-repeat=\"campaign in $ctrl.data\">\n" +
-    "                    <td><a class=\"text-success\">{{campaign.title || \"Campaign (\" + campaign.rid + \")\"}}</a>\n" +
+    "                    <td><a class=\"text-success\" ui-sref=\"bitraz.main.analytics({rid:campaign.rid})\">{{campaign.title || \"Campaign (\" + campaign.rid + \")\"}}</a>\n" +
     "                        <br/>\n" +
     "                        <small><i class=\"fa fa-clock-o\"></i> Created {{campaign.createdOn | date: 'MM.dd.yyyy'}}</small>\n" +
     "                        <small ng-if=\"campaign.endDate\"><i class=\"fa fa-clock-o\"></i> Ended {{campaign.endDate | date: 'MM.dd.yyyy'}}</small>\n" +
@@ -504,7 +504,7 @@ angular.module("views/common/dashboard/total_users_tmpl.html", []).run(["$templa
     "                </div>\n" +
     "\n" +
     "                <div class=\"col-xs-4\">\n" +
-    "                    <small class=\"stats-label\">This Week</small>\n" +
+    "                    <small class=\"stats-label\">Last 7 Days</small>\n" +
     "                    <h4>{{$ctrl.data.uniqueUsersLast7days || 0}}/<span class=\"text-success\">{{$ctrl.data.usersLast7days || 0}}</span></h4>\n" +
     "                </div>\n" +
     "            </div>\n" +
@@ -548,7 +548,7 @@ angular.module("views/common/dashboard/total_visits_tmpl.html", []).run(["$templ
     "                </div>\n" +
     "\n" +
     "                <div class=\"col-xs-4\">\n" +
-    "                    <small class=\"stats-label\">This Week</small>\n" +
+    "                    <small class=\"stats-label\">Last 7 Days</small>\n" +
     "                    <h4>{{$ctrl.data.uniqueVisitsLast7days || 0}}/<span class=\"text-success\">{{$ctrl.data.visitsLast7days || 0}}</span></h4>\n" +
     "                </div>\n" +
     "            </div>\n" +

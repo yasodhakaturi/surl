@@ -59,7 +59,7 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider, $urlM
       },
       views: {
         "body@bitraz": {
-          templateUrl: "views/analytics/analytics.html",
+          templateUrl: "views/common/analytics.html",
           controller: "AnalyticsController"
         }
       }
