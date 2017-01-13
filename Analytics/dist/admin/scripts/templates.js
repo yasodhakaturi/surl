@@ -27,7 +27,7 @@ angular.module("views/admin/components/clients_component_tmpl.html", []).run(["$
 
 angular.module("views/admin/header.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/admin/header.html",
-    "<div id=\"logo\" class=\"light-version\" href=\"#\"> <a ng-href=\"#\"><span> bi <span class=\"part2\">TRAZ</span> </span></a> </div> <nav role=\"navigation\"> <!-- <minimaliza-menu></minimaliza-menu> --> <div class=\"small-logo\" ng-href=\"#\"> <a ng-href=\"#\"><span class=\"text-primary\">bi <span class=\"part2\">TRAZ</span></span></a> </div> <div class=\"mobile-menu\" ng-if=\"$root.userInfo.Id\"> <button type=\"button\" class=\"navbar-toggle mobile-menu-toggle\" data-toggle=\"collapse\" data-target=\"#mobile-collapse\"> <i class=\"fa fa-chevron-down\"></i> </button> <div class=\"collapse mobile-navbar\" id=\"mobile-collapse\"> <ul class=\"nav navbar-nav\"> <li ng-class=\"{'active':active == 'home'}\"><a class=\"page-scroll\" href=\"#page-top\">Home</a></li> <li ng-class=\"{'active':active == 'analytics'}\"><a class=\"page-scroll\" page-scroll href=\"#analytics\">Analytics</a></li> <li ng-class=\"{'active':active == 'security'}\"><a class=\"page-scroll\" page-scroll href=\"#security\">Security </a></li> <li><a class=\"page-scroll\" page-scroll ng-click=\"logout()\">Logout</a></li> </ul> </div> </div> <div class=\"navbar-right\" ng-if=\"$root.userInfo.Id\"> <ul class=\"nav navbar-nav no-borders\"> <li uib-dropdown> <a ui-sref=\"bitraz.main.index\" uib-dropdown-toggle> <i class=\"pe-7s-home\"></i> </a> </li> <li uib-dropdown> <a uib-dropdown-toggle> <i class=\"pe-7s-graph\"></i> </a> <div uib-dropdown-menu class=\"hdropdown bigmenu animated flipInX\"> <table> <tbody> <tr> <td> <a ui-sref=\"bitraz.main.analytics\"> <i class=\"pe pe-7s-graph1 text-danger\"></i> <h5>Analytics</h5> </a>  <td> <a ui-sref=\"bitraz.main.campaigns\"> <i class=\"pe pe-7s-portfolio text-info\"></i> <h5>Campaigns</h5> </a>   <tr> <td> <a ui-sref=\"bitraz.main.users\"> <i class=\"pe pe-7s-users text-success\"></i> <h5>Users</h5> </a>  <td> <a ui-sref=\"bitraz.main.archieves\"> <i class=\"pe pe-7s-box1 text-success\"></i> <h5>Archieve</h5> </a>    </table> </div> </li> <li> <a ui-sref=\"bitraz.main.settings\"> <i class=\"pe-7s-config\"></i> </a> </li> <li> <a ng-click=\"logout()\"> <i class=\"pe-7s-power\"></i> </a> </li> </ul> </div> </nav>");
+    "<div id=\"logo\" class=\"light-version\" href=\"#\"> <a ng-href=\"#\"><span> bi <span class=\"part2\">TRAZ</span> </span></a> </div> <nav role=\"navigation\"> <!-- <minimaliza-menu></minimaliza-menu> --> <div class=\"small-logo\" ng-href=\"#\"> <a ng-href=\"#\"><span class=\"text-primary\">bi <span class=\"part2\">TRAZ</span></span></a> </div> <div class=\"mobile-menu\" ng-if=\"$root.userInfo.user_id\"> <button type=\"button\" class=\"navbar-toggle mobile-menu-toggle\" data-toggle=\"collapse\" data-target=\"#mobile-collapse\"> <i class=\"fa fa-chevron-down\"></i> </button> <div class=\"collapse mobile-navbar\" id=\"mobile-collapse\"> <ul class=\"nav navbar-nav\"> <li ng-class=\"{'active':active == 'home'}\"><a class=\"page-scroll\" href=\"#page-top\">Home</a></li> <li ng-class=\"{'active':active == 'analytics'}\"><a class=\"page-scroll\" page-scroll href=\"#analytics\">Analytics</a></li> <li ng-class=\"{'active':active == 'security'}\"><a class=\"page-scroll\" page-scroll href=\"#security\">Security </a></li> <li><a class=\"page-scroll\" page-scroll ng-click=\"logout()\">Logout</a></li> </ul> </div> </div> <div class=\"navbar-right\" ng-if=\"$root.userInfo.user_id\"> <ul class=\"nav navbar-nav no-borders\"> <li uib-dropdown> <a ui-sref=\"bitraz.main.index\" uib-dropdown-toggle> <i class=\"pe-7s-home\"></i> </a> </li> <li uib-dropdown> <a uib-dropdown-toggle> <i class=\"pe-7s-graph\"></i> </a> <div uib-dropdown-menu class=\"hdropdown bigmenu animated flipInX\"> <table> <tbody> <tr> <td> <a ui-sref=\"bitraz.main.analytics\"> <i class=\"pe pe-7s-graph1 text-danger\"></i> <h5>Analytics</h5> </a>  <td> <a ui-sref=\"bitraz.main.campaigns\"> <i class=\"pe pe-7s-portfolio text-info\"></i> <h5>Campaigns</h5> </a>   <tr> <td> <a ui-sref=\"bitraz.main.users\"> <i class=\"pe pe-7s-users text-success\"></i> <h5>Users</h5> </a>  <td> <a ui-sref=\"bitraz.main.archieves\"> <i class=\"pe pe-7s-box1 text-success\"></i> <h5>Archieve</h5> </a>    </table> </div> </li> <li> <a ui-sref=\"bitraz.main.settings\"> <i class=\"pe-7s-config\"></i> </a> </li> <li> <a ng-click=\"logout()\"> <i class=\"pe-7s-power\"></i> </a> </li> </ul> </div> </nav>");
 }]);
 
 angular.module("views/admin/index.html", []).run(["$templateCache", function($templateCache) {
@@ -265,8 +265,8 @@ angular.module("views/common/dashboard/activities_tmpl.html", []).run(["$templat
     "\n" +
     "        <div class=\"pull-right\">\n" +
     "            <a ng-click=\"$ctrl.show('today')\" class=\"btn btn-xs btn-default\" ng-class=\"{'text-success': $ctrl.state == 'today'}\">Today</a>\n" +
-    "            <a ng-click=\"$ctrl.show('week')\" class=\"btn btn-xs btn-default \" ng-class=\"{'text-success': $ctrl.state == 'week'}\">7 Days</a>\n" +
-    "            <a ng-click=\"$ctrl.show('month')\" class=\"btn btn-xs btn-default\" ng-class=\"{'text-success': $ctrl.state == 'month'}\">30 Days</a>\n" +
+    "            <a ng-click=\"$ctrl.show('last7days')\" class=\"btn btn-xs btn-default \" ng-class=\"{'text-success': $ctrl.state == 'last7days'}\">Week</a>\n" +
+    "            <a ng-click=\"$ctrl.show('month')\" class=\"btn btn-xs btn-default\" ng-class=\"{'text-success': $ctrl.state == 'month'}\">Month</a>\n" +
     "        </div>\n" +
     "        <div class=\"panel-title\">Last Activity</div>\n" +
     "        <div class=\"list-item-container\" style=\"width: 100%\">\n" +
@@ -419,16 +419,16 @@ angular.module("views/common/dashboard/recent_campaigns_tmpl.html", []).run(["$t
     "                </thead>\n" +
     "                <tbody>\n" +
     "                <tr ng-if=\"$ctrl.data.length > 0\" ng-repeat=\"campaign in $ctrl.data\">\n" +
-    "                    <td><a class=\"text-success\" ui-sref=\"bitraz.main.analytics({rid:campaign.rid })\">{{campaign.title || \"Campaign (\" + campaign.rid + \")\"}}</a>\n" +
+    "                    <td><a class=\"text-success\">{{campaign.title || \"Campaign (\" + campaign.rid + \")\"}}</a>\n" +
     "                        <br/>\n" +
-    "                        <small><i class=\"fa fa-clock-o\"></i> Created {{campaign.createdOn | date: 'mm.dd.yyyy'}}</small>\n" +
-    "                        <small ng-if=\"campaign.inActiveDate\"><i class=\"fa fa-clock-o\"></i> Ended {{campaign.inActiveDate | date: 'mm.dd.yyyy'}}</small>\n" +
+    "                        <small><i class=\"fa fa-clock-o\"></i> Created {{campaign.createdOn | date: 'MM.dd.yyyy'}}</small>\n" +
+    "                        <small ng-if=\"campaign.endDate\"><i class=\"fa fa-clock-o\"></i> Ended {{campaign.endDate | date: 'MM.dd.yyyy'}}</small>\n" +
     "                    </td>\n" +
     "                    <td>\n" +
     "                        <span class=\"pie\">{{campaign.users}}</span>\n" +
     "                    </td>\n" +
-    "                    <td><strong>{{campaign.visits/campaign.users}}%</strong></td>\n" +
-    "                    <td><span>{{campaign.status}}</span></td>\n" +
+    "                    <td><strong>{{(campaign.visits/campaign.users)*100 | number:0}}%</strong></td>\n" +
+    "                    <td><span>{{campaign.status ? 'Active':'InActive'}}</span></td>\n" +
     "                </tr>\n" +
     "                <tr ng-if=\"!$ctrl.data\"><td colspan=\"4\" class=\"text-center\">No Campaigns</td> </tr>\n" +
     "                </tbody>\n" +
@@ -455,12 +455,12 @@ angular.module("views/common/dashboard/total_campaigns_tmpl.html", []).run(["$te
     "                    </span>\n" +
     "            <div class=\"row\">\n" +
     "                <div class=\"col-xs-6\">\n" +
-    "                    <small class=\"stats-label\">7 Days</small>\n" +
-    "                    <h4>{{$ctrl.data.campaignsWeek || 0}}</h4>\n" +
+    "                    <small class=\"stats-label\">This Week</small>\n" +
+    "                    <h4>{{$ctrl.data.campaignsLast7days || 0}}</h4>\n" +
     "                </div>\n" +
     "\n" +
     "                <div class=\"col-xs-6\">\n" +
-    "                    <small class=\"stats-label\">30 days</small>\n" +
+    "                    <small class=\"stats-label\">This Month</small>\n" +
     "                    <h4>{{$ctrl.data.campaignsMonth || 0}}</h4>\n" +
     "                </div>\n" +
     "            </div>\n" +
@@ -504,8 +504,8 @@ angular.module("views/common/dashboard/total_users_tmpl.html", []).run(["$templa
     "                </div>\n" +
     "\n" +
     "                <div class=\"col-xs-4\">\n" +
-    "                    <small class=\"stats-label\">7 Days</small>\n" +
-    "                    <h4>{{$ctrl.data.uniqueUsersWeek || 0}}/<span class=\"text-success\">{{$ctrl.data.usersWeek || 0}}</span></h4>\n" +
+    "                    <small class=\"stats-label\">This Week</small>\n" +
+    "                    <h4>{{$ctrl.data.uniqueUsersLast7days || 0}}/<span class=\"text-success\">{{$ctrl.data.usersLast7days || 0}}</span></h4>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "        </div>\n" +
@@ -548,8 +548,8 @@ angular.module("views/common/dashboard/total_visits_tmpl.html", []).run(["$templ
     "                </div>\n" +
     "\n" +
     "                <div class=\"col-xs-4\">\n" +
-    "                    <small class=\"stats-label\">7 Days</small>\n" +
-    "                    <h4>{{$ctrl.data.uniqueVisitsWeek || 0}}/<span class=\"text-success\">{{$ctrl.data.visitsWeek || 0}}</span></h4>\n" +
+    "                    <small class=\"stats-label\">This Week</small>\n" +
+    "                    <h4>{{$ctrl.data.uniqueVisitsLast7days || 0}}/<span class=\"text-success\">{{$ctrl.data.visitsLast7days || 0}}</span></h4>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "        </div>\n" +
@@ -563,7 +563,7 @@ angular.module("views/common/dashboard/urls_generated_tmpl.html", []).run(["$tem
     "    <div class=\"panel-body text-center h-200\">\n" +
     "        <i class=\"pe-7s-graph1 fa-4x\"></i>\n" +
     "\n" +
-    "        <h1 class=\"m-xs\" ng-bind=\"$ctrl.data || 0 | number\"></h1>\n" +
+    "        <h1 class=\"m-xs\" ng-bind=\"$ctrl.data.count || 0 | number\"></h1>\n" +
     "\n" +
     "        <h3 class=\"font-extra-bold no-margins text-success\">\n" +
     "            Url's Generated\n" +

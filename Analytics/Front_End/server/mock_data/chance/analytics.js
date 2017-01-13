@@ -1,21 +1,79 @@
 var chance = require("chance").Chance();
 
 exports.getSummary = function(query){
+
   return {
-    totalUrls: 123123,
-    users:{total:123, uniqueUsers:123, uniqueUsersToday: 12, usersToday: 123,  uniqueUsersYesterday: 12, usersYesterday: 123,  uniqueUsersWeek: 12, usersWeek: 123 },
-    visits:{total:1, uniqueVisits: 12, visitsToday:12, uniqueVisitsToday:123, visitsYesterday:123, uniqueVisitsYesterday:123, uniqueVisitsWeek:123, visitsWeek:123},
-    campaigns:{total:24, campaignsWeek:2, campaignsMonth:24},
-    loggedInUsers:{total:1, totalToday:0, totalYesterday:0, totalWeek:0},
-    recentCampaigns:[
-      {id:1, rid:123, title:null, createdOn:'12/12/2000', inActiveDate:'', visits:123, users: 123, status:'Active'},
-      {id:2, rid:234, title:"test 123", createdOn:'01/05/2001', inActiveDate:'01/10/2001', visits:123, users: 123, status:'InActive'},
-      {id:3, rid:234, title:"test 123", createdOn:'01/05/2001', inActiveDate:'01/10/2001', visits:123, users: 123, status:'Archieve'}
-    ],
-    activities:{
-      today:{urlTotal:12, urlPercent:12, visitsTotal:1, visitsPercent:2, revisitsTotal:1, revisitsPercent:2, noVisitsTotal:1, noVisitsPercent:2},
-      week:{urlTotal:23, urlPercent:1, visitsTotal:1, visitsPercent:2, revisitsTotal:1, revisitsPercent:2, noVisitsTotal:1, noVisitsPercent:2},
-      month:{urlTotal:2, urlPercent:2, visitsTotal:1, visitsPercent:2, revisitsTotal:1, revisitsPercent:2, noVisitsTotal:1, noVisitsPercent:2}}
+    "totalUrls": {"count": 8199},
+    "users": {
+      "total": 8199,
+      "uniqueUsers": 2,
+      "uniqueUsersToday": 3,
+      "usersToday": 3,
+      "uniqueUsersYesterday": 2,
+      "usersYesterday": 1,
+      "uniqueUsersLast7days": 1,
+      "usersLast7days": 7831
+    },
+    "visits": {
+      "total": 8235,
+      "uniqueVisits": 6416,
+      "visitsToday": 2,
+      "uniqueVisitsToday": 2,
+      "visitsYesterday": 3,
+      "uniqueVisitsYesterday": 1,
+      "uniqueVisitsLast7days": 2,
+      "visitsLast7days": 2986
+    },
+    "campaigns": {"total": 7, "campaignsLast7days": 2, "campaignsMonth": 2},
+    "recentCampaigns": [{
+      "id": 1,
+      "rid": "1234",
+      "createdOn": "2016-11-28T23:47:04.763",
+      "endate": null,
+      "visits": 6415,
+      "users": 8198,
+      "status": true
+    }, {
+      "id": 2,
+      "rid": "abcd",
+      "createdOn": "2016-12-07T20:18:27.607",
+      "endate": null,
+      "visits": 1,
+      "users": 1,
+      "status": true
+    }],
+    "activities": {
+      "today": {
+        "urlTotal": 8199,
+        "urlPercent": 0.0,
+        "visitsTotal": 8235,
+        "visitsPercent": 0.0,
+        "revisitsTotal": 1819,
+        "revisitsPercent": 0.0,
+        "noVisitsTotal": 1783,
+        "noVisitsPercent": 0.0
+      },
+      "last7days": {
+        "urlTotal": 8199,
+        "urlPercent": 25.02,
+        "visitsTotal": 8235,
+        "visitsPercent": -0.21,
+        "revisitsTotal": 1819,
+        "revisitsPercent": 0.1,
+        "noVisitsTotal": 1783,
+        "noVisitsPercent": 5.92
+      },
+      "month": {
+        "urlTotal": 8199,
+        "urlPercent": 46.8,
+        "visitsTotal": 8235,
+        "visitsPercent": -13.47,
+        "revisitsTotal": 1819,
+        "revisitsPercent": -10.46,
+        "noVisitsTotal": 1783,
+        "noVisitsPercent": 10.61
+      }
+    }
   }
 };
 

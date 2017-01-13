@@ -3,15 +3,15 @@ angular.module('bitraz.rid', ["ngResource"])
       return $resource(appConfig.apiEndPoint + '/api/rid/', {}, {
         getInfo: {
           method: 'GET',
-          url: appConfig.apiEndPoint + '/api/rid/info/:id'
+          url: appConfig.apiEndPoint + '/rid/info/:id'
         },
         validate: {
           method: 'POST',
-          url: appConfig.apiEndPoint + '/api/rid/validate/:id'
+          url: appConfig.apiEndPoint + '/rid/validate/:id'
         },
         getSummary: {
           method: 'GET',
-          url: appConfig.apiEndPoint + '/api/AnalyticsApi/GETSUMMARY'
+          url: appConfig.apiEndPoint + '/Analytics/GETSUMMARY'
         },
         getCounts: {
           method: 'GET',

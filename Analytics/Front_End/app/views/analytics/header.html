@@ -8,7 +8,7 @@
     <div class="small-logo" ng-href="#">
         <a ng-href="#"><span class="text-primary">bi <span class="part2">TRAZ</span></span></a>
     </div>
-    <div class="mobile-menu" ng-if="$root.userInfo.Id">
+    <div class="mobile-menu" ng-if="$root.userInfo.user_id">
         <button type="button" class="navbar-toggle mobile-menu-toggle" data-toggle="collapse" data-target="#mobile-collapse">
             <i class="fa fa-chevron-down"></i>
         </button>
@@ -21,7 +21,7 @@
             </ul>
         </div>
     </div>
-    <div class="navbar-right"  ng-if="$root.userInfo.Id">
+    <div class="navbar-right"  ng-if="$root.userInfo.user_id">
         <ul class="nav navbar-nav no-borders">
             <li uib-dropdown>
                 <a ui-sref="bitraz.main.index" uib-dropdown-toggle>

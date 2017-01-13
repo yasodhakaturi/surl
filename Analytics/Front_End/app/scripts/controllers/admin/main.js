@@ -36,7 +36,7 @@ function HeaderController($rootScope, $scope, $state, AuthService, appConfig, $w
 function HomeController($http, $scope, $rootScope) {
 
   $scope.dashboardConfig = {
-    userId: $rootScope.userInfo.Id,
+    userId: $rootScope.userInfo.user_id,
     type: 'all',
     modules:[
       {name: 'urlGenerated', rank:1, span:1},

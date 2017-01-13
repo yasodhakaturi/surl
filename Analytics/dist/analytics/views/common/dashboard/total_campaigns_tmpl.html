@@ -13,12 +13,12 @@
                     </span>
             <div class="row">
                 <div class="col-xs-6">
-                    <small class="stats-label">7 Days</small>
-                    <h4>{{$ctrl.data.campaignsWeek || 0}}</h4>
+                    <small class="stats-label">This Week</small>
+                    <h4>{{$ctrl.data.campaignsLast7days || 0}}</h4>
                 </div>
 
                 <div class="col-xs-6">
-                    <small class="stats-label">30 days</small>
+                    <small class="stats-label">This Month</small>
                     <h4>{{$ctrl.data.campaignsMonth || 0}}</h4>
                 </div>
             </div>

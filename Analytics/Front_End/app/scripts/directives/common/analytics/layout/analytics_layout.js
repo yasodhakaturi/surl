@@ -305,7 +305,7 @@ angular.module("bitraz")
       $ctrl.loadData = (params) => {
         $ctrl.dashboardConfig = {
           type:'campaign',
-          userId: $rootScope.userInfo.Id,
+          userId: $rootScope.userInfo.user_id,
           campaignId: params.Uniqueid
         };
         if(timer){

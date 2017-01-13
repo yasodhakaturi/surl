@@ -18,8 +18,8 @@
                 <li ng-class="{'active':active == 'features'}"><a class="page-scroll" page-scroll ui-sref="bitraz.main.features">Features</a></li>
                 <li ng-class="{'active':active == 'clients'}"><a class="page-scroll" page-scroll ui-sref="bitraz.main.clients">Clients </a></li>
                 <li ng-class="{'active':active == 'contact'}"><a class="page-scroll" page-scroll ui-sref="bitraz.main.contact">Contact</a></li>
-                <li ng-class="{'active':active == 'login'}" ng-show="!$root.userInfo || !$root.userInfo.Id"><a class="page-scroll" page-scroll ui-sref="bitraz.main.login">Sign In</a></li>
-                <li ng-class="{'active':active == 'logout'}" ng-show="$root.userInfo && $root.userInfo.Id"><a class="page-scroll" page-scroll ng-click="logout()">Log Out</a></li>
+                <li ng-class="{'active':active == 'login'}" ng-show="!$root.userInfo || !$root.userInfo.user_id"><a class="page-scroll" page-scroll ui-sref="bitraz.main.login">Sign In</a></li>
+                <li ng-class="{'active':active == 'logout'}" ng-show="$root.userInfo && $root.userInfo.user_id"><a class="page-scroll" page-scroll ng-click="logout()">Log Out</a></li>
             </ul>
         </div>
     </div>
@@ -30,8 +30,8 @@
                 <li ng-class="{'active':active == 'features'}"><a class="page-scroll" page-scroll ui-sref="bitraz.main.features">Features</a></li>
                 <li ng-class="{'active':active == 'clients'}"><a class="page-scroll" page-scroll ui-sref="bitraz.main.clients">Clients </a></li>
                 <li ng-class="{'active':active == 'contact'}"><a class="page-scroll" page-scroll ui-sref="bitraz.main.contact">Contact</a></li>
-                <li ng-class="{'active':active == 'login'}" ng-show="!$root.userInfo || !$root.userInfo.Id"><a class="page-scroll" page-scroll ui-sref="bitraz.main.login">Sign In</a></li>
-                <li ng-class="{'active':active == 'logout'}" ng-show="$root.userInfo && $root.userInfo.Id"><a class="page-scroll" page-scroll ng-click="logout()">Log Out</a></li>
+                <li ng-class="{'active':active == 'login'}" ng-show="!$root.userInfo || !$root.userInfo.user_id"><a class="page-scroll" page-scroll ui-sref="bitraz.main.login">Sign In</a></li>
+                <li ng-class="{'active':active == 'logout'}" ng-show="$root.userInfo && $root.userInfo.user_id"><a class="page-scroll" page-scroll ng-click="logout()">Log Out</a></li>
             </ul>
         </div>
     </div>

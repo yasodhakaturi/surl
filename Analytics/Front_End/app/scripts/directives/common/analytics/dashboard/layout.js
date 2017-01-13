@@ -24,18 +24,23 @@ angular.module("bitraz.dashboard", ['ui.router'])
       };
 
       $ctrl.getParams = ()=> {
-        if($ctrl.config.userId){$ctrl.params.userId = $ctrl.config.userId;}
+        if($ctrl.config.userId){$ctrl.params.cid = $ctrl.config.userId;}
         if($ctrl.config.campaignId){$ctrl.params.campaignId = $ctrl.config.campaignId;}else{ delete $ctrl.params.campaignId;}
         return $ctrl.params;
       };
 
       $ctrl.$onInit = ()=>{
-         $ctrl.getSummary();
+        if(!( _.isNull($rootScope.userInfo && $rootScope.userInfo.user_id) || _.isUndefined($rootScope.userInfo && $rootScope.userInfo.user_id))){
+          $ctrl.getSummary();
+        }
+
       };
 
       $ctrl.$onChanges = (changes)=>{
         if(changes.config && !changes.config.isFirstChange()){
-          $ctrl.getSummary();
+          if(!( _.isNull($rootScope.userInfo && $rootScope.userInfo.user_id) || _.isUndefined($rootScope.userInfo && $rootScope.userInfo.user_id))) {
+            $ctrl.getSummary();
+          }
         }
       }
 

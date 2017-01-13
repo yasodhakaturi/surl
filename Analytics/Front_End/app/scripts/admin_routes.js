@@ -164,7 +164,7 @@ angular.module('routes', [
       console.log(toState, toStateParams, fromState, fromStateParams, $location)
       $rootScope.isAuthenticationRequired = toState.data
         && toState.data.requiresLogin
-        && ( _.isNull($rootScope.userInfo && $rootScope.userInfo.Id) || _.isUndefined($rootScope.userInfo && $rootScope.userInfo.Id) );
+        && ( _.isNull($rootScope.userInfo && $rootScope.userInfo.user_id) || _.isUndefined($rootScope.userInfo && $rootScope.userInfo.user_id) );
 
       if ( $rootScope.isAuthenticationRequired ) {
         event.preventDefault();
