@@ -89,17 +89,17 @@ angular.module("views/common/dashboard/dashboard_tmpl.html", []).run(["$template
     "<div class=\"dashboard-container\" ng-if=\"$ctrl.config && $ctrl.config.type == 'all'\">\n" +
     "    <div class=\"row\">\n" +
     "        <div class=\"col-lg-3 col-md-6\">\n" +
-    "            <urls-generated data=\"$ctrl.data.totalUrls\"></urls-generated>\n" +
+    "            <urls-generated data=\"$ctrl.data.totalUrls\" is-campaign=\"!!$ctrl.config.campaignId\"></urls-generated>\n" +
     "        </div>\n" +
     "        <div class=\"col-lg-3 col-md-6\">\n" +
-    "            <total-users data=\"$ctrl.data.users\"></total-users>\n" +
+    "            <total-users data=\"$ctrl.data.users\" is-campaign=\"!!$ctrl.config.campaignId\"></total-users>\n" +
     "        </div>\n" +
     "        <div class=\"col-lg-3 col-md-6\">\n" +
-    "            <total-visits data=\"$ctrl.data.visits\"></total-visits>\n" +
+    "            <total-visits data=\"$ctrl.data.visits\" is-campaign=\"!!$ctrl.config.campaignId\"></total-visits>\n" +
     "        </div>\n" +
     "\n" +
     "        <div class=\"col-lg-3 col-md-6\">\n" +
-    "            <total-campaigns data=\"$ctrl.data.campaigns\"></total-campaigns>\n" +
+    "            <total-campaigns data=\"$ctrl.data.campaigns\" is-campaign=\"!!$ctrl.config.campaignId\"></total-campaigns>\n" +
     "        </div>\n" +
     "\n" +
     "\n" +
@@ -111,7 +111,7 @@ angular.module("views/common/dashboard/dashboard_tmpl.html", []).run(["$template
     "        </div>\n" +
     "\n" +
     "        <div class=\"col-lg-3\">\n" +
-    "            <activities data=\"$ctrl.data.activities\" header=\"true\"></activities>\n" +
+    "            <activities data=\"$ctrl.data.activities\" header=\"true\" is-campaign=\"!!$ctrl.config.campaignId\"></activities>\n" +
     "        </div>\n" +
     "\n" +
     "        <div class=\"col-lg-3\">\n" +
@@ -124,16 +124,16 @@ angular.module("views/common/dashboard/dashboard_tmpl.html", []).run(["$template
     "<div class=\"dashboard-container\" ng-if=\"$ctrl.config && $ctrl.config.type == 'campaign'\">\n" +
     "    <div class=\"row\">\n" +
     "        <div class=\"col-lg-3 col-md-6\">\n" +
-    "            <urls-generated data=\"$ctrl.data.totalUrls\"></urls-generated>\n" +
+    "            <urls-generated data=\"$ctrl.data.totalUrls\" is-campaign=\"!!$ctrl.config.campaignId\"></urls-generated>\n" +
     "        </div>\n" +
     "        <div class=\"col-lg-3 col-md-6\">\n" +
-    "            <total-users data=\"$ctrl.data.users\"></total-users>\n" +
+    "            <total-users data=\"$ctrl.data.users\" is-campaign=\"!!$ctrl.config.campaignId\"></total-users>\n" +
     "        </div>\n" +
     "        <div class=\"col-lg-3 col-md-6\">\n" +
-    "            <total-visits data=\"$ctrl.data.visits\"></total-visits>\n" +
+    "            <total-visits data=\"$ctrl.data.visits\" is-campaign=\"!!$ctrl.config.campaignId\"></total-visits>\n" +
     "        </div>\n" +
     "        <div class=\"col-lg-3 col-md-6\">\n" +
-    "            <activities data=\"$ctrl.data.activities\" header=\"false\"></activities>\n" +
+    "            <activities data=\"$ctrl.data.activities\" is-campaign=\"!!$ctrl.config.campaignId\" header=\"false\"></activities>\n" +
     "        </div>\n" +
     "\n" +
     "    </div>\n" +
@@ -268,7 +268,10 @@ angular.module("views/common/dashboard/total_users_tmpl.html", []).run(["$templa
     "        </div>\n" +
     "        <div class=\"m-t-xl\">\n" +
     "            <h3 class=\"m-b-xs text-success\" ng-bind=\"$ctrl.data.total || 0 | number\"></h3>\n" +
-    "                            <span class=\"font-bold no-margins\">\n" +
+    "                            <span class=\"font-bold no-margins\" ng-if=\"$ctrl.isCampaign\">\n" +
+    "                                Unique users in this campaign\n" +
+    "                            </span>\n" +
+    "                            <span class=\"font-bold no-margins\" ng-if=\"!$ctrl.isCampaign\">\n" +
     "                                Unique users across all campaigns\n" +
     "                            </span>\n" +
     "\n" +
@@ -498,7 +501,7 @@ angular.module("views/common/header-dashboard.html", []).run(["$templateCache", 
 
 angular.module("views/common/login.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/common/login.html",
-    "<div class=\"login-container\"> <div class=\"row\"> <div class=\"col-md-12\"> <div class=\"text-center m-b-md\" style=\"border: 1px solid transparent\"> <h3>LOGIN</h3> <!-- <small> This is the best app ever!</small> --> </div> <div class=\"hpanel\"> <div class=\"panel-body\"> <ng-form name=\"loginForm\" id=\"loginForm\" novalidate> <div class=\"form-group\"> <label class=\"control-label\" for=\"username\">Username</label> <input type=\"text\" placeholder=\"name@your_domain.com\" title=\"Please enter you username\" ng-model=\"uname\" ng-required=\"true\" value=\"\" name=\"username\" id=\"username\" class=\"form-control\"> </div> <span ng-if=\"loginForm.username.$touched && loginForm.username.$error.required\" class=\"text-danger\">Name is required</span> <div class=\"form-group\"> <label class=\"control-label\" for=\"password\">Password</label> <input type=\"password\" title=\"Please enter your password\" ng-required=\"true\" ng-model=\"pswd\" name=\"password\" id=\"password\" class=\"form-control\"> </div> <span ng-if=\"loginForm.password.$touched && loginForm.password.$error.required\" class=\"text-danger\">Password is required</span> <button class=\"btn btn-success btn-block\" ng-click=\"login()\"><span ng-show=\"!loading\">Login</span><span ng-show=\"loading\"><i class=\"fa fa-refresh fa-spin\"></i> </span></button> <span class=\"text-danger\" ng-if=\"loginError\" class=\"text-danger\">Error: {{loginError}} </span> </ng-form> </div> </div> </div> </div> </div>");
+    "<div class=\"login-container\"> <div class=\"row\"> <div class=\"col-md-12\"> <div class=\"text-center m-b-md\" style=\"border: 1px solid transparent\"> <h3>LOGIN</h3> <!-- <small> This is the best app ever!</small> --> </div> <div class=\"hpanel\"> <div class=\"panel-body\"> <form name=\"loginForm\" id=\"loginForm\" novalidate ng-submit=\"login()\"> <div class=\"form-group\"> <label class=\"control-label\" for=\"username\">Username</label> <input type=\"text\" placeholder=\"name@your_domain.com\" title=\"Please enter you username\" ng-model=\"uname\" ng-required=\"true\" value=\"\" name=\"username\" id=\"username\" class=\"form-control\"> </div> <span ng-if=\"loginForm.username.$touched && loginForm.username.$error.required\" class=\"text-danger\">Name is required</span> <div class=\"form-group\"> <label class=\"control-label\" for=\"password\">Password</label> <input type=\"password\" title=\"Please enter your password\" ng-required=\"true\" ng-model=\"pswd\" name=\"password\" id=\"password\" class=\"form-control\"> </div> <span ng-if=\"loginForm.password.$touched && loginForm.password.$error.required\" class=\"text-danger\">Password is required</span> <button class=\"btn btn-success btn-block\" type=\"submit\"><span ng-show=\"!loading\">Login</span><span ng-show=\"loading\"><i class=\"fa fa-refresh fa-spin\"></i> </span></button> <span class=\"text-danger\" ng-if=\"loginError\" class=\"text-danger\">Error: {{loginError}} </span> </form> </div> </div> </div> </div> </div>");
 }]);
 
 angular.module("views/common/navigation.html", []).run(["$templateCache", function($templateCache) {

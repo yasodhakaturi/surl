@@ -3,7 +3,8 @@ angular.module("bitraz.dashboard")
     templateUrl: "views/common/dashboard/activities_tmpl.html",
     bindings: {
       data: "<",
-      header: "<"
+      header: "<",
+      isCampaign:"<"
     },
     controller: ["$scope", "$rootScope", "$timeout", function ($scope, $rootScope, $timeout) {
       var $ctrl = this;

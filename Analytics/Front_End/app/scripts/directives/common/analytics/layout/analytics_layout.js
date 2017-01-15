@@ -69,7 +69,12 @@ angular.module("bitraz")
         startDate: moment().format('MM/DD/YYYY'),
         endDate: moment().format('MM/DD/YYYY'),
         minDate: moment('01/01/2016').format('MM/DD/YYYY'),
-        maxDate: moment().format('MM/DD/YYYY')
+        maxDate: moment().format('MM/DD/YYYY'),
+        eventHandlers: {'apply.daterangepicker': function(ev, picker) {
+          $scope.date = {startDate: ev.model.startDate,
+            endDate: ev.model.endDate};
+          $ctrl.$onInit();
+        }}
       };
 
       $scope.chartConfig = {

@@ -8,7 +8,10 @@
         </div>
         <div class="m-t-xl">
             <h3 class="m-b-xs text-success" ng-bind="$ctrl.data.total || 0 | number"></h3>
-                            <span class="font-bold no-margins">
+                            <span class="font-bold no-margins" ng-if="$ctrl.isCampaign">
+                                Unique users in this campaign
+                            </span>
+                            <span class="font-bold no-margins" ng-if="!$ctrl.isCampaign">
                                 Unique users across all campaigns
                             </span>
 
