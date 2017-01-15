@@ -62,8 +62,8 @@ function AnalyticsController($rootScope, $state, $scope, CampaignService, $locat
           $location.path('/')
         }
       }else{
-        if(res.campaigns){
-          $scope.campaigns = res.campaigns;
+        if(res){
+          $scope.campaigns = res || [];
 
           if(_.indexOf(_.map($scope.campaigns, 'rid'), $scope.selectedCampaign) < 0){
             $scope.selectedCampaign = $scope.campaigns[0].rid;
