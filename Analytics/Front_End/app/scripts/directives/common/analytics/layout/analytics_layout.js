@@ -131,7 +131,7 @@ angular.module("bitraz")
         series: [{
           type: 'area',
           name: 'Count',
-          data: $scope.data.activity
+          data: _.map($scope.data.activity, (activity)=>{return [(new Date(activity.RequestedDate)).getTime(), activity.RequestCount];})
         }]
 
       };
@@ -304,7 +304,7 @@ angular.module("bitraz")
         $scope.locationConfig.series[0].data =  $scope.data.locations;
         $scope.platformConfig.series[0].data =  $scope.data.platforms;
         $scope.deviceConfig.series[0].data =  $scope.data.platforms;
-        $scope.chartConfig.series[0].data =  $scope.data.activity;
+        $scope.chartConfig.series[0].data =  _.map($scope.data.activity, (activity)=>{return [(new Date(activity.RequestedDate)).getTime(), activity.RequestCount];});
       };
 
       $ctrl.loadData = (params) => {
