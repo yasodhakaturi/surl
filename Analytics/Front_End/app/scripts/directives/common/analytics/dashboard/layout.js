@@ -30,7 +30,7 @@ angular.module("bitraz.dashboard", ['ui.router'])
       };
 
       $ctrl.$onInit = ()=>{
-        if(!( _.isNull($rootScope.userInfo && $rootScope.userInfo.user_id) || _.isUndefined($rootScope.userInfo && $rootScope.userInfo.user_id))){
+        if($rootScope.userInfo && $rootScope.userInfo.user_id){
           $ctrl.getSummary();
         }
 
@@ -38,7 +38,7 @@ angular.module("bitraz.dashboard", ['ui.router'])
 
       $ctrl.$onChanges = (changes)=>{
         if(changes.config && !changes.config.isFirstChange()){
-          if(!( _.isNull($rootScope.userInfo && $rootScope.userInfo.user_id) || _.isUndefined($rootScope.userInfo && $rootScope.userInfo.user_id))) {
+          if($rootScope.userInfo && $rootScope.userInfo.user_id) {
             $ctrl.getSummary();
           }
         }

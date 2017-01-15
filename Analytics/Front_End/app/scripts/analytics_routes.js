@@ -162,7 +162,7 @@ angular.module('routes', [
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toStateParams, fromState, fromStateParams) {
       var isAuthenticationRequired = toState.data
         && toState.data.requiresLogin
-        && (!$rootScope.userInfo || !$rootScope.userInfo.user_id);
+        && !($rootScope.userInfo && $rootScope.userInfo.user_id);
 
       if ( isAuthenticationRequired ) {
         event.preventDefault();
