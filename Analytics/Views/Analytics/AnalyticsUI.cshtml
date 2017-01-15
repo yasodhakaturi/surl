@@ -6,7 +6,7 @@
     <title page-title>biTRAZ :: trace your link</title> <!-- Place favicon.ico and apple-touch-icon.png in the root directory --> <!--<link rel="shortcut icon" type="image/ico" href="favicon.ico" />-->
     <link rel="stylesheet" href="../dist/analytics/styles/vendor.css">
     <link rel="stylesheet" href="../dist/analytics/styles/style.css"> 
-    <script type="text/javascript">
+    @*<script type="text/javascript">
 (function () {
     window.appConfig = {
         env: 'dev',
@@ -14,7 +14,7 @@
         apiUrl: 'http://localhost:3000',
         userInfo: { Id: null, UserName: '', isAdmin: false, isClient: false, isReadOnly: true }
     }
-})();</script>
+})();</script>*@
      <!-- Body --> <!-- appCtrl controller with serveral data used in theme on diferent view -->
     <body ng-controller="appCtrl" class="{{$state.current.data.specialClass}} fixed-navbar hide-sidebar">
         <!-- Simple splash screen--> <div class="splash"> <div class="color-line"></div> <div class="splash-title"> <h1>Bitraz</h1> <p></p> <img src="../dist/analytics/images/loading-bars.svg" width="64" height="64"></div> </div>

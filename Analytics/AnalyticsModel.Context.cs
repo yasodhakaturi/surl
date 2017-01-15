@@ -34,6 +34,7 @@ namespace Analytics
         public virtual DbSet<UIDDATA> UIDDATAs { get; set; }
         public virtual DbSet<ErrorLog> ErrorLogs { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
+        public virtual DbSet<LoginHistory> LoginHistories { get; set; }
     
         public virtual int InsertintoUIDRID(string typediff, Nullable<int> uidorrid)
         {
@@ -138,11 +139,15 @@ namespace Analytics
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertSHORTURLData", ipv4Parameter, ipv6Parameter, browserParameter, browser_versionParameter, cityParameter, regionParameter, countryParameter, countrycodeParameter, req_urlParameter, useragentParameter, hostnameParameter, deviceTypeParameter, isMobiledeviceParameter, fk_uidParameter, fk_ridParameter, fK_clientidParameter, uniqueidParameter);
         }
     
-        public virtual int InsertUIDData(Nullable<int> fk_rid, string referencenumber, string longurl, string mobilenumber)
+        public virtual int InsertUIDData(Nullable<int> fk_rid, Nullable<int> fk_clientid, string referencenumber, string longurl, string mobilenumber)
         {
             var fk_ridParameter = fk_rid.HasValue ?
                 new ObjectParameter("fk_rid", fk_rid) :
                 new ObjectParameter("fk_rid", typeof(int));
+    
+            var fk_clientidParameter = fk_clientid.HasValue ?
+                new ObjectParameter("fk_clientid", fk_clientid) :
+                new ObjectParameter("fk_clientid", typeof(int));
     
             var referencenumberParameter = referencenumber != null ?
                 new ObjectParameter("referencenumber", referencenumber) :
@@ -156,7 +161,7 @@ namespace Analytics
                 new ObjectParameter("mobilenumber", mobilenumber) :
                 new ObjectParameter("mobilenumber", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertUIDData", fk_ridParameter, referencenumberParameter, longurlParameter, mobilenumberParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertUIDData", fk_ridParameter, fk_clientidParameter, referencenumberParameter, longurlParameter, mobilenumberParameter);
         }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)

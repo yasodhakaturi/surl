@@ -19,7 +19,7 @@ namespace Analytics.Helpers.BO
         SqlConnection lSQLConn = null;
         SqlCommand lSQLCmd = new SqlCommand();
         string connStr = "";
-        public void InsertUIDdata(int fk_rid,string referencenumber, string longurl, string mobilenumber)
+        public void InsertUIDdata(int fk_rid,int? fk_clientid,string referencenumber, string longurl, string mobilenumber)
         {
             connStr = ConfigurationManager.ConnectionStrings["shortenURLConnectionString"].ConnectionString;
             try
@@ -30,6 +30,7 @@ namespace Analytics.Helpers.BO
                 lSQLCmd.CommandType = CommandType.StoredProcedure;
                 lSQLCmd.CommandText = "InsertUIDData";
                 lSQLCmd.Parameters.Add(new SqlParameter("@fk_rid", fk_rid));
+                lSQLCmd.Parameters.Add(new SqlParameter("@fk_clientid", fk_clientid));
                 lSQLCmd.Parameters.Add(new SqlParameter("@referencenumber", referencenumber));
                 lSQLCmd.Parameters.Add(new SqlParameter("@longurl", longurl));
                 lSQLCmd.Parameters.Add(new SqlParameter("@mobilenumber", mobilenumber));

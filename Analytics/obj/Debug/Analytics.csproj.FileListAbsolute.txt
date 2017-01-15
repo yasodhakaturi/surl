@@ -300,6 +300,7 @@ C:\Users\yasodha\Documents\Visual Studio 2013\Projects\Analytics_with UI\surl\An
 C:\Users\yasodha\Documents\Visual Studio 2013\Projects\Analytics_with UI\surl\Analytics\obj\Debug\Analytics.dll
 C:\Users\yasodha\Documents\Visual Studio 2013\Projects\Analytics_with UI\surl\Analytics\obj\Debug\Analytics.pdb
 C:\Users\yasodha\Documents\Visual Studio 2013\Projects\Analytics_with UI\surl\Analytics\obj\Debug\Analytics.csprojResolveAssemblyReference.cache
+C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\surl\Analytics\bin\EntityFramework.dll
 C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\surl\Analytics\bin\Analytics.dll.config
 C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\surl\Analytics\bin\Analytics.dll
 C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\surl\Analytics\bin\Analytics.pdb
@@ -307,7 +308,6 @@ C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\su
 C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\surl\Analytics\bin\AttributeRouting.dll
 C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\surl\Analytics\bin\AttributeRouting.Web.dll
 C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\surl\Analytics\bin\AttributeRouting.Web.Http.dll
-C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\surl\Analytics\bin\EntityFramework.dll
 C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\surl\Analytics\bin\EntityFramework.SqlServer.dll
 C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\surl\Analytics\bin\Microsoft.AspNet.Identity.Core.dll
 C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\surl\Analytics\bin\Microsoft.AspNet.Identity.EntityFramework.dll
@@ -373,3 +373,4 @@ C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\su
 C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\surl\Analytics\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\surl\Analytics\obj\Debug\Analytics.dll
 C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\surl\Analytics\obj\Debug\Analytics.pdb
+C:\Users\yasodha\Documents\Visual Studio 2013\Projects\optimized code with UI\surl\Analytics\obj\Debug\Analytics.csprojResolveAssemblyReference.cache

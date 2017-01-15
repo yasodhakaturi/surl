@@ -234,6 +234,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AnalyticsController.cs" />
     <Compile Include="Controllers\AngularTemplatesController.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="ErrorLog.cs">
@@ -242,9 +243,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\BO\AuthenticateBO.cs" />
     <Compile Include="Helpers\BO\BaseEntity.cs" />
     <Compile Include="Helpers\BO\ConvertionBO.cs" />
     <Compile Include="Helpers\BO\DataInsertionBO.cs" />
+    <Compile Include="Helpers\BO\Error.cs" />
     <Compile Include="Helpers\BO\OperationsBO.cs" />
     <Compile Include="Helpers\BO\OptionsModule.cs" />
     <Compile Include="Helpers\BO\PWDDataBO.cs" />
@@ -255,15 +258,25 @@
     <Compile Include="Helpers\Utility\Helper.cs" />
     <Compile Include="Helpers\Utility\SqlHelper.cs" />
     <Compile Include="IService1.cs" />
+    <Compile Include="LoginHistory.cs">
+      <DependentUpon>AnalyticsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\appUrlModel.cs" />
     <Compile Include="Models\BrowserWiseData.cs" />
+    <Compile Include="Models\CampaignsList.cs" />
+    <Compile Include="Models\CampaignSummary.cs" />
     <Compile Include="Models\CampaignView.cs" />
     <Compile Include="Models\ClientView.cs" />
     <Compile Include="Models\CountryWiseData.cs" />
     <Compile Include="Models\CountsData.cs" />
+    <Compile Include="Models\DashBoardSummary.cs" />
     <Compile Include="Models\DayWiseData.cs" />
     <Compile Include="Models\DeviceWiseData.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\LoginUserInfo.cs" />
     <Compile Include="Models\Summary.cs" />
+    <Compile Include="Models\UserInfo.cs" />
+    <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RIDDATA.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
@@ -1254,30 +1267,22 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Web.config" />
-    <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Shared\Lockout.cshtml" />
-    <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Analytics\Index.cshtml" />
-    <Content Include="Views\Shared\_analyticsLayout.cshtml" />
-    <Content Include="Views\Analytics\Analytics.cshtml" />
-    <Content Include="Views\Admin\AdminLogin.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Scripts\version.json" />
-    <Content Include="Views\AngularTemplates\Inline.cshtml" />
-    <Content Include="Views\AngularTemplates\Template.cshtml" />
-    <Content Include="Views\Admin\Admin.cshtml" />
     <Content Include="Views\Admin\AdminUI.cshtml" />
     <Content Include="Views\Analytics\AnalyticsUI.cshtml" />
     <Content Include="Views\Home\IndexUI.cshtml" />
+    <Content Include="Views\Home\LoginUI.cshtml" />
+    <Content Include="Views\Home\LoginRid.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Views\Auth\" />
     <Folder Include="Views\Campaign\" />
     <Folder Include="Views\Test\" />
   </ItemGroup>

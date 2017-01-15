@@ -1,39 +1,22 @@
-﻿@*@inherits System.Web.Mvc.WebViewPage
+﻿@inherits System.Web.Mvc.WebViewPage
 @{
     Layout = null;
 }
 
-<!DOCTYPE html>
-<body ng-app="inlinedTemplates">
-    <div class="container">
-        <h1>Inlined Angular Templates</h1>
-        <hr />
-        <div ng-view></div>
-    </div>
+@*<!DOCTYPE html>
+    <body ng-app="inlinedTemplates">
+        <div class="container">
+            <h1>Inlined Angular Templates</h1>
+            <hr />
+            <div ng-view></div>
+        </div>
 
-  
-
-    @Html.Partial("~/Views/Admin/AdminLoginUI.cshtml")
+        @Html.Action("Template", "AngularTemplates", new { name="login" })
 
 
 
 
-
-
-
-
-   
-</body>*@
-
-
-
-
-
-@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
+    </body>*@
 <html lang="en">
 
 <head>
@@ -66,68 +49,44 @@
     <![endif]-->
     <script type="text/javascript">
     function CheckLogin() {
-        var Email = document.getElementById('txtEmail').value;
+        //var uname = document.getElementById('txtUserName').value;
         var pwd = document.getElementById('txtPassword').value;
         var chkrem = document.getElementById('chkremember');
         var checkremck = chkrem.checked;
 
         var error = "";
-        if (Email == "") {
-            error += "Please Enter Your Email\n\n";
-        }
+        //if (uname == "") {
+        //    error += "Please Enter Your UserName\n\n";
+        //}
         if (pwd == "") {
             error += "Please Enter Your Password\n\n";
         }
+        if (error == "") {
+            $('#divLoading').show();
+            $.ajax({
+                type: "POST",
+                url: '/Home/ValidateRid',
+                data: { password: pwd, chkRemember: checkremck },
+                success: function (response) {
+                    $('#divLoading').hide();
+                    var data = response.split('~');
 
-        var jsonObject = {
-            "id" : "1",
-            "objclient": { "UserName": "admin", "Email": "yasodha.bitra@gmail.com" }
-        };
+                    if (data[0] == 'Success') {
+                        window.location.replace(data[1]);
+                    }
+                    else {
+                        alert(data[1]);
+                    }
 
-        $.ajax({
-            url: "@Url.Action("Users")",
-            type: "POST",
-            data: JSON.stringify(jsonObject)  ,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        error: function (response) {
-            alert(response.responseJSON);
-            document.getElementById("txtEmail").value = response.responseJSON;
-        },
-        success: function (response) {
-            alert(response.responseJSON);
-            alert(response);
-            document.getElementById("txtEmail").value = response;
-
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError);
+                }
+            });
         }
-    });
-
-        //if (error == "") {  
-        //    $('#divLoading').show();
-        //    $.ajax({
-        //        type: "POST",
-        //        url: '/Admin/Validate',
-        //        data: { email:Email,password: pwd, chkRemember: checkremck },
-        //        success: function (response) {
-        //            $('#divLoading').hide();
-        //            var data = response.split('~');
-
-        //            if (data[0] == 'Success') {
-        //                window.location.replace(data[1]);
-        //            }
-        //            else {
-        //                alert(data[1]);
-        //            }
-
-        //        },
-        //        error: function (xhr, ajaxOptions, thrownError) {
-        //            alert(thrownError);
-        //        }
-        //    });
-        //}
-        //else {
-        //    alert(error);
-        //}
+        else {
+            alert(error);
+        }
 
     }
 
@@ -148,9 +107,7 @@
                     <div class="panel-body">
                         <form role="form">
                             <fieldset>
-                                <div class="form-group">
-                                        <input id="txtEmail" class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
-                                    </div>
+
                                 <div class="form-group">
                                     <input id="txtPassword" class="form-control" placeholder="Password" name="password" type="password" value="">
                                 </div>

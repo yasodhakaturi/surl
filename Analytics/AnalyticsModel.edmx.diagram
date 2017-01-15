@@ -19,6 +19,9 @@
         <EntityTypeShape EntityType="shortenURLModel.Client" Width="1.5" PointX="5.375" PointY="6.75" />
         <AssociationConnector Association="shortenURLModel.FK_RIDDATA_Client" />
         <AssociationConnector Association="shortenURLModel.FK_SHORTURLDATA_Client" />
+        <EntityTypeShape EntityType="shortenURLModel.LoginHistory" Width="1.5" PointX="7.375" PointY="4.75" />
+        <AssociationConnector Association="shortenURLModel.FK_UIDDATA_Client" />
+        <AssociationConnector Association="shortenURLModel.FK_UIDDATA_UIDDATA" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

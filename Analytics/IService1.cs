@@ -33,15 +33,15 @@ namespace Analytics
         [WebInvoke(Method = "GET",
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "GETALLCOUNTS?Fk_Uniqueid={Fk_Uniqueid}&DateFrom={DateFrom}&DateTO={DateTO}")]
-         Stream GETALLCOUNTS(string Fk_Uniqueid, string DateFrom, string DateTO);
+            UriTemplate = "GETAllCounts?Fk_Uniqueid={Fk_Uniqueid}&DateFrom={DateFrom}&DateTO={DateTO}")]
+        Stream GETAllCounts(string Fk_Uniqueid, string DateFrom, string DateTO);
 
         [OperationContract]
         [WebInvoke(Method = "GET",
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "GETSUMMARY?Fk_Uniqueid={Fk_Uniqueid}")]
-        Stream GETSUMMARY(string Fk_Uniqueid);
+            UriTemplate = "GETSummary?Fk_Uniqueid={Fk_Uniqueid}")]
+        Stream GETSummary(string Fk_Uniqueid);
 
         [OperationContract]
         [WebInvoke(Method = "GET",

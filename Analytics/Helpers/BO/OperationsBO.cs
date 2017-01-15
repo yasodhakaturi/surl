@@ -1,4 +1,5 @@
 ﻿using Analytics.Helpers.Utility;
+using Analytics.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -117,7 +118,7 @@ namespace Analytics.Helpers.BO
                 string pwd = null;
                 
                 PWDDataBO obj = (from uniid in dc.UIDandRIDDatas
-                               where uniid.PK_UniqueId == Uniqueid_UIDRID  && uniid.TypeDiff=="2"
+                               where uniid.PK_UniqueId == Uniqueid_UIDRID  
                                select new PWDDataBO
                              {
                                  typediff=uniid.TypeDiff,
@@ -125,10 +126,17 @@ namespace Analytics.Helpers.BO
                              }).SingleOrDefault();
                 if (obj != null)
                 {
-                    pwd = (from r in dc.RIDDATAs
-                           where r.PK_Rid == obj.UIDorRID
-                           select r.Pwd).SingleOrDefault();
-                    obj.pwd = pwd;
+                    if (obj.typediff == "2")
+                    {
+                        pwd = (from r in dc.RIDDATAs
+                               where r.PK_Rid == obj.UIDorRID
+                               select r.Pwd).SingleOrDefault();
+                        obj.pwd = pwd;
+                    }
+                    else
+                    {
+                        obj.pwd = pwd;
+                    }
                     return obj;
                 }
                 else
@@ -167,7 +175,54 @@ namespace Analytics.Helpers.BO
                 return 0;
             }
         }
+
+        public UserViewModel GetViewConfigDetails(string url)
+        {
+            UserViewModel obj = new UserViewModel();
+            string env = ""; string appurl = "";
+
+             if (url.Contains(".com") || url.Contains("www."))
+              env = "prod";
+             else
+             env = "dev"; 
+
+            obj.env = env;
+            if (url.Contains(".com") || url.Contains("www."))
+                appurl = url;
+            else
+                appurl = "http://localhost:3000";
+
+            obj.appUrl = appurl;
+            UserInfo user_obj = new UserInfo();
+
+            if (HttpContext.Current.Session["userdata"] != null)
+            {
+                user_obj.user_id = Helper.CurrentUserId;
+                user_obj.user_name = Helper.CurrentUserName;
+                //user_obj.user_role = Helper.CurrentUserRole;
+                if (Helper.CurrentUserRole.ToLower() == "admin")
+                { obj.isAdmin = "true"; obj.isClient = "false"; }
+                else if (Helper.CurrentUserRole.ToLower() == "client")
+                { obj.isClient = "true"; obj.isAdmin = "false"; }
+            }
+            else
+            {
+                user_obj.user_id = 0;
+                user_obj.user_name = "null";
+                obj.isAdmin = "false";
+                obj.isClient = "false";
+            }
+            
+            obj.userInfo = user_obj;
+            appUrlModel appobj = new appUrlModel();
+            appobj.admin = "/Admin";
+            appobj.analytics = "/Analytics";
+            appobj.landing = "/Home";
+            obj.apiUrl = appobj;
+            return obj;
+        }
         public void Monitize(string Shorturl)
+        
         {
             try
             {

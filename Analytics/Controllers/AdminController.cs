@@ -28,14 +28,22 @@ namespace Analytics.Controllers
 
         
         // GET: Admin
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
-        public ActionResult Admin()
+      public ActionResult Index()
       {
-          return View();
+          UserViewModel obj = new UserViewModel();
+          string url = Request.Url.ToString();
+          obj = new OperationsBO().GetViewConfigDetails(url);
+
+          return View(obj);
       }
+    //    public ActionResult Admin()
+    //{
+    //       UserViewModel obj = new UserViewModel();
+    //       string url = Request.Url.ToString();
+    //       obj = new OperationsBO().GetViewConfigDetails(url);
+
+    //      return View(obj);
+    //  }
       public ActionResult AdminLogin()
         {
             //string strResult = string.Empty;
@@ -90,15 +98,15 @@ namespace Analytics.Controllers
             }
          }
       
-        public ActionResult Index()
-         {
-             //ADDClientView obj = new ADDClientView();
-             List<Client> objc = (from c in dc.Clients
-                                  select c).ToList();
-             //obj.clientLst = objc;
+        //public ActionResult Index()
+        // {
+        //     //ADDClientView obj = new ADDClientView();
+        //     List<Client> objc = (from c in dc.Clients
+        //                          select c).ToList();
+        //     //obj.clientLst = objc;
 
-             return View(objc);
-         }
+        //     return View(objc);
+        // }
 
         public JsonResult Users(ClientView objclient, int? id)
     

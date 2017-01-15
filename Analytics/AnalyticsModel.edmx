@@ -30,6 +30,16 @@
           <Property Name="StackTrace" Type="nvarchar(max)" />
           <Property Name="ErrorMessage" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="LoginHistory">
+          <Key>
+            <PropertyRef Name="PKLoginHistoryId" />
+          </Key>
+          <Property Name="PKLoginHistoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FKPersonId" Type="int" />
+          <Property Name="Role" Type="nvarchar" MaxLength="50" />
+          <Property Name="IpAddress" Type="nvarchar(max)" />
+          <Property Name="LoginDateTime" Type="datetime" />
+        </EntityType>
         <EntityType Name="RIDDATA">
           <Key>
             <PropertyRef Name="PK_Rid" />
@@ -39,6 +49,7 @@
           <Property Name="Pwd" Type="nvarchar(max)" />
           <Property Name="IsActive" Type="bit" />
           <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="FK_ClientId" Type="int" />
         </EntityType>
@@ -93,6 +104,7 @@
           </Key>
           <Property Name="PK_Uid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="FK_RID" Type="int" />
+          <Property Name="FK_ClientID" Type="int" />
           <Property Name="ReferenceNumber" Type="nvarchar(max)" />
           <Property Name="Longurl" Type="nvarchar(max)" />
           <Property Name="MobileNumber" Type="nvarchar" MaxLength="50" />
@@ -183,6 +195,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UIDDATA_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="0..1" />
+          <End Role="UIDDATA" Type="Self.UIDDATA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="PK_ClientID" />
+            </Principal>
+            <Dependent Role="UIDDATA">
+              <PropertyRef Name="FK_ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UIDDATA_RIDDATA">
           <End Role="RIDDATA" Type="Self.RIDDATA" Multiplicity="0..1" />
           <End Role="UIDDATA" Type="Self.UIDDATA" Multiplicity="*" />
@@ -192,6 +216,18 @@
             </Principal>
             <Dependent Role="UIDDATA">
               <PropertyRef Name="FK_RID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UIDDATA_UIDDATA">
+          <End Role="UIDDATA" Type="Self.UIDDATA" Multiplicity="1" />
+          <End Role="UIDDATA1" Type="Self.UIDDATA" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="UIDDATA">
+              <PropertyRef Name="PK_Uid" />
+            </Principal>
+            <Dependent Role="UIDDATA1">
+              <PropertyRef Name="PK_Uid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -226,6 +262,7 @@
         </Function>
         <Function Name="InsertUIDData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="fk_rid" Type="int" Mode="In" />
+          <Parameter Name="fk_clientid" Type="int" Mode="In" />
           <Parameter Name="referencenumber" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="longurl" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="mobilenumber" Type="nvarchar" Mode="In" />
@@ -273,6 +310,7 @@
         <EntityContainer Name="shortenURLModelStoreContainer">
           <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ErrorLog" EntityType="Self.ErrorLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LoginHistory" EntityType="Self.LoginHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RIDDATA" EntityType="Self.RIDDATA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SHORTURLDATA" EntityType="Self.SHORTURLDATA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
@@ -306,9 +344,17 @@
             <End Role="UIDDATA" EntitySet="UIDDATA" />
             <End Role="SHORTURLDATA" EntitySet="SHORTURLDATA" />
           </AssociationSet>
+          <AssociationSet Name="FK_UIDDATA_Client" Association="Self.FK_UIDDATA_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="UIDDATA" EntitySet="UIDDATA" />
+          </AssociationSet>
           <AssociationSet Name="FK_UIDDATA_RIDDATA" Association="Self.FK_UIDDATA_RIDDATA">
             <End Role="RIDDATA" EntitySet="RIDDATA" />
             <End Role="UIDDATA" EntitySet="UIDDATA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UIDDATA_UIDDATA" Association="Self.FK_UIDDATA_UIDDATA">
+            <End Role="UIDDATA" EntitySet="UIDDATA" />
+            <End Role="UIDDATA1" EntitySet="UIDDATA" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -329,6 +375,7 @@
           <Property Name="IsActive" Type="Boolean" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="SHORTURLDATA">
           <Key>
@@ -395,6 +442,10 @@
           <NavigationProperty Name="SHORTURLDATAs" Relationship="shortenURLModel.FK_SHORTURLDATA_UIDDATA" FromRole="UIDDATA" ToRole="SHORTURLDATA" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="FK_ClientID" Type="Int32" />
+          <NavigationProperty Name="Client" Relationship="shortenURLModel.FK_UIDDATA_Client" FromRole="UIDDATA" ToRole="Client" />
+          <NavigationProperty Name="UIDDATA1" Relationship="shortenURLModel.FK_UIDDATA_UIDDATA" FromRole="UIDDATA" ToRole="UIDDATA1" />
+          <NavigationProperty Name="UIDDATA2" Relationship="shortenURLModel.FK_UIDDATA_UIDDATA" FromRole="UIDDATA1" ToRole="UIDDATA" />
         </EntityType>
         <Association Name="FK_SHORTURLDATA_UIDandRIDData">
           <End Role="UIDandRIDData" Type="Self.UIDandRIDData" Multiplicity="0..1" />
@@ -448,6 +499,7 @@
           </FunctionImport>
           <FunctionImport Name="InsertUIDData">
             <Parameter Name="fk_rid" Mode="In" Type="Int32" />
+            <Parameter Name="fk_clientid" Mode="In" Type="Int32" />
             <Parameter Name="referencenumber" Mode="In" Type="String" />
             <Parameter Name="longurl" Mode="In" Type="String" />
             <Parameter Name="mobilenumber" Mode="In" Type="String" />
@@ -517,6 +569,15 @@
           <AssociationSet Name="FK_SHORTURLDATA_Client" Association="shortenURLModel.FK_SHORTURLDATA_Client">
             <End Role="Client" EntitySet="Clients" />
             <End Role="SHORTURLDATA" EntitySet="SHORTURLDATAs" />
+          </AssociationSet>
+          <EntitySet Name="LoginHistories" EntityType="shortenURLModel.LoginHistory" />
+          <AssociationSet Name="FK_UIDDATA_Client" Association="shortenURLModel.FK_UIDDATA_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="UIDDATA" EntitySet="UIDDATAs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UIDDATA_UIDDATA" Association="shortenURLModel.FK_UIDDATA_UIDDATA">
+            <End Role="UIDDATA" EntitySet="UIDDATAs" />
+            <End Role="UIDDATA1" EntitySet="UIDDATAs" />
           </AssociationSet>
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
@@ -612,6 +673,7 @@
           <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LoginDate" Type="DateTime" Precision="3" />
           <Property Name="LoginCount" Type="Int32" />
+          <NavigationProperty Name="UIDDATAs" Relationship="shortenURLModel.FK_UIDDATA_Client" FromRole="Client" ToRole="UIDDATA" />
         </EntityType>
         <Association Name="FK_RIDDATA_Client">
           <End Type="shortenURLModel.Client" Role="Client" Multiplicity="0..1" />
@@ -637,6 +699,40 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="LoginHistory">
+          <Key>
+            <PropertyRef Name="PKLoginHistoryId" />
+          </Key>
+          <Property Name="PKLoginHistoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FKPersonId" Type="Int32" />
+          <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IpAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LoginDateTime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <Association Name="FK_UIDDATA_Client">
+          <End Type="shortenURLModel.Client" Role="Client" Multiplicity="0..1" />
+          <End Type="shortenURLModel.UIDDATA" Role="UIDDATA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="PK_ClientID" />
+            </Principal>
+            <Dependent Role="UIDDATA">
+              <PropertyRef Name="FK_ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UIDDATA_UIDDATA">
+          <End Type="shortenURLModel.UIDDATA" Role="UIDDATA" Multiplicity="1" />
+          <End Type="shortenURLModel.UIDDATA" Role="UIDDATA1" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="UIDDATA">
+              <PropertyRef Name="PK_Uid" />
+            </Principal>
+            <Dependent Role="UIDDATA1">
+              <PropertyRef Name="PK_Uid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -646,6 +742,7 @@
           <EntitySetMapping Name="RIDDATAs">
             <EntityTypeMapping TypeName="shortenURLModel.RIDDATA">
               <MappingFragment StoreEntitySet="RIDDATA">
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
@@ -707,6 +804,7 @@
           <EntitySetMapping Name="UIDDATAs">
             <EntityTypeMapping TypeName="shortenURLModel.UIDDATA">
               <MappingFragment StoreEntitySet="UIDDATA">
+                <ScalarProperty Name="FK_ClientID" ColumnName="FK_ClientID" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="FK_RID" ColumnName="FK_RID" />
@@ -785,6 +883,17 @@
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="PK_ClientID" ColumnName="PK_ClientID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LoginHistories">
+            <EntityTypeMapping TypeName="shortenURLModel.LoginHistory">
+              <MappingFragment StoreEntitySet="LoginHistory">
+                <ScalarProperty Name="LoginDateTime" ColumnName="LoginDateTime" />
+                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="FKPersonId" ColumnName="FKPersonId" />
+                <ScalarProperty Name="PKLoginHistoryId" ColumnName="PKLoginHistoryId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -1,5 +1,16 @@
-﻿@{
-    Layout = null;
+﻿@model Analytics.Models.UserViewModel
+@{
+    ViewBag.Title = "Landing";
 }
+<script type="text/javascript">
+    (function () {
+        window.appConfig = {
+            env: "@Model.env",
+            apiUrl: '@Model.appUrl',
+            appUrl:{admin: "@Model.apiUrl.admin",analytics:"@Model.apiUrl.analytics",landing:"@Model.apiUrl.landing"},
+            userInfo: { user_id: @Model.userInfo.user_id, UserName: "@Model.userInfo.user_name", isAdmin: @Model.isAdmin, isClient: @Model.isClient, isReadOnly: true }
+        }
+    })();</script>
 
 @Html.Partial("~/Views/Home/IndexUI.cshtml")
+

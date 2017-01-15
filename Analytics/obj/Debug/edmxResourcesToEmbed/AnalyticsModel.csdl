@@ -14,6 +14,7 @@
     <Property Name="IsActive" Type="Boolean" />
     <Property Name="CreatedDate" Type="DateTime" Precision="3" />
     <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+    <Property Name="EndDate" Type="DateTime" Precision="3" />
   </EntityType>
   <EntityType Name="SHORTURLDATA">
     <Key>
@@ -80,6 +81,10 @@
     <NavigationProperty Name="SHORTURLDATAs" Relationship="shortenURLModel.FK_SHORTURLDATA_UIDDATA" FromRole="UIDDATA" ToRole="SHORTURLDATA" />
     <Property Name="CreatedDate" Type="DateTime" Precision="3" />
     <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+    <Property Name="FK_ClientID" Type="Int32" />
+    <NavigationProperty Name="Client" Relationship="shortenURLModel.FK_UIDDATA_Client" FromRole="UIDDATA" ToRole="Client" />
+    <NavigationProperty Name="UIDDATA1" Relationship="shortenURLModel.FK_UIDDATA_UIDDATA" FromRole="UIDDATA" ToRole="UIDDATA1" />
+    <NavigationProperty Name="UIDDATA2" Relationship="shortenURLModel.FK_UIDDATA_UIDDATA" FromRole="UIDDATA1" ToRole="UIDDATA" />
   </EntityType>
   <Association Name="FK_SHORTURLDATA_UIDandRIDData">
     <End Role="UIDandRIDData" Type="Self.UIDandRIDData" Multiplicity="0..1" />
@@ -133,6 +138,7 @@
     </FunctionImport>
     <FunctionImport Name="InsertUIDData">
       <Parameter Name="fk_rid" Mode="In" Type="Int32" />
+      <Parameter Name="fk_clientid" Mode="In" Type="Int32" />
       <Parameter Name="referencenumber" Mode="In" Type="String" />
       <Parameter Name="longurl" Mode="In" Type="String" />
       <Parameter Name="mobilenumber" Mode="In" Type="String" />
@@ -202,6 +208,15 @@
     <AssociationSet Name="FK_SHORTURLDATA_Client" Association="shortenURLModel.FK_SHORTURLDATA_Client">
       <End Role="Client" EntitySet="Clients" />
       <End Role="SHORTURLDATA" EntitySet="SHORTURLDATAs" />
+    </AssociationSet>
+    <EntitySet Name="LoginHistories" EntityType="shortenURLModel.LoginHistory" />
+    <AssociationSet Name="FK_UIDDATA_Client" Association="shortenURLModel.FK_UIDDATA_Client">
+      <End Role="Client" EntitySet="Clients" />
+      <End Role="UIDDATA" EntitySet="UIDDATAs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UIDDATA_UIDDATA" Association="shortenURLModel.FK_UIDDATA_UIDDATA">
+      <End Role="UIDDATA" EntitySet="UIDDATAs" />
+      <End Role="UIDDATA1" EntitySet="UIDDATAs" />
     </AssociationSet>
   </EntityContainer>
   <ComplexType Name="sp_helpdiagramdefinition_Result">
@@ -297,6 +312,7 @@
     <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="LoginDate" Type="DateTime" Precision="3" />
     <Property Name="LoginCount" Type="Int32" />
+    <NavigationProperty Name="UIDDATAs" Relationship="shortenURLModel.FK_UIDDATA_Client" FromRole="Client" ToRole="UIDDATA" />
   </EntityType>
   <Association Name="FK_RIDDATA_Client">
     <End Type="shortenURLModel.Client" Role="Client" Multiplicity="0..1" />
@@ -319,6 +335,40 @@
       </Principal>
       <Dependent Role="SHORTURLDATA">
         <PropertyRef Name="FK_ClientID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="LoginHistory">
+    <Key>
+      <PropertyRef Name="PKLoginHistoryId" />
+    </Key>
+    <Property Name="PKLoginHistoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FKPersonId" Type="Int32" />
+    <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IpAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="LoginDateTime" Type="DateTime" Precision="3" />
+  </EntityType>
+  <Association Name="FK_UIDDATA_Client">
+    <End Type="shortenURLModel.Client" Role="Client" Multiplicity="0..1" />
+    <End Type="shortenURLModel.UIDDATA" Role="UIDDATA" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="PK_ClientID" />
+      </Principal>
+      <Dependent Role="UIDDATA">
+        <PropertyRef Name="FK_ClientID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UIDDATA_UIDDATA">
+    <End Type="shortenURLModel.UIDDATA" Role="UIDDATA" Multiplicity="1" />
+    <End Type="shortenURLModel.UIDDATA" Role="UIDDATA1" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="UIDDATA">
+        <PropertyRef Name="PK_Uid" />
+      </Principal>
+      <Dependent Role="UIDDATA1">
+        <PropertyRef Name="PK_Uid" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

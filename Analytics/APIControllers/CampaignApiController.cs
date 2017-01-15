@@ -13,7 +13,7 @@ using System.Web.Mvc;
 
 namespace Analytics.Controllers
 {
-   [EnableCors(origins: "http://localhost:3300", headers: "*", methods: "*")]
+  // [EnableCors(origins: "http://localhost:3000", headers: "*", methods: "*")]
     public class CampaignApiController : ApiController
     {
         shortenURLEntities dc = new shortenURLEntities();
@@ -37,8 +37,8 @@ namespace Analytics.Controllers
                 //    Data = objc,
                 //    JsonRequestBehavior = JsonRequestBehavior.AllowGet
                 //};
-                HttpContext.Current.Response.AppendHeader("Access-Control-Allow-Credentials", "true");
-                HttpContext.Current.Response.AppendHeader("SupportsCredentials ", "true");
+               // HttpContext.Current.Response.AppendHeader("Access-Control-Allow-Credentials", "true");
+                //HttpContext.Current.Response.AppendHeader("SupportsCredentials ", "true");
 
                 return listcamps;
 
@@ -128,8 +128,8 @@ namespace Analytics.Controllers
             //else
             //    obj = obj1;
             // return Json(obj1, JsonRequestBehavior.AllowGet);
-            HttpContext.Current.Response.AppendHeader("Access-Control-Allow-Credentials", "true");
-            HttpContext.Current.Response.AppendHeader("SupportsCredentials ", "true");
+          //  HttpContext.Current.Response.AppendHeader("Access-Control-Allow-Credentials", "true");
+           // HttpContext.Current.Response.AppendHeader("SupportsCredentials ", "true");
 
             obj.SetSerializableProperties(fields);
             return Json(obj, new Newtonsoft.Json.JsonSerializerSettings()
@@ -155,8 +155,8 @@ namespace Analytics.Controllers
                 new OperationsBO().UpdateCampaign(ReferenceNumber, "", IsActive);
             else
                 obj = obj1;
-            HttpContext.Current.Response.AppendHeader("Access-Control-Allow-Credentials", "true");
-            HttpContext.Current.Response.AppendHeader("SupportsCredentials ", "true");
+           // HttpContext.Current.Response.AppendHeader("Access-Control-Allow-Credentials", "true");
+            //HttpContext.Current.Response.AppendHeader("SupportsCredentials ", "true");
             obj.SetSerializableProperties(fields);
             return Json(obj, new Newtonsoft.Json.JsonSerializerSettings()
             {
@@ -188,8 +188,8 @@ namespace Analytics.Controllers
                 obj = obj1;
             }
             //return Json(objclient, JsonRequestBehavior.AllowGet);
-            HttpContext.Current.Response.AppendHeader("Access-Control-Allow-Credentials", "true");
-            HttpContext.Current.Response.AppendHeader("SupportsCredentials ", "true");
+           // HttpContext.Current.Response.AppendHeader("Access-Control-Allow-Credentials", "true");
+            //HttpContext.Current.Response.AppendHeader("SupportsCredentials ", "true");
 
             obj.SetSerializableProperties(fields);
             return Json(obj, new Newtonsoft.Json.JsonSerializerSettings()
@@ -212,8 +212,8 @@ namespace Analytics.Controllers
                 if (objc != null && objc.IsActive == true)
                 {
 
-                    HttpContext.Current.Response.AppendHeader("Access-Control-Allow-Credentials", "true");
-                    HttpContext.Current.Response.AppendHeader("SupportsCredentials ", "true");
+                   // HttpContext.Current.Response.AppendHeader("Access-Control-Allow-Credentials", "true");
+                    //HttpContext.Current.Response.AppendHeader("SupportsCredentials ", "true");
                     objc.SetSerializableProperties(fields);
                     return Json(objc, new Newtonsoft.Json.JsonSerializerSettings()
                     {

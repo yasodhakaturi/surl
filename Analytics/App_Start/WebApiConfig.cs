@@ -29,7 +29,8 @@ namespace Analytics.App_Start
         {
             //config.SetCorsPolicyProviderFactory(new CorsPolicyFactory());
             config.EnableCors();
-            config.EnableCors(new EnableCorsAttribute("http://localhost:3300", "*", "*"));
+            //config.EnableCors(new EnableCorsAttribute("http://localhost:3000", "*", "*"));
+            config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
             config.MapHttpAttributeRoutes();
             EnableCrossSiteRequests(config);
             AddRoutes(config);

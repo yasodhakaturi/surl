@@ -4,6 +4,7 @@
     <EntitySetMapping Name="RIDDATAs">
       <EntityTypeMapping TypeName="shortenURLModel.RIDDATA">
         <MappingFragment StoreEntitySet="RIDDATA">
+          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
           <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
           <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
           <ScalarProperty Name="IsActive" ColumnName="IsActive" />
@@ -65,6 +66,7 @@
     <EntitySetMapping Name="UIDDATAs">
       <EntityTypeMapping TypeName="shortenURLModel.UIDDATA">
         <MappingFragment StoreEntitySet="UIDDATA">
+          <ScalarProperty Name="FK_ClientID" ColumnName="FK_ClientID" />
           <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
           <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
           <ScalarProperty Name="FK_RID" ColumnName="FK_RID" />
@@ -143,6 +145,17 @@
           <ScalarProperty Name="Password" ColumnName="Password" />
           <ScalarProperty Name="UserName" ColumnName="UserName" />
           <ScalarProperty Name="PK_ClientID" ColumnName="PK_ClientID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LoginHistories">
+      <EntityTypeMapping TypeName="shortenURLModel.LoginHistory">
+        <MappingFragment StoreEntitySet="LoginHistory">
+          <ScalarProperty Name="LoginDateTime" ColumnName="LoginDateTime" />
+          <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+          <ScalarProperty Name="Role" ColumnName="Role" />
+          <ScalarProperty Name="FKPersonId" ColumnName="FKPersonId" />
+          <ScalarProperty Name="PKLoginHistoryId" ColumnName="PKLoginHistoryId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

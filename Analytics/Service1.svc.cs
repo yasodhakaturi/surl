@@ -56,9 +56,10 @@ namespace Analytics
                 if (referencenumber.Trim() != "" && longurl.Trim() != "" && mobilenumber.Trim() != "")
                 {
                     //check reference number in RID table
-                    Uniqueid_RID = (from registree in dc.RIDDATAs
+                    RIDDATA objrid = (from registree in dc.RIDDATAs
                                     where registree.ReferenceNumber.Trim() == referencenumber.Trim()
-                                    select registree.PK_Rid).SingleOrDefault();
+                                    select registree).SingleOrDefault();
+                    Uniqueid_RID = objrid.PK_Rid;
                     //if (Uniqueid_RID == 0)
                     //{
                     //    new DataInsertionBO().InsertRIDdata(referencenumber, "");
@@ -77,7 +78,7 @@ namespace Analytics
                         //if data found in UIDDATA insert data into UIDDATA 
                         if (Uniqueid_UID == 0)
                         {
-                            new DataInsertionBO().InsertUIDdata(Uniqueid_RID, referencenumber, longurl, mobilenumber);
+                            new DataInsertionBO().InsertUIDdata(Uniqueid_RID,objrid.FK_ClientId, referencenumber, longurl, mobilenumber);
                             Uniqueid_UID = (from registree in dc.UIDDATAs
                                             where registree.ReferenceNumber.Trim() == referencenumber.Trim() &&
                                             registree.Longurl.Trim() == longurl.Trim() &&
@@ -357,7 +358,7 @@ namespace Analytics
             public int? unique_users { get; set; }
             public int total_users { get; set; }
         }
-        public Stream GETALLCOUNTS(string Fk_Uniqueid,string DateFrom, string DateTo)
+        public Stream GETAllCounts(string Fk_Uniqueid, string DateFrom, string DateTo)
         {
             try 
             { 
@@ -442,7 +443,7 @@ namespace Analytics
             }
         }
 
-        public Stream GETSUMMARY(string Fk_Uniqueid)
+        public Stream GETSummary(string Fk_Uniqueid)
         {
             try
             {
