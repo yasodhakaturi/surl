@@ -147,10 +147,10 @@ angular.module('routes', [
         $rootScope.$state = $state;
         $rootScope.userInfo = appConfig.userInfo;
         $rootScope.$on('$stateChangeSuccess', function (event, toState, toStateParams, fromState, fromStateParams) {
-console.log(toState, toStateParams, fromState, fromStateParams, $location)
+
           var isAuthenticationRequired = toState.data
             && toState.data.requiresLogin
-            && ( _.isNull($rootScope.userInfo && $rootScope.userInfo.user_id) || _.isUndefined($rootScope.userInfo && $rootScope.userInfo.user_id) );
+            && (!$rootScope.userInfo || !$rootScope.userInfo.user_id);
 
           if ( isAuthenticationRequired ) {
             event.preventDefault();

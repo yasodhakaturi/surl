@@ -85,13 +85,8 @@ function AnalyticsController($rootScope, $state, $scope, CampaignService, $locat
     }
 
   };
-
-
-
-  if(!( _.isNull($rootScope.userInfo && $rootScope.userInfo.user_id) || _.isUndefined($rootScope.userInfo && $rootScope.userInfo.user_id))){
+  if($rootScope.userInfo && $rootScope.userInfo.user_id){
     $scope.init();
   }
-
-
 }
 

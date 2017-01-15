@@ -89,8 +89,8 @@ function AnalyticsController($rootScope, $scope, RidService, $state, $location) 
     }
   };
 
-  if( _.isNull($rootScope.userInfo && $rootScope.userInfo.user_id) || _.isUndefined($rootScope.userInfo && $rootScope.userInfo.user_id)){
-    //$state.go('bitraz.main.login', {redirect_url: $location.$$absUrl});
+  if(!($rootScope.userInfo && $rootScope.userInfo.user_id)){
+    $state.go('bitraz.main.login', {redirect_url: $location.$$absUrl});
   }else{
     $scope.init()
   }
