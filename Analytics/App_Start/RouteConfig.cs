@@ -12,14 +12,28 @@ namespace Analytics
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+           // routes.MapMvcAttributeRoutes();
 
+            //routes.MapRoute(
+            //    name: "Admin",
+            //    url: "admin",
+            //    defaults: new { controller = "Admin", action = "AdminLogin" }
+            //);
 
-            routes.MapRoute(
-           name: "Login",
-           url: "{id}",
-           defaults: new { controller = "Home", action = "Login" }
-       );
+            //routes.MapRoute(
+            //    name: "Admin",
+            //    url: "admin/{name}",
+            //    defaults: new { controller = "Admin", action = "Admin" }
+            //);
+    
 
+       //     routes.MapRoute(
+       //    name: "Login",
+       //    url: "{id}",
+       //    defaults: new { controller = "Home", action = "LoginRid" }
+       //);
+
+            
              routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

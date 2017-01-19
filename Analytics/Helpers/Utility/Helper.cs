@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -78,6 +79,54 @@ namespace Analytics.Helpers.Utility
                 }
             }
         }
+        public static string ConnectionString
+        {
+            get
+            {
+                return ConfigurationManager.ConnectionStrings["shortenURLConnectionString"].ToString();
+            }
+        }
+
+        public static int CurrentUserId
+        {
+            get
+            {
+
+                return Convert.ToInt32(HttpContext.Current.Session["userdata"].ToString().Split('^')[0]);
+
+            }
+        }
+        public static string CurrentUseremail
+        {
+            get
+            {
+
+                return HttpContext.Current.Session["userdata"].ToString().Split('^')[1];
+
+            }
+
+        }
+        public static string CurrentUserName
+        {
+            get
+            {
+
+                return HttpContext.Current.Session["userdata"].ToString().Split('^')[2];
+
+            }
+
+        }
+        public static string CurrentUserRole
+        {
+            get
+            {
+
+                return HttpContext.Current.Session["userdata"].ToString().Split('^')[3].ToLower();
+
+            }
+        }
+       
+
         //internal static string Decrypt(byte[] key, string encryptedString)
         //{
         //    // Initialise
@@ -105,5 +154,13 @@ namespace Analytics.Helpers.Utility
         //        }
         //    }
         //}
+
+       
+    }
+    public enum UserRole
+    {
+        Admin,
+        Client
+
     }
 }

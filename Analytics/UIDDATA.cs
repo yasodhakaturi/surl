@@ -24,11 +24,16 @@ namespace Analytics
         public string ReferenceNumber { get; set; }
         public string Longurl { get; set; }
         public string MobileNumber { get; set; }
-        public Nullable<System.DateTime> RequestDate { get; set; }
         public Nullable<int> FK_RID { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<System.DateTime> UpdatedDate { get; set; }
+        public Nullable<int> FK_ClientID { get; set; }
     
         public virtual RIDDATA RIDDATA { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SHORTURLDATA> SHORTURLDATAs { get; set; }
+        public virtual Client Client { get; set; }
+        public virtual UIDDATA UIDDATA1 { get; set; }
+        public virtual UIDDATA UIDDATA2 { get; set; }
     }
 }

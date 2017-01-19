@@ -1,13 +1,17 @@
 ﻿using Analytics.Helpers.Utility;
+using Analytics.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.ServiceModel.Web;
 using System.Web;
 
@@ -16,6 +20,11 @@ namespace Analytics.Helpers.BO
     public class OperationsBO
     {
         shortenURLEntities dc = new shortenURLEntities();
+        string connStr = ConfigurationManager.ConnectionStrings["shortenURLConnectionString"].ConnectionString;
+        SqlConnection lSQLConn = null;
+        SqlCommand lSQLCmd = new SqlCommand();
+
+
         public bool CheckUniqueid(int Uniqueid_UIDRID, string type)
         {
             try
@@ -106,24 +115,32 @@ namespace Analytics.Helpers.BO
         {
             try
             {
-
+                string pwd = null;
                 
                 PWDDataBO obj = (from uniid in dc.UIDandRIDDatas
-                               where uniid.PK_UniqueId == Uniqueid_UIDRID 
+                               where uniid.PK_UniqueId == Uniqueid_UIDRID  
                                select new PWDDataBO
                              {
                                  typediff=uniid.TypeDiff,
                                  UIDorRID=uniid.UIDorRID
                              }).SingleOrDefault();
-                string pwd = (from r in dc.RIDDATAs
-                              where r.PK_Rid == obj.UIDorRID && obj.typediff == "2"
-                              select r.Pwd).SingleOrDefault();
-                obj.pwd = pwd;
                 if (obj != null)
+                {
+                    if (obj.typediff == "2")
+                    {
+                        pwd = (from r in dc.RIDDATAs
+                               where r.PK_Rid == obj.UIDorRID
+                               select r.Pwd).SingleOrDefault();
+                        obj.pwd = pwd;
+                    }
+                    else
+                    {
+                        obj.pwd = pwd;
+                    }
                     return obj;
+                }
                 else
                     return null;
-                
                 
             }
             catch (Exception ex)
@@ -158,7 +175,54 @@ namespace Analytics.Helpers.BO
                 return 0;
             }
         }
+
+        public UserViewModel GetViewConfigDetails(string url)
+        {
+            UserViewModel obj = new UserViewModel();
+            string env = ""; string appurl = "";
+
+             if (url.Contains(".com") || url.Contains("www."))
+              env = "prod";
+             else
+             env = "dev"; 
+
+            obj.env = env;
+            if (url.Contains(".com") || url.Contains("www."))
+                appurl = url;
+            else
+                appurl = "http://localhost:3000";
+
+            obj.appUrl = appurl;
+            UserInfo user_obj = new UserInfo();
+
+            if (HttpContext.Current.Session["userdata"] != null)
+            {
+                user_obj.user_id = Helper.CurrentUserId;
+                user_obj.user_name = Helper.CurrentUserName;
+                //user_obj.user_role = Helper.CurrentUserRole;
+                if (Helper.CurrentUserRole.ToLower() == "admin")
+                { obj.isAdmin = "true"; obj.isClient = "false"; }
+                else if (Helper.CurrentUserRole.ToLower() == "client")
+                { obj.isClient = "true"; obj.isAdmin = "false"; }
+            }
+            else
+            {
+                user_obj.user_id = 0;
+                user_obj.user_name = "null";
+                obj.isAdmin = "false";
+                obj.isClient = "false";
+            }
+            
+            obj.userInfo = user_obj;
+            appUrlModel appobj = new appUrlModel();
+            appobj.admin = "/Admin";
+            appobj.analytics = "/Analytics";
+            appobj.landing = "/Home";
+            obj.apiUrl = appobj;
+            return obj;
+        }
         public void Monitize(string Shorturl)
+        
         {
             try
             {
@@ -173,6 +237,9 @@ namespace Analytics.Helpers.BO
                     int? FK_RID = (from u in dc.UIDDATAs
                                    where u.PK_Uid == Fk_UID
                                    select u.FK_RID).SingleOrDefault();
+                    int? FK_clientid = (from r in dc.RIDDATAs
+                                        where r.PK_Rid == FK_RID
+                                        select r.FK_ClientId).SingleOrDefault();
                     //retrive ipaddress and browser
                     string ipv4 = new ConvertionBO().GetIP4Address();
                     string ipv6 = HttpContext.Current.Request.UserHostAddress;
@@ -222,7 +289,7 @@ namespace Analytics.Helpers.BO
                             CountryCode = (string)obj["country_code"];
                         }
                     }
-                    new DataInsertionBO().InsertShortUrldata(ipv4, ipv6, browser, browserversion, City, Region, Country, CountryCode, req_url, useragent, hostname, devicetype, ismobiledevice,Fk_UID,FK_RID, Uniqueid_SHORTURLDATA);
+                    new DataInsertionBO().InsertShortUrldata(ipv4, ipv6, browser, browserversion, City, Region, Country, CountryCode, req_url, useragent, hostname, devicetype, ismobiledevice,Fk_UID,FK_RID,FK_clientid, Uniqueid_SHORTURLDATA);
                 }
                 //WebOperationContext.Current.OutgoingResponse.StatusCode = System.Net.HttpStatusCode.Redirect;
                 //if (!longurl.StartsWith("http://") && !longurl.StartsWith("https://"))
@@ -242,6 +309,129 @@ namespace Analytics.Helpers.BO
 
             }
         }
+
+
+        public string GetApiKey()
+        {
+            string APIKey="";
+            using (var cryptoProvider = new RNGCryptoServiceProvider())
+            {
+                byte[] secretKeyByteArray = new byte[32]; //256 bit
+                cryptoProvider.GetBytes(secretKeyByteArray);
+                APIKey = Convert.ToBase64String(secretKeyByteArray);
+            }
+            return APIKey;
+        }
+        public Client CheckClientEmail(string email)
+        {
+            Client obj = new Client();
+            obj = dc.Clients.Where(c => c.Email == email).Select(x => x).SingleOrDefault();
+            //if (obj != null)
+            //    check = true;
+            //else
+            //    check = false;
+            return obj;
+
+        }
+        public bool CheckClientEmail1(string email)
+        {
+            Client obj = new Client(); bool check = false;
+            obj = dc.Clients.Where(c => c.Email == email).Select(x => x).SingleOrDefault();
+            if (obj != null)
+                check = true;
+            //else
+            //    check = false;
+            return check;
+
+        }
+        public bool CheckClientId(int id)
+        {
+            Client obj = new Client(); bool check = false;
+            obj = dc.Clients.Where(c => c.PK_ClientID == id).Select(x => x).SingleOrDefault();
+            if (obj != null)
+                check = true;
+            //else
+            //    check = false;
+            return check;
+        }
+       
+        public void UpdateClient(string username,string email,bool? isactive)
+        {
+            try
+            {
+                //string strQuery = "Update MMPersonMessage set Status = 'R' where FKMessageId = (" + messageid + ") and FKToPersonId = (" + personid + ")";
+                DateTime utcdt = DateTime.UtcNow;
+                string strQuery = "Update Client set UserName = '" + username + "' ,IsActive='" + isactive + "',UpdatedDate='" + utcdt + "' where Email ='" + email + "'";
+                SqlHelper.ExecuteNonQuery(Helper.ConnectionString, CommandType.Text, strQuery);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+            }
+        }
+        public void InsertUIDRIDData(string referencenumber)
+        {
+            try
+            {
+            int rid = dc.RIDDATAs.Where(r => r.ReferenceNumber == referencenumber).Select(x => x.PK_Rid).SingleOrDefault();
+            lSQLConn = new SqlConnection(connStr);
+            SqlDataReader myReader;
+            lSQLConn.Open();
+            lSQLCmd.CommandType = CommandType.StoredProcedure;
+            lSQLCmd.CommandText = "InsertintoUIDRID";
+            //lSQLCmd.Parameters.Add(new SqlParameter("@Fk_Uniqueid", Uniqueid_SHORTURLDATA));
+            lSQLCmd.Parameters.Add(new SqlParameter("@typediff", "2"));
+            lSQLCmd.Parameters.Add(new SqlParameter("@uidorrid", rid));
+            lSQLCmd.Connection = lSQLConn;
+            myReader = lSQLCmd.ExecuteReader();
+            }
+            catch (Exception ex)
+            {
+                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+            }
+        }
+
+
+        public bool CheckReferenceNumber(string referencenumber)
+        {
+            RIDDATA obj = new RIDDATA(); bool check = false;
+            obj = dc.RIDDATAs.Where(c => c.ReferenceNumber == referencenumber).Select(x => x).SingleOrDefault();
+            if (obj != null)
+                check = true;
+            //else
+            //    check = false;
+            return check;
+
+        }
+        public RIDDATA CheckReferenceNumber1(string referencenumber)
+        {
+            RIDDATA obj = new RIDDATA(); bool check = false;
+            obj = dc.RIDDATAs.Where(c => c.ReferenceNumber == referencenumber).Select(x => x).SingleOrDefault();
+            if (obj != null)
+                return obj;
+                //else
+            //    check = false;
+            return obj;
+
+        }
+
+        public void UpdateCampaign(string referencenumber, string password, bool? isactive)
+        {
+            try
+            {
+                string strQuery="";
+                if(password!="")
+                 strQuery = "Update RIDDATA set Pwd=" + password + ",IsActive=" + isactive + " where ReferenceNumber =" + referencenumber + "";
+                else
+                 strQuery = "Update RIDDATA set IsActive=" + isactive + " where ReferenceNumber =" + referencenumber + "";
+                SqlHelper.ExecuteNonQuery(Helper.ConnectionString, CommandType.Text, strQuery);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+            }
+        }
+
         //public CountsData GetCountsData(SqlDataReader myReader,string filterBy,string DateFrom,string DateTo)
         //{
 

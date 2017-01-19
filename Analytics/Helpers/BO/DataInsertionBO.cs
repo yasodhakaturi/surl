@@ -1,4 +1,5 @@
 ﻿using Analytics.Helpers.Utility;
+using Analytics.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace Analytics.Helpers.BO
         SqlConnection lSQLConn = null;
         SqlCommand lSQLCmd = new SqlCommand();
         string connStr = "";
-        public void InsertUIDdata(int fk_rid,string referencenumber, string longurl, string mobilenumber)
+        public void InsertUIDdata(int fk_rid,int? fk_clientid,string referencenumber, string longurl, string mobilenumber)
         {
             connStr = ConfigurationManager.ConnectionStrings["shortenURLConnectionString"].ConnectionString;
             try
@@ -29,6 +30,7 @@ namespace Analytics.Helpers.BO
                 lSQLCmd.CommandType = CommandType.StoredProcedure;
                 lSQLCmd.CommandText = "InsertUIDData";
                 lSQLCmd.Parameters.Add(new SqlParameter("@fk_rid", fk_rid));
+                lSQLCmd.Parameters.Add(new SqlParameter("@fk_clientid", fk_clientid));
                 lSQLCmd.Parameters.Add(new SqlParameter("@referencenumber", referencenumber));
                 lSQLCmd.Parameters.Add(new SqlParameter("@longurl", longurl));
                 lSQLCmd.Parameters.Add(new SqlParameter("@mobilenumber", mobilenumber));
@@ -46,7 +48,7 @@ namespace Analytics.Helpers.BO
                 lSQLConn.Close();
             }
         }
-        public void InsertRIDdata(string referencenumber, string pwd)
+        public void InsertRIDdata(string referencenumber, string pwd,int clientid)
         {
             SqlConnection lSQLConn = null;
             SqlCommand lSQLCmd = new SqlCommand();
@@ -61,6 +63,8 @@ namespace Analytics.Helpers.BO
                 lSQLCmd.CommandText = "InsertRIDData";
                 lSQLCmd.Parameters.Add(new SqlParameter("@referencenumber", referencenumber));
                 lSQLCmd.Parameters.Add(new SqlParameter("@pwd", pwd));
+                lSQLCmd.Parameters.Add(new SqlParameter("@clientid", clientid));
+
                 lSQLCmd.Connection = lSQLConn;
                 lSQLCmd.ExecuteNonQuery();
             }
@@ -75,7 +79,7 @@ namespace Analytics.Helpers.BO
                 lSQLConn.Close();
             }
         }
-        public void InsertShortUrldata(string ipv4, string ipv6, string browser, string browser_version, string city, string Region, string country, string countrycode, string req_url, string useragent, string hostname, string devicetype, string ismobiledevice,int? fk_uid,int? fk_rid,int uniqueid)
+        public void InsertShortUrldata(string ipv4, string ipv6, string browser, string browser_version, string city, string Region, string country, string countrycode, string req_url, string useragent, string hostname, string devicetype, string ismobiledevice,int? fk_uid,int? fk_rid,int? FK_clientid,int uniqueid)
         {
             SqlConnection lSQLConn = null;
             SqlCommand lSQLCmd = new SqlCommand();
@@ -103,6 +107,7 @@ namespace Analytics.Helpers.BO
                 lSQLCmd.Parameters.Add(new SqlParameter("@IsMobiledevice", ismobiledevice));
                 lSQLCmd.Parameters.Add(new SqlParameter("@fk_uid", fk_uid));
                 lSQLCmd.Parameters.Add(new SqlParameter("@fk_rid", fk_rid));
+                lSQLCmd.Parameters.Add(new SqlParameter("@FK_clientid", FK_clientid));
                 lSQLCmd.Parameters.Add(new SqlParameter("@uniqueid", uniqueid));
                 lSQLCmd.Connection = lSQLConn;
                 lSQLCmd.ExecuteNonQuery();

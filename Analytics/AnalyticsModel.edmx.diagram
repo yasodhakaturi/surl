@@ -4,11 +4,11 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="c77b3ecf297f43b680397d8330dd5b6a" Name="Diagram1">
+      <Diagram DiagramId="c77b3ecf297f43b680397d8330dd5b6a" Name="Diagram1" ZoomLevel="84">
         <EntityTypeShape EntityType="shortenURLModel.RIDDATA" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="shortenURLModel.SHORTURLDATA" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="shortenURLModel.sysdiagram" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="shortenURLModel.UIDandRIDData" Width="1.5" PointX="0.75" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="shortenURLModel.UIDandRIDData" Width="1.5" PointX="0.75" PointY="2.375" IsExpanded="true" />
         <EntityTypeShape EntityType="shortenURLModel.UIDDATA" Width="1.5" PointX="2.75" PointY="5.75" IsExpanded="true" />
         <AssociationConnector Association="shortenURLModel.FK_SHORTURLDATA_UIDandRIDData" ManuallyRouted="false" />
         <EntityTypeShape EntityType="shortenURLModel.ErrorLog" Width="1.5" PointX="5.375" PointY="3.75" />
@@ -16,6 +16,12 @@
         <AssociationConnector Association="shortenURLModel.FK_UIDDATA_RIDDATA" />
         <AssociationConnector Association="shortenURLModel.FK_SHORTURLDATA_SHORTURLDATA" />
         <AssociationConnector Association="shortenURLModel.FK_SHORTURLDATA_UIDDATA" />
+        <EntityTypeShape EntityType="shortenURLModel.Client" Width="1.5" PointX="5.375" PointY="6.75" />
+        <AssociationConnector Association="shortenURLModel.FK_RIDDATA_Client" />
+        <AssociationConnector Association="shortenURLModel.FK_SHORTURLDATA_Client" />
+        <EntityTypeShape EntityType="shortenURLModel.LoginHistory" Width="1.5" PointX="7.375" PointY="4.75" />
+        <AssociationConnector Association="shortenURLModel.FK_UIDDATA_Client" />
+        <AssociationConnector Association="shortenURLModel.FK_UIDDATA_UIDDATA" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
