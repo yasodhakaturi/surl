@@ -225,7 +225,7 @@ namespace Analytics.Controllers
                 else
                 {
                     if (rid_shorturl == rid_cookie)
-                        Response.Redirect("~/Analytics/Analytics?rid=" + rid_param);
+                        Response.Redirect("~/Analytics?rid=" + rid_param);
                     else
                         return View();
                 }
@@ -234,7 +234,7 @@ namespace Analytics.Controllers
             else if (obj != null && obj.typediff == "2" && (obj.pwd == "" || obj.pwd == null))
             {
                 //Response.Redirect("~/Analytics/Index?rid=" + rid_shorturl); 
-                Response.Redirect("~/Analytics/Analytics?rid=" + rid_param); 
+                Response.Redirect("~/Analytics?rid=" + rid_param); 
 
             }
             else if (obj != null && obj.typediff == "1")

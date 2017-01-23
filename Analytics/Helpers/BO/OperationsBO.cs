@@ -181,16 +181,20 @@ namespace Analytics.Helpers.BO
             UserViewModel obj = new UserViewModel();
             string env = ""; string appurl = "";
 
-             if (url.Contains(".com") || url.Contains("www."))
-              env = "prod";
-             else
-             env = "dev"; 
+            // if (url.Contains(".com") || url.Contains("www."))
+            //  env = "prod";
+            // else
+            // env = "dev"; 
 
-            obj.env = env;
-            if (url.Contains(".com") || url.Contains("www."))
-                appurl = url;
-            else
-                appurl = "http://localhost:3000";
+            //obj.env = env;
+            //if (url.Contains(".com") || url.Contains("www."))
+            //    appurl = url;
+            //else
+            //    appurl = "http://localhost:3000";
+
+            env = ConfigurationManager.AppSettings["env"].ToString();
+            appurl = ConfigurationManager.AppSettings["appurl"].ToString();
+
 
             obj.appUrl = appurl;
             UserInfo user_obj = new UserInfo();

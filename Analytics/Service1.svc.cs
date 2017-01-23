@@ -49,6 +49,54 @@ namespace Analytics
 
             public string message { get; set; }
         }
+
+        public string GETClientid(string UserName, string Email, string Password)
+        {
+            try
+            {
+                 Client obj = new Client();bool isactive=true;int cid=0;
+                if (UserName.Trim() != "" && Email.Trim() != "" && Password.Trim() != "")
+                {
+                    
+            Client isEmailExists = new OperationsBO().CheckClientEmail(Email);
+            //Client obj1 = new Client();
+            if (isEmailExists==null)
+            {
+                //add client details
+                string ApiKey = new OperationsBO().GetApiKey();
+                obj.UserName = UserName;
+                obj.Email = Email;
+                obj.Password = Password;
+                obj.APIKey = ApiKey;
+                obj.IsActive = isactive;
+                obj.Role = "Client";
+                obj.CreatedDate = DateTime.Today;
+                dc.Clients.Add(obj);
+                dc.SaveChanges();
+            }
+                    Client cl_obj=new OperationsBO().CheckClientEmail(Email);
+                    if(cl_obj!=null)
+                    {  cid=cl_obj.PK_ClientID;}
+                        return cid.ToString()+" "+cl_obj.APIKey;
+
+                    }
+                    else
+                    {
+                       return cid.ToString(); 
+                    }
+               
+            }
+            catch (Exception ex)
+            {
+                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+                error errobj = new error();
+                errobj.message = "Exception" + ex.Message;
+                return null;
+            }
+        }
+
+
+
         public string GETUID(string referencenumber, string longurl, string mobilenumber, out string UID_UIDRID)
         {
             try
@@ -138,7 +186,7 @@ namespace Analytics
                       {
                           Uniqueid_RID = (from registree in dc.RIDDATAs
                                           where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim() &&
-                                                  registree.Pwd.Trim() == Password.Trim()
+                                                  registree.Pwd.Trim() == Password.Trim() && registree.FK_ClientId==clientid
                                           select registree.PK_Rid).SingleOrDefault();
 
                           if (Uniqueid_RID == 0)

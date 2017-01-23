@@ -36,7 +36,7 @@ namespace Analytics.Helpers.BO
             //else if (qry.Role.ToLower() == UserRole.Client.ToString())
             {
 
-                name = qry.PK_ClientID.ToString() + '^' + qry.Email + '^' + qry.UserName + '^' + qry.Role;
+                name = qry.PK_ClientID.ToString() + '^' + qry.Email + '^' + qry.UserName + '^' + qry.Role+ '^' + qry.IsActive;
                 // FormsAuthentication.SetAuthCookie(name, false);
                 qry.LoginDate = DateTime.Now;
                 if (qry.LoginCount == null)

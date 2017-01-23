@@ -235,6 +235,8 @@
     <Compile Include="Controllers\AnalyticsController.cs" />
     <Compile Include="Controllers\AngularTemplatesController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\CampaignController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="ErrorLog.cs">
@@ -1284,6 +1286,7 @@
   <ItemGroup>
     <Folder Include="Views\Auth\" />
     <Folder Include="Views\Campaign\" />
+    <Folder Include="Views\Customer\" />
     <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>

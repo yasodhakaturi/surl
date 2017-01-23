@@ -25,7 +25,7 @@ namespace Analytics
             //    url: "admin/{name}",
             //    defaults: new { controller = "Admin", action = "Admin" }
             //);
-    
+
 
        //     routes.MapRoute(
        //    name: "Login",

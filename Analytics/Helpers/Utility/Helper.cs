@@ -125,7 +125,15 @@ namespace Analytics.Helpers.Utility
 
             }
         }
-       
+        public static bool CurrentUserActiveStatus
+        {
+            get
+            {
+
+                return Convert.ToBoolean(HttpContext.Current.Session["userdata"].ToString().Split('^')[4]);
+
+            }
+        }
 
         //internal static string Decrypt(byte[] key, string encryptedString)
         //{
