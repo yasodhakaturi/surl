@@ -22,16 +22,16 @@ namespace Analytics.Controllers
         //}
         //public JsonResult GetclientDetails()
         //{
-            List<ClientView> objc = new List<ClientView>();
-            ClientView obj = new ClientView();
+            List<ClientView1> objc = new List<ClientView1>();
+            ClientView1 obj = new ClientView1();
             int id1 = Convert.ToInt32(id);
             try
             {
-                if (id == null)
+                if (id == null && Session["id"] != null)
                 {
                     //get all client detials
                     objc = (from c in dc.Clients
-                            select new ClientView
+                            select new ClientView1
                             {
                                 id = c.PK_ClientID,
                                 UserName = c.UserName,
@@ -42,11 +42,11 @@ namespace Analytics.Controllers
                     return Json(objc, JsonRequestBehavior.AllowGet);
 
                 }
-                else if(id!=null)
+                else if (id != null && Session["id"] != null)
                 {
                 obj = (from c in dc.Clients
                                         where c.PK_ClientID==id1
-                                        select new ClientView
+                                        select new ClientView1
                                         {
                                             id = c.PK_ClientID,
                                             UserName = c.UserName,
@@ -54,7 +54,7 @@ namespace Analytics.Controllers
                                             IsActive = c.IsActive
                                             //Password = c.Password
                                         }).SingleOrDefault();
-                return Json(objc, JsonRequestBehavior.AllowGet);
+                return Json(obj, JsonRequestBehavior.AllowGet);
 
                 }
                 
@@ -69,18 +69,18 @@ namespace Analytics.Controllers
         }
         public JsonResult Search(string username, string email, bool? isactive)
         {
-            List<ClientView> obj_search = new List<ClientView>();
+            List<ClientView1> obj_search = new List<ClientView1>();
             string isactivestr = Convert.ToString(isactive);
             try
             {
                 //string username = Helper.CurrentUserName;
                 //string email = Helper.CurrentUseremail;
                 //bool isactive = Helper.CurrentUserActiveStatus;
-                if (username != null && email == null && isactivestr == null)
+                if (username != null && (email == "" || email == null) && (isactivestr == "" || isactivestr == null) && Session["id"] != null)
                 {
                     obj_search = (from c in dc.Clients
                                   where c.UserName.Contains(username.ToString())
-                                  select new ClientView()
+                                  select new ClientView1()
                                   {
                                       id = c.PK_ClientID,
                                       UserName = c.UserName,
@@ -88,11 +88,11 @@ namespace Analytics.Controllers
                                       IsActive = c.IsActive
                                   }).ToList();
                 }
-                else if (email != null && username == null && isactivestr == null)
+                else if (email != null && (username == null || username == "") && (isactivestr == null || isactivestr == "") && Session["id"] != null)
                 {
                     obj_search = (from c in dc.Clients
                                   where c.Email.Contains(email.ToString())
-                                  select new ClientView()
+                                  select new ClientView1()
                                   {
                                       id = c.PK_ClientID,
                                       UserName = c.UserName,
@@ -100,11 +100,11 @@ namespace Analytics.Controllers
                                       IsActive = c.IsActive
                                   }).ToList();
                 }
-                else if (isactivestr != null && username == null && email == null)
+                else if (isactivestr != null && (username == null || username == "") && (email == null || email == "") && Session["id"] != null)
                 {
                     obj_search = (from c in dc.Clients
                                   where c.IsActive == isactive
-                                  select new ClientView()
+                                  select new ClientView1()
                                   {
                                       id = c.PK_ClientID,
                                       UserName = c.UserName,
@@ -127,18 +127,20 @@ namespace Analytics.Controllers
 
             }
         }
-        public JsonResult AddClient([FromBody]JToken jObject)
+
+               
+        [System.Web.Mvc.HttpPost]
+        public JsonResult AddClient(string UserName, string Email, string Password, bool IsActive)
+        //public JsonResult AddClient([FromBody]JToken jObject)
         {
             Client obj = new Client();
             try
             {
                 //string fields = "UserName,Email,IsActive";
-                //string parameters = new StreamReader(parameter).ReadToEnd(); //email1;
-                //JObject jObject = JObject.Parse(parameter);
-                string UserName = (string)jObject["UserName"];
-                string Email = (string)jObject["Email"];
-                string Password = (string)jObject["Password"];
-                bool IsActive = (bool)jObject["IsActive"];
+                //string UserName = (string)jObject["UserName"];
+                //string Email = (string)jObject["Email"];
+                //string Password = (string)jObject["Password"];
+                //bool IsActive = (bool)jObject["IsActive"];
                 Client isEmailExists = new OperationsBO().CheckClientEmail(Email);
                 //Client obj1 = new Client();
                 if (isEmailExists == null && Session["id"] != null)
@@ -184,20 +186,22 @@ namespace Analytics.Controllers
                // return Json(obj,JsonRequestBehavior.AllowGet);
             }
         }
-        public JsonResult UpdateClient([FromBody]JToken jObject)
-        {
+        //public JsonResult UpdateClient([FromBody]JToken jObject)
+        [System.Web.Mvc.HttpPost]
+        public JsonResult UpdateClient(string UserName, string Email, bool IsActive)    
+    {
              Client obj1 = new Client();
             try{
-            string id = (string)jObject["id"];
-            string UserName = (string)jObject["UserName"];
-            string Email = (string)jObject["Email"];
-            //string Password = (string)jObject["Password"];
-            bool? IsActive = (bool)jObject["IsActive"];
-            int id1 = Convert.ToInt32(id);
+            //string id = (string)jObject["id"];
+            //string UserName = (string)jObject["UserName"];
+            //string Email = (string)jObject["Email"];
+            ////string Password = (string)jObject["Password"];
+            //bool? IsActive = (bool)jObject["IsActive"];
+             // int id1 = Convert.ToInt32(Session["id"]);
             //string fields = "UserName,Email,IsActive";
-            Client isEmailExists = new OperationsBO().CheckClientEmail(Email);
-            Client obj = dc.Clients.Where(c => c.PK_ClientID == id1).Select(c1 => c1).SingleOrDefault();
-            if (isEmailExists!=null)
+            //Client isEmailExists = new OperationsBO().CheckClientEmail(Email);
+            Client obj = dc.Clients.Where(c => c.Email == Email).SingleOrDefault();
+            if (obj != null && Session["id"]!=null)
                 new OperationsBO().UpdateClient(UserName, Email, IsActive);
             else
                 obj = obj1;
@@ -216,25 +220,29 @@ namespace Analytics.Controllers
 
         }
 
-        public JsonResult DeleteClient([FromBody]JToken jObject)
+       // public JsonResult DeleteClient([FromBody]JToken jObject)
+        [System.Web.Mvc.HttpPost]
+        public JsonResult DeleteClient(string Email)
         {
             Client obj1 = new Client();
             try{
-            string id = (string)jObject["id"];
-            string UserName = (string)jObject["UserName"];
-            string Email = (string)jObject["Email"];
-            string Password = (string)jObject["Password"];
-            bool? IsActive = (bool)jObject["IsActive"];
-            int id1 = Convert.ToInt32(id);
+            //string id = (string)jObject["id"];
+            //string UserName = (string)jObject["UserName"];
+            //string Email = (string)jObject["Email"];
+            //string Password = (string)jObject["Password"];
+            //bool? IsActive = (bool)jObject["IsActive"];
+            //int id1 = Convert.ToInt32(Session["id"]);
             //string fields = "UserName,Email,IsActive";
-            Client isEmailExists = new OperationsBO().CheckClientEmail(Email);
-            Client obj = dc.Clients.Where(c => c.PK_ClientID == id1).Select(c1 => c1).SingleOrDefault();
-            if (isEmailExists!=null && obj.IsActive == true)
+            Client obj = new OperationsBO().CheckClientEmail(Email);
+            //Client obj = dc.Clients.Where(c => c.PK_ClientID == isEmailExists.PK_ClientID).Select(c1 => c1).SingleOrDefault();
+            if (obj != null && Session["id"] != null)
             {
+                if (obj.IsActive == true)
+                {
                     obj.IsActive = false;
                     obj.UpdatedDate = DateTime.UtcNow;
                     dc.SaveChanges();
-                
+                }
             }
             else
             {

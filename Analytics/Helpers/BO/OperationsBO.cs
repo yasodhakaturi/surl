@@ -424,10 +424,11 @@ namespace Analytics.Helpers.BO
             try
             {
                 string strQuery="";
+                DateTime dt = DateTime.UtcNow;
                 if(password!="")
-                 strQuery = "Update RIDDATA set Pwd=" + password + ",IsActive=" + isactive + " where ReferenceNumber =" + referencenumber + "";
+                    strQuery = "Update RIDDATA set Pwd='" + password + "',IsActive='" + isactive + "',UpdatedDate='" + dt + "' where ReferenceNumber ='" + referencenumber + "'";
                 else
-                 strQuery = "Update RIDDATA set IsActive=" + isactive + " where ReferenceNumber =" + referencenumber + "";
+                    strQuery = "Update RIDDATA set IsActive='" + isactive + "',UpdatedDate='" + dt + "' where ReferenceNumber ='" + referencenumber + "'";
                 SqlHelper.ExecuteNonQuery(Helper.ConnectionString, CommandType.Text, strQuery);
             }
             catch (Exception ex)

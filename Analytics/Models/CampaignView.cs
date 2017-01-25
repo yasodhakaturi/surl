@@ -15,4 +15,13 @@ namespace Analytics.Models
         //public List<string> listcampaigns { get; set; }
 
     }
+    public class CampaignView1
+    {
+        public int id { get; set; }
+        public string ReferenceNumber { get; set; }
+       // public string pwd { get; set; }
+        public bool? isactive { get; set; }
+        //public List<string> listcampaigns { get; set; }
+
+    }
 }

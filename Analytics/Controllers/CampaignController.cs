@@ -21,16 +21,16 @@ namespace Analytics.Controllers
             //}
             //public JsonResult GetclientDetails()
             //{
-            List<CampaignView> objc = new List<CampaignView>();
-            CampaignView obj = new CampaignView();
+            List<CampaignView1> objc = new List<CampaignView1>();
+            CampaignView1 obj = new CampaignView1();
             int id1 = Convert.ToInt32(id);
             try
             {
-                if (id == null)
+                if (id == null && Session["id"] != "")
                 {
                     //get all client detials
                     objc = (from r in dc.RIDDATAs
-                                                    select new CampaignView
+                                                    select new CampaignView1
                                                     {
                                                         id = r.PK_Rid,
                                                         ReferenceNumber = r.ReferenceNumber,
@@ -40,11 +40,11 @@ namespace Analytics.Controllers
                     return Json(objc, JsonRequestBehavior.AllowGet);
 
                 }
-                else if (id != null)
+                else if (id != null && Session["id"] != "")
                 {
                     obj = (from r in dc.RIDDATAs
                             where r.PK_Rid == id1
-                            select new CampaignView
+                            select new CampaignView1
                             {
                                 id = r.PK_Rid,
                                 ReferenceNumber = r.ReferenceNumber,
@@ -67,16 +67,16 @@ namespace Analytics.Controllers
 
         public JsonResult Search(string referencenumber, bool? isactive)
         {
-            List<CampaignView> obj_search = new List<CampaignView>();
+            List<CampaignView1> obj_search = new List<CampaignView1>();
             string isactivestr = Convert.ToString(isactive);
 
             try
             {
-                if (referencenumber != null && isactivestr == null)
+                if (referencenumber != null && isactivestr == null && Session["id"]!="")
             {
                 obj_search = (from c in dc.RIDDATAs
                               where c.ReferenceNumber.Contains(referencenumber.ToString())
-                              select new CampaignView()
+                              select new CampaignView1()
                               {
                                   id = c.PK_Rid,
                                   ReferenceNumber = c.ReferenceNumber,
@@ -85,11 +85,11 @@ namespace Analytics.Controllers
                               }).ToList();
             }
 
-                else if (isactivestr != null && referencenumber == "")
+                else if (isactivestr != null && referencenumber == "" && Session["id"] != "")
             {
                 obj_search = (from c in dc.RIDDATAs
                               where c.IsActive == isactive
-                              select new CampaignView()
+                              select new CampaignView1()
                               {
                                   id = c.PK_Rid,
                                   ReferenceNumber = c.ReferenceNumber,
@@ -106,27 +106,31 @@ namespace Analytics.Controllers
             }
         }
 
-        public JsonResult AddCampaign([FromBody]JToken jObject)
-        {
+        //public JsonResult AddCampaign([FromBody]JToken jObject)
+        [System.Web.Mvc.HttpPost]
+        public JsonResult AddCampaign(string ReferenceNumber, string Pwd, bool IsActive)    
+    {
             RIDDATA obj = new RIDDATA();
             try
             { 
             //string fields = "id,ReferenceNumber,isactive";
-            //string parameters = new StreamReader(parameter).ReadToEnd(); //email1;
-            //JObject jObject = JObject.Parse(parameter);
-            string ReferenceNumber = (string)jObject["ReferenceNumber"];
-            string Pwd = (string)jObject["Pwd"];
-            bool IsActive = (bool)jObject["IsActive"];
-            int FK_ClientId = (int)jObject["ClientId"];
-            bool isClientExists = new OperationsBO().CheckClientId(FK_ClientId);
-            if (isClientExists == false)
+            
+            //string ReferenceNumber = (string)jObject["ReferenceNumber"];
+            //string Pwd = (string)jObject["Pwd"];
+            //bool IsActive = (bool)jObject["IsActive"];
+             //int id = (int)Session["id"];
+             //int id = 1;
+             RIDDATA objc = dc.RIDDATAs.Where(x => x.ReferenceNumber== ReferenceNumber).SingleOrDefault();
+            //int FK_ClientId = (int)jObject["ClientId"];
+            //bool isClientExists = new OperationsBO().CheckClientId(FK_ClientId);
+             if (objc == null && Session["id"]!="")
             {
                 //add campaign details
                 obj.ReferenceNumber = ReferenceNumber;
                 obj.Pwd = Pwd;
                 obj.IsActive = IsActive;
                 obj.CreatedDate = DateTime.UtcNow;
-                obj.FK_ClientId = FK_ClientId;
+                obj.FK_ClientId = (int)Session["id"];
                 dc.RIDDATAs.Add(obj);
                 dc.SaveChanges();
                 new OperationsBO().InsertUIDRIDData(ReferenceNumber);
@@ -140,8 +144,10 @@ namespace Analytics.Controllers
             }
         }
 
-        public JsonResult UpdateCampaign([FromBody]JToken jObject)
-        {
+        //public JsonResult UpdateCampaign([FromBody]JToken jObject)
+        //[System.Web.Mvc.HttpPost]
+        public JsonResult UpdateCampaign(string ReferenceNumber, string Pwd, bool IsActive)      
+    {
             RIDDATA obj = new RIDDATA();
             RIDDATA obj1 = new RIDDATA();
             try
@@ -149,17 +155,27 @@ namespace Analytics.Controllers
             //string fields = "id,ReferenceNumber,isactive";
             //string parameters = new StreamReader(parameter).ReadToEnd(); //email1;
             //JObject jObject = JObject.Parse(parameter);
-            int id = (int)jObject["id"];
-            string ReferenceNumber = (string)jObject["ReferenceNumber"];
+            //int id = (int)jObject["id"];
+            //string ReferenceNumber = (string)jObject["ReferenceNumber"];
             //string Pwd = (string)jObject["Pwd"];
-            bool IsActive = (bool)jObject["IsActive"];
-            obj = dc.RIDDATAs.Where(r => r.PK_Rid == id).SingleOrDefault();
-            bool isReferenceNumberExists = new OperationsBO().CheckReferenceNumber(ReferenceNumber);
-            if (isReferenceNumberExists == true)
-                new OperationsBO().UpdateCampaign(ReferenceNumber, "", IsActive);
+            //bool IsActive = (bool)jObject["IsActive"];
+            obj = dc.RIDDATAs.Where(r => r.ReferenceNumber == ReferenceNumber).SingleOrDefault();
+            //obj = (from rid in dc.RIDDATAs
+            //       where rid.ReferenceNumber == ReferenceNumber
+            //       select rid).SingleOrDefault();
+           // bool isReferenceNumberExists = new OperationsBO().CheckReferenceNumber(ReferenceNumber);
+            if (obj != null)
+                new OperationsBO().UpdateCampaign(ReferenceNumber, Pwd, IsActive);
             else
                 obj = obj1;
-            return Json(obj, JsonRequestBehavior.AllowGet);
+            //return Json(obj, JsonRequestBehavior.AllowGet);
+            return Json(
+       new
+       {
+       referencenumber=obj.ReferenceNumber,
+       IsActive=obj.IsActive}
+       , JsonRequestBehavior.AllowGet
+       );
             }
             catch (Exception ex)
             {
@@ -168,7 +184,9 @@ namespace Analytics.Controllers
             }
         }
 
-      public JsonResult DeleteCampaign([FromBody]JToken jObject)
+     // public JsonResult DeleteCampaign([FromBody]JToken jObject)
+        [System.Web.Mvc.HttpPost]
+        public JsonResult DeleteCampaign(string ReferenceNumber) 
         {
             RIDDATA obj = new RIDDATA();
             RIDDATA obj1 = new RIDDATA();
@@ -177,13 +195,15 @@ namespace Analytics.Controllers
             //string fields = "id,ReferenceNumber,isactive";
             //string parameters = new StreamReader(parameter).ReadToEnd(); //email1;
             //JObject jObject = JObject.Parse(parameter);
-            int id = (int)jObject["id"];
-            string ReferenceNumber = (string)jObject["ReferenceNumber"];
+            //int id = (int)jObject["id"];
+            //string ReferenceNumber = (string)jObject["ReferenceNumber"];
             //string Pwd = (string)jObject["Pwd"];
-            bool IsActive = (bool)jObject["IsActive"];
-            obj = dc.RIDDATAs.Where(r => r.PK_Rid == id).SingleOrDefault();
-            bool isReferenceNumberExists = new OperationsBO().CheckReferenceNumber(ReferenceNumber);
-            if (isReferenceNumberExists == true && obj.IsActive == true)
+            //bool IsActive = (bool)jObject["IsActive"];
+            //obj = dc.RIDDATAs.Where(r => r.ReferenceNumber == ReferenceNumber).Select(r=>r).SingleOrDefault();
+            obj = dc.RIDDATAs.Where(r => r.ReferenceNumber == ReferenceNumber).SingleOrDefault();
+
+            //bool isReferenceNumberExists = new OperationsBO().CheckReferenceNumber(ReferenceNumber);
+            if (obj != null && obj.IsActive == true)
             {
                 obj.IsActive = false;
                 obj.UpdatedDate = DateTime.UtcNow;
@@ -194,7 +214,15 @@ namespace Analytics.Controllers
             {
                 obj = obj1;
             }
-            return Json(obj, JsonRequestBehavior.AllowGet);
+            return Json(
+     new
+     {
+         referencenumber = obj.ReferenceNumber,
+         IsActive = obj.IsActive
+     }
+     , JsonRequestBehavior.AllowGet
+     );
+            //return Json(obj, JsonRequestBehavior.AllowGet);
           }
           catch (Exception ex)
           {
