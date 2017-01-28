@@ -1,4 +1,4 @@
-angular.module('bitraz.template', ['views/admin/admin.html', 'views/admin/analytics.html', 'views/admin/archieves.html', 'views/admin/campaigns.html', 'views/admin/components/clients_component_tmpl.html', 'views/admin/header.html', 'views/admin/index.html', 'views/admin/settings.html', 'views/admin/users.html', 'views/admin/users/add_user.html', 'views/admin/users/change_password.html', 'views/admin/users/edit_user.html', 'views/common/analytics.html', 'views/common/dashboard/activities_tmpl.html', 'views/common/dashboard/dashboard_tmpl.html', 'views/common/dashboard/logged_users_tmpl.html', 'views/common/dashboard/recent_campaigns_tmpl.html', 'views/common/dashboard/total_campaigns_tmpl.html', 'views/common/dashboard/total_users_tmpl.html', 'views/common/dashboard/total_visits_tmpl.html', 'views/common/dashboard/urls_generated_tmpl.html', 'views/common/directives/analytics_layout.html', 'views/common/header-dashboard.html', 'views/common/login.html', 'views/common/navigation.html', 'views/common/panel_tools.html']);
+angular.module('bitraz.template', ['views/admin/admin.html', 'views/admin/analytics.html', 'views/admin/archieves.html', 'views/admin/campaigns.html', 'views/admin/campaigns/add_campaign.html', 'views/admin/campaigns/campaign_list.html', 'views/admin/campaigns/edit_campaign.html', 'views/admin/components/clients_component_tmpl.html', 'views/admin/header.html', 'views/admin/index.html', 'views/admin/settings.html', 'views/admin/users.html', 'views/admin/users/add_user.html', 'views/admin/users/change_password.html', 'views/admin/users/edit_user.html', 'views/common/analytics.html', 'views/common/dashboard/activities_tmpl.html', 'views/common/dashboard/dashboard_tmpl.html', 'views/common/dashboard/logged_users_tmpl.html', 'views/common/dashboard/recent_campaigns_tmpl.html', 'views/common/dashboard/total_campaigns_tmpl.html', 'views/common/dashboard/total_users_tmpl.html', 'views/common/dashboard/total_visits_tmpl.html', 'views/common/dashboard/urls_generated_tmpl.html', 'views/common/directives/analytics_layout.html', 'views/common/header-dashboard.html', 'views/common/login.html', 'views/common/navigation.html', 'views/common/panel_tools.html']);
 
 angular.module("views/admin/admin.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/admin/admin.html",
@@ -18,6 +18,209 @@ angular.module("views/admin/archieves.html", []).run(["$templateCache", function
 angular.module("views/admin/campaigns.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/admin/campaigns.html",
     "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12 text-center m-t-md\"> <h2> Welcome to biTRAZ admin campaigns </h2> <p>Special <strong>Analytic Trace Application</strong> for your mobile marketing campaigns.</p> </div> </div> <div class=\"row\"> <div class=\"col-sm-12\"> <ul> <li>list of campaigns</li> <li>add campaign</li> <li>edit campaign</li> </ul> </div> </div> </div> </div>");
+}]);
+
+angular.module("views/admin/campaigns/add_campaign.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("views/admin/campaigns/add_campaign.html",
+    "<div id=\"add_user\">\n" +
+    "\n" +
+    "    <div class=\"content\" animate-panel effect=\"zoomIn\">\n" +
+    "        <div class=\"modal-header\">\n" +
+    "            <h3 class=\"modal-title\" id=\"modal-title\">Add a Campaign</h3>\n" +
+    "        </div>\n" +
+    "\n" +
+    "            <ng-form class=\"form-horizontal\" name=\"$ctrl.newUserForm\" novalidate >\n" +
+    "                <div class=\"modal-body\" id=\"modal-body\">\n" +
+    "                    <div class=\"form-group\">\n" +
+    "                        <label class=\"col-sm-2 control-label\">User Name</label>\n" +
+    "\n" +
+    "                        <div class=\"col-sm-10\">\n" +
+    "                            <input type=\"text\" ng-required=\"true\" name=\"username\" placeholder=\"User Name\" class=\"form-control\" ng-model=\"$ctrl.newUser.UserName\" />\n" +
+    "                            <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newUserForm.username.$invalid && $ctrl.newUserForm.username.$touched\">\n" +
+    "                                <span ng-if=\"$ctrl.newUserForm.username.$error.required\">Name is required</span>\n" +
+    "                            </small>\n" +
+    "                        </div>\n" +
+    "\n" +
+    "                    </div>\n" +
+    "                    <div class=\"form-group\">\n" +
+    "                        <label class=\"col-sm-2 control-label\">Email</label>\n" +
+    "\n" +
+    "                        <div class=\"col-sm-10\">\n" +
+    "                            <input type=\"email\" ng-required=\"true\" name=\"email\" placeholder=\"Email\" class=\"form-control\" ng-model=\"$ctrl.newUser.Email\" />\n" +
+    "                            <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newUserForm.email.$invalid && $ctrl.newUserForm.email.$touched\">\n" +
+    "                                <span ng-if=\"$ctrl.newUserForm.email.$error.required\">Email is required</span>\n" +
+    "                                <span ng-if=\"!$ctrl.newUserForm.email.$error.required && $ctrl.newUserForm.email.$error.email\">Invalid Email</span>\n" +
+    "                            </small>\n" +
+    "                        </div>\n" +
+    "                    </div>\n" +
+    "\n" +
+    "                    <div class=\"form-group\">\n" +
+    "                        <label class=\"col-sm-2 control-label\">Password</label>\n" +
+    "\n" +
+    "                        <div class=\"col-sm-10\">\n" +
+    "                            <input id=\"pw1\" type=\"password\" ng-required=\"true\" ng-minlength=\"8\" name=\"password\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.newUser.Password\" />\n" +
+    "                            <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newUserForm.password.$invalid && $ctrl.newUserForm.password.$touched\">\n" +
+    "                                <span ng-if=\"$ctrl.newUserForm.password.$error.required\">Password is required</span>\n" +
+    "                                <span ng-if=\"!$ctrl.newUserForm.password.$error.required && $ctrl.newUserForm.password.$error.minlength\">Minimum 8 characters are required.</span>\n" +
+    "                            </small>\n" +
+    "                        </div>\n" +
+    "                    </div>\n" +
+    "\n" +
+    "                    <div class=\"form-group\">\n" +
+    "                        <label class=\"col-sm-2 control-label\">Password</label>\n" +
+    "\n" +
+    "                        <div class=\"col-sm-10\">\n" +
+    "                            <input id=\"pw2\" pw-check='pw1' type=\"password\" ng-required=\"true\" ng-minlength=\"8\" name=\"repassword\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.newUser.RePassword\" />\n" +
+    "                            <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newUserForm.repassword.$invalid && $ctrl.newUserForm.repassword.$touched\">\n" +
+    "                                <span ng-if=\"$ctrl.newUserForm.repassword.$error.required\">Re Password is required</span>\n" +
+    "                                <span ng-if=\"!$ctrl.newUserForm.repassword.$error.required && $ctrl.newUserForm.repassword.$error.minlength\">Minimum 8 characters are required.</span>\n" +
+    "                                <span ng-if=\"!$ctrl.newUserForm.repassword.$error.required && !$ctrl.newUserForm.repassword.$error.minlength && $ctrl.newUserForm.repassword.$error.pwmatch\">Re Password Not Matched</span>\n" +
+    "                            </small>\n" +
+    "                        </div>\n" +
+    "                    </div>\n" +
+    "\n" +
+    "                    <div class=\"form-group\">\n" +
+    "                        <label class=\"col-sm-2 control-label\">Active</label>\n" +
+    "\n" +
+    "                        <div class=\"col-sm-10\">\n" +
+    "                            <input type=\"checkbox\" name=\"isActive\"  class=\"form-control\" ng-model=\"$ctrl.newUser.IsActive\" />\n" +
+    "                        </div>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "                <div class=\"modal-footer\">\n" +
+    "                    <small class=\"text-danger\" ng-if=\"$ctrl.saveError\">Error: {{$ctrl.saveError}} </small>\n" +
+    "                    <button class=\"btn btn-default\" type=\"submit\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "                    <button class=\"btn btn-primary\" type=\"submit\" ng-class=\"{'disabled': !$ctrl.newUserForm.$valid}\" ng-disabled=\"!$ctrl.newUserForm.$valid\"  ng-click=\"save($ctrl.newUser)\">Save changes</button>\n" +
+    "                </div>\n" +
+    "            </ng-form>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("views/admin/campaigns/campaign_list.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("views/admin/campaigns/campaign_list.html",
+    "<div id=\"edit_user\">\n" +
+    "\n" +
+    "    <div class=\"content\" animate-panel effect=\"zoomIn\">\n" +
+    "        <div class=\"modal-header\">\n" +
+    "            <h3 class=\"modal-title\" id=\"modal-title\">Change User Password</h3>\n" +
+    "        </div>\n" +
+    "\n" +
+    "        <ng-form class=\"form-horizontal\" name=\"$ctrl.userForm\" novalidate >\n" +
+    "            <div class=\"modal-body\" id=\"modal-body\">\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label class=\"col-sm-2 control-label\">User Name</label>\n" +
+    "\n" +
+    "                    <div class=\"col-sm-10\">\n" +
+    "                        {{$ctrl.user.UserName}}\n" +
+    "                    </div>\n" +
+    "\n" +
+    "                </div>\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label class=\"col-sm-2 control-label\">Email</label>\n" +
+    "\n" +
+    "                    <div class=\"col-sm-10\">\n" +
+    "                        {{$ctrl.user.Email}}\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label class=\"col-sm-2 control-label\">Password</label>\n" +
+    "\n" +
+    "                    <div class=\"col-sm-10\">\n" +
+    "                        <input id=\"pw1\" type=\"password\" ng-required=\"true\" ng-minlength=\"8\" name=\"password\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.user.Password\" />\n" +
+    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.userForm.password.$invalid && $ctrl.userForm.password.$touched\">\n" +
+    "                            <span ng-if=\"$ctrl.userForm.password.$error.required\">Password is required</span>\n" +
+    "                            <span ng-if=\"!$ctrl.userForm.password.$error.required && $ctrl.userForm.password.$error.minlength\">Minimum 8 characters are required.</span>\n" +
+    "                        </small>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label class=\"col-sm-2 control-label\">Re-Password</label>\n" +
+    "\n" +
+    "                    <div class=\"col-sm-10\">\n" +
+    "                        <input id=\"pw2\" pw-check='pw1' type=\"password\" ng-required=\"true\" ng-minlength=\"8\" name=\"repassword\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.user.RePassword\" />\n" +
+    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.userForm.repassword.$invalid && $ctrl.userForm.repassword.$touched\">\n" +
+    "                            <span ng-if=\"$ctrl.userForm.repassword.$error.required\">Re Password is required</span>\n" +
+    "                            <span ng-if=\"!$ctrl.userForm.repassword.$error.required && $ctrl.userForm.repassword.$error.minlength\">Minimum 8 characters are required.</span>\n" +
+    "                            <span ng-if=\"!$ctrl.userForm.repassword.$error.required && !$ctrl.userForm.repassword.$error.minlength && $ctrl.userForm.repassword.$error.pwmatch\">Re Password Not Matched</span>\n" +
+    "                        </small>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label class=\"col-sm-2 control-label\">Active</label>\n" +
+    "\n" +
+    "                    <div class=\"col-sm-10\">\n" +
+    "                        {{!!$ctrl.user.IsActive}}\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "            <div class=\"modal-footer\">\n" +
+    "                <small class=\"text-danger\" ng-if=\"$ctrl.saveError\">Error: {{$ctrl.saveError}} </small>\n" +
+    "                <button class=\"btn btn-default\" type=\"submit\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "                <button class=\"btn btn-primary\" type=\"submit\" ng-class=\"{'disabled': !$ctrl.userForm.$valid}\" ng-disabled=\"!$ctrl.userForm.$valid\"  ng-click=\"save($ctrl.user)\">Save changes</button>\n" +
+    "            </div>\n" +
+    "        </ng-form>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("views/admin/campaigns/edit_campaign.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("views/admin/campaigns/edit_campaign.html",
+    "<div id=\"edit_user\">\n" +
+    "\n" +
+    "    <div class=\"content\" animate-panel effect=\"zoomIn\">\n" +
+    "        <div class=\"modal-header\">\n" +
+    "            <h3 class=\"modal-title\" id=\"modal-title\">Edit a User</h3>\n" +
+    "        </div>\n" +
+    "\n" +
+    "        <ng-form class=\"form-horizontal\" name=\"$ctrl.userForm\" novalidate >\n" +
+    "            <div class=\"modal-body\" id=\"modal-body\">\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label class=\"col-sm-2 control-label\">User Name</label>\n" +
+    "\n" +
+    "                    <div class=\"col-sm-10\">\n" +
+    "                        <input type=\"text\" ng-required=\"true\" name=\"username\" placeholder=\"User Name\" class=\"form-control\" ng-model=\"$ctrl.user.UserName\" />\n" +
+    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.userForm.username.$invalid && $ctrl.userForm.username.$touched\">\n" +
+    "                            <span ng-if=\"$ctrl.userForm.username.$error.required\">Name is required</span>\n" +
+    "                        </small>\n" +
+    "                    </div>\n" +
+    "\n" +
+    "                </div>\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label class=\"col-sm-2 control-label\">Email</label>\n" +
+    "\n" +
+    "                    <div class=\"col-sm-10\">\n" +
+    "                        {{$ctrl.user.Email}}\n" +
+    "                        <!--<input type=\"email\" ng-required=\"true\" name=\"email\" placeholder=\"Email\" class=\"form-control\" ng-model=\"$ctrl.user.Email\" />-->\n" +
+    "                        <!--<small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.userForm.email.$invalid && $ctrl.userForm.email.$touched\">-->\n" +
+    "                            <!--<span ng-if=\"$ctrl.userForm.email.$error.required\">Email is required</span>-->\n" +
+    "                            <!--<span ng-if=\"!$ctrl.userForm.email.$error.required && $ctrl.userForm.email.$error.email\">Invalid Email</span>-->\n" +
+    "                        <!--</small>-->\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label class=\"col-sm-2 control-label\">Active</label>\n" +
+    "\n" +
+    "                    <div class=\"col-sm-10\">\n" +
+    "                        <input type=\"checkbox\" name=\"isActive\"  class=\"form-control\" ng-model=\"$ctrl.user.IsActive\" />\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "            <div class=\"modal-footer\">\n" +
+    "                <small class=\"text-danger\" ng-if=\"$ctrl.saveError\">Error: {{$ctrl.saveError}} </small>\n" +
+    "                <button class=\"btn btn-default\" type=\"submit\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "                <button class=\"btn btn-primary\" type=\"submit\" ng-class=\"{'disabled': !$ctrl.userForm.$valid}\" ng-disabled=\"!$ctrl.userForm.$valid\"  ng-click=\"save($ctrl.user)\">Save changes</button>\n" +
+    "            </div>\n" +
+    "        </ng-form>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "");
 }]);
 
 angular.module("views/admin/components/clients_component_tmpl.html", []).run(["$templateCache", function($templateCache) {
@@ -488,10 +691,11 @@ angular.module("views/common/dashboard/total_users_tmpl.html", []).run(["$templa
     "                                Unique users across all campaigns\n" +
     "                            </span>\n" +
     "\n" +
-    "            <div class=\"progress m-t-xs full progress-small\" ng-init=\"percent = ($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1)\">\n" +
-    "                <div style=\"width: {{percent}}%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"{{percent}}\"\n" +
+    "            <div class=\"progress m-t-xs full progress-small\">\n" +
+    "\n" +
+    "                <div style=\"width: {{($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1) * 100}}%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"{{($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1) * 100}}\"\n" +
     "                     role=\"progressbar\" class=\" progress-bar progress-bar-success\">\n" +
-    "                    <span class=\"sr-only\">{{percent}}% Unique Users</span>\n" +
+    "                    <span class=\"sr-only\">{{($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1) * 100}}% Unique Users</span>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "\n" +
@@ -532,10 +736,10 @@ angular.module("views/common/dashboard/total_visits_tmpl.html", []).run(["$templ
     "                                Unique users visited\n" +
     "                            </span>\n" +
     "\n" +
-    "            <div class=\"progress m-t-xs full progress-small\" ng-init=\"percent = ($ctrl.data.visits || 0) / ($ctrl.data.uniqueVisits || 0)\">\n" +
-    "                <div style=\"width: {{percent}}%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"{{percent}}\"\n" +
+    "            <div class=\"progress m-t-xs full progress-small\" >\n" +
+    "                <div style=\"width: {{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100)}}%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"{{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100)}}\"\n" +
     "                     role=\"progressbar\" class=\" progress-bar progress-bar-success\">\n" +
-    "                    <span class=\"sr-only\">{{percent}}% Unique Visits</span>\n" +
+    "                    <span class=\"sr-only\">{{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100)}}% Unique Visits</span>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "\n" +

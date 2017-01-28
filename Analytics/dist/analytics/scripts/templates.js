@@ -275,10 +275,11 @@ angular.module("views/common/dashboard/total_users_tmpl.html", []).run(["$templa
     "                                Unique users across all campaigns\n" +
     "                            </span>\n" +
     "\n" +
-    "            <div class=\"progress m-t-xs full progress-small\" ng-init=\"percent = ($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1)\">\n" +
-    "                <div style=\"width: {{percent}}%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"{{percent}}\"\n" +
+    "            <div class=\"progress m-t-xs full progress-small\">\n" +
+    "\n" +
+    "                <div style=\"width: {{($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1) * 100}}%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"{{($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1) * 100}}\"\n" +
     "                     role=\"progressbar\" class=\" progress-bar progress-bar-success\">\n" +
-    "                    <span class=\"sr-only\">{{percent}}% Unique Users</span>\n" +
+    "                    <span class=\"sr-only\">{{($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1) * 100}}% Unique Users</span>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "\n" +
@@ -319,10 +320,10 @@ angular.module("views/common/dashboard/total_visits_tmpl.html", []).run(["$templ
     "                                Unique users visited\n" +
     "                            </span>\n" +
     "\n" +
-    "            <div class=\"progress m-t-xs full progress-small\" ng-init=\"percent = ($ctrl.data.visits || 0) / ($ctrl.data.uniqueVisits || 0)\">\n" +
-    "                <div style=\"width: {{percent}}%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"{{percent}}\"\n" +
+    "            <div class=\"progress m-t-xs full progress-small\" >\n" +
+    "                <div style=\"width: {{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100)}}%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"{{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100)}}\"\n" +
     "                     role=\"progressbar\" class=\" progress-bar progress-bar-success\">\n" +
-    "                    <span class=\"sr-only\">{{percent}}% Unique Visits</span>\n" +
+    "                    <span class=\"sr-only\">{{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100)}}% Unique Visits</span>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "\n" +

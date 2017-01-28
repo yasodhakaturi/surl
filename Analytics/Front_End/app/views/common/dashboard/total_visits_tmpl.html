@@ -12,10 +12,10 @@
                                 Unique users visited
                             </span>
 
-            <div class="progress m-t-xs full progress-small" ng-init="percent = ($ctrl.data.visits || 0) / ($ctrl.data.uniqueVisits || 0)">
-                <div style="width: {{percent}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="{{percent}}"
+            <div class="progress m-t-xs full progress-small" >
+                <div style="width: {{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100)}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="{{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100)}}"
                      role="progressbar" class=" progress-bar progress-bar-success">
-                    <span class="sr-only">{{percent}}% Unique Visits</span>
+                    <span class="sr-only">{{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100)}}% Unique Visits</span>
                 </div>
             </div>
 
