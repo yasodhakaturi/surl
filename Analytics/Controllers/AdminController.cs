@@ -206,7 +206,7 @@ namespace Analytics.Controllers
                     //update campaign detials
                     bool isReferenceNumberExists = new OperationsBO().CheckReferenceNumber(obj.ReferenceNumber);
                     if (isReferenceNumberExists == true)
-                    new OperationsBO().UpdateCampaign(obj.ReferenceNumber, obj.pwd, obj.isactive);
+                    new OperationsBO().UpdateCampaign("", obj.ReferenceNumber, obj.pwd, obj.isactive);
                     return Json(obj, JsonRequestBehavior.AllowGet);
                 }
                 return Json("wrong input");

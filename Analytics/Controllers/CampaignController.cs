@@ -108,11 +108,14 @@ namespace Analytics.Controllers
 
         //public JsonResult AddCampaign([FromBody]JToken jObject)
         [System.Web.Mvc.HttpPost]
-        public JsonResult AddCampaign(string ReferenceNumber, string Pwd, bool IsActive)    
+        public JsonResult AddCampaign(string CampaignName, string Pwd, bool IsActive)    
     {
             RIDDATA obj = new RIDDATA();
             try
-            { 
+            {
+                Random randNum = new Random();
+                int r = randNum.Next(00000, 99999);
+                string ReferenceNumber = r.ToString("D5");
             //string fields = "id,ReferenceNumber,isactive";
             
             //string ReferenceNumber = (string)jObject["ReferenceNumber"];
@@ -120,12 +123,13 @@ namespace Analytics.Controllers
             //bool IsActive = (bool)jObject["IsActive"];
              //int id = (int)Session["id"];
              //int id = 1;
-             RIDDATA objc = dc.RIDDATAs.Where(x => x.ReferenceNumber== ReferenceNumber).SingleOrDefault();
+            // RIDDATA objc = dc.RIDDATAs.Where(x => x.ReferenceNumber== ReferenceNumber).SingleOrDefault();
             //int FK_ClientId = (int)jObject["ClientId"];
             //bool isClientExists = new OperationsBO().CheckClientId(FK_ClientId);
-             if (objc == null && Session["id"]!="")
+             if (Session["id"]!=null)
             {
                 //add campaign details
+                obj.CampaignName = CampaignName;
                 obj.ReferenceNumber = ReferenceNumber;
                 obj.Pwd = Pwd;
                 obj.IsActive = IsActive;
@@ -133,7 +137,7 @@ namespace Analytics.Controllers
                 obj.FK_ClientId = (int)Session["id"];
                 dc.RIDDATAs.Add(obj);
                 dc.SaveChanges();
-                new OperationsBO().InsertUIDRIDData(ReferenceNumber);
+               // new OperationsBO().InsertUIDRIDData(ReferenceNumber);
             }
             return Json(obj, JsonRequestBehavior.AllowGet);
             }
@@ -146,7 +150,7 @@ namespace Analytics.Controllers
 
         //public JsonResult UpdateCampaign([FromBody]JToken jObject)
         //[System.Web.Mvc.HttpPost]
-        public JsonResult UpdateCampaign(string ReferenceNumber, string Pwd, bool IsActive)      
+        public JsonResult UpdateCampaign(string CampaignName,string ReferenceNumber, string Pwd, bool IsActive)      
     {
             RIDDATA obj = new RIDDATA();
             RIDDATA obj1 = new RIDDATA();
@@ -165,7 +169,7 @@ namespace Analytics.Controllers
             //       select rid).SingleOrDefault();
            // bool isReferenceNumberExists = new OperationsBO().CheckReferenceNumber(ReferenceNumber);
             if (obj != null)
-                new OperationsBO().UpdateCampaign(ReferenceNumber, Pwd, IsActive);
+                new OperationsBO().UpdateCampaign(ReferenceNumber, CampaignName, Pwd, IsActive);
             else
                 obj = obj1;
             //return Json(obj, JsonRequestBehavior.AllowGet);

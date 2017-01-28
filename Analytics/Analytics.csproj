@@ -218,27 +218,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AnalyticsModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="APIControllers\AnalyticsApiController.cs" />
-    <Compile Include="APIControllers\CampaignApiController.cs" />
-    <Compile Include="APIControllers\CustomerApiController.cs" />
     <Compile Include="App_Start\ApplicationUser.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Client.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AnalyticsController.cs" />
-    <Compile Include="Controllers\AngularTemplatesController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\CampaignController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="ErrorLog.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
@@ -303,9 +297,6 @@
     </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="sysdiagram.cs">
-      <DependentUpon>AnalyticsModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="UIDandRIDData.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
     <Compile Include="UIDDATA.cs">
@@ -1329,7 +1320,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>50955</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:3000/</IISUrl>
+          <IISUrl>http://192.168.1.64:3000/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

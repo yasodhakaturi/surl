@@ -25,7 +25,6 @@ namespace Analytics
         public string Req_url { get; set; }
         public string Hostname { get; set; }
         public string DeviceType { get; set; }
-        public Nullable<int> FK_UniqueID { get; set; }
         public string UserAgent { get; set; }
         public string IsMobileDevice { get; set; }
         public string Region { get; set; }
@@ -34,7 +33,6 @@ namespace Analytics
         public Nullable<int> FK_ClientID { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
     
-        public virtual UIDandRIDData UIDandRIDData { get; set; }
         public virtual RIDDATA RIDDATA { get; set; }
         public virtual SHORTURLDATA SHORTURLDATA1 { get; set; }
         public virtual SHORTURLDATA SHORTURLDATA2 { get; set; }

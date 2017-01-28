@@ -176,16 +176,38 @@ namespace Analytics.Controllers
                            .ObjectContext
                            .Translate<visits>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).SingleOrDefault();
 
+                           // // Move to locations result 
+                           // myReader.NextResult();
+                           // lastactivity lastactivity = ((IObjectContextAdapter)dc)
+                           //.ObjectContext
+                           //.Translate<lastactivity>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).SingleOrDefault();
+
                             // Move to locations result 
                             myReader.NextResult();
-                            lastactivity lastactivity = ((IObjectContextAdapter)dc)
+                            today today = ((IObjectContextAdapter)dc)
                            .ObjectContext
-                           .Translate<lastactivity>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).SingleOrDefault();
+                           .Translate<today>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).SingleOrDefault();
 
+                            // Move to locations result 
+                            myReader.NextResult();
+                            last7days last7days = ((IObjectContextAdapter)dc)
+                           .ObjectContext
+                           .Translate<last7days>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).SingleOrDefault();
+
+                            // Move to locations result 
+                            myReader.NextResult();
+                            month month = ((IObjectContextAdapter)dc)
+                           .ObjectContext
+                           .Translate<month>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).SingleOrDefault();
+                            activities obj_act = new activities();
                             objc.totalUrls = totalUrls;
                             objc.users = users;
                             objc.visits = visits;
-                            objc.lastactivity = lastactivity;
+                            //objc.lastactivity = lastactivity;
+                            obj_act.today = today;
+                            obj_act.last7days = last7days;
+                            obj_act.month = month;
+                            objc.activities = obj_act;
                         
                         }
                         return Json(objc, JsonRequestBehavior.AllowGet);
@@ -247,6 +269,7 @@ namespace Analytics.Controllers
                                                           id = r.PK_Rid,
                                                           rid = r.ReferenceNumber,
                                                           createdOn = r.CreatedDate,
+                                                          CampaignName=r.CampaignName,
                                                           //createdOn=dateformatt(r.CreatedDate),
                                                           endDate = r.EndDate
 
@@ -257,6 +280,7 @@ namespace Analytics.Controllers
                                     id = r.id,
                                     rid = r.rid,
                                     createdOn = r.createdOn.Value.ToString("yyyy-MM-ddThh:mm:ss"),
+                                    CampaignName = r.CampaignName,
                                     //createdOn=dateformatt(r.CreatedDate),
                                     endDate = (r.endDate == null) ? null : (r.endDate.Value.ToString("yyyy-MM-ddThh:mm:ss"))
 
@@ -359,7 +383,10 @@ namespace Analytics.Controllers
                       .ObjectContext
                       .Translate<BrowserWiseData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
 
-                        List<DayWiseData> objr = (from r in activity
+                        List<DayWiseData> objr = new List<DayWiseData>();
+                        if(activity!=null)
+                        { 
+                        objr = (from r in activity
                                                   select new DayWiseData()
                                                   {
                                                       RequestedDate=r.RequestedDate.Value.ToString("yyyy-MM-ddThh:mm:ss"),
@@ -367,6 +394,7 @@ namespace Analytics.Controllers
                                                       //r.crd.Value.ToString("yyyy-MM-ddThh:mm:ss"),
 
                                                   }).ToList();
+                    }
                         //List<DayWiseData> objr = (from r in activity
                         //                              select new DayWiseData()
                         //                              {
@@ -386,9 +414,14 @@ namespace Analytics.Controllers
                     }
                 else
                
-                {Error obj_err = new Error();
+                {
+                    Error obj_err = new Error();
                     Errormessage errmesobj = new Errormessage();
-                    errmesobj.message = "please pass reference number";
+                    if(Session["id"] == null)
+                     errmesobj.message = "please login";
+                    else
+                        errmesobj.message = "please pass reference number";
+
                     obj_err.error = errmesobj;
 
                     return Json(obj_err, JsonRequestBehavior.AllowGet);

@@ -18,8 +18,8 @@ namespace Analytics.Controllers
         {
             return View();
         }
-       
-        
+
+        [System.Web.Http.HttpPost]
         public JsonResult Login(string uname, string password)
      //   [System.Web.Http.HttpPost]
      //public JsonResult Login([FromBody]JToken jObject)    
