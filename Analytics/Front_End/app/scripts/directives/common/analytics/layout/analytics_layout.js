@@ -6,6 +6,9 @@ angular.module("bitraz")
     },
     controller: ["$scope", "$rootScope", "$uibModal", "$timeout", "highchartsNG", "RidService", "$interval", function ($scope, $rootScope, $uibModal, $timeout, highchartsNG, RidService, $interval) {
       let $ctrl = this;
+
+      $ctrl.loading = true;
+
       $scope.data = {
         "activity": [],
         "locations": [],
@@ -316,8 +319,10 @@ angular.module("bitraz")
         if(timer){
           $interval.cancel(timer);
         }
+        $ctrl.loading = true;
         RidService.getCounts(params).$promise.then((resp)=>{
           $scope.data = resp;
+          $ctrl.loading = false;
           $ctrl.refreshCharts();
           $ctrl.reflow();
           timer = $interval(function(){

@@ -51,7 +51,117 @@ function HomeController($http, $scope, $rootScope) {
 
 }
 
-function CampaignsController($http, $scope) {}
+function CampaignsController($scope, $http, $uibModal, UsersCollectionModel, CampaignsCollectionModel, CampaignModel) {
+    $scope.campaignListOptions = {
+        enableSorting: true,
+        columnDefs: [
+          { name:'Name', field: 'title' },
+          { name:'Is Protected', field: 'isPasswordProtected'},
+          { name:'Created On', field: 'created_on' },
+          { name:'Created By', field: 'created_by' },
+          { name:'Status', field: 'IsActive'},
+          { name:'Actions', cellTemplate:'<div>' +
+                      '<a ng-click="grid.appScope.editCampaign(row.entity)">Edit</a>' +
+                      '&nbsp;' +
+                      '</div>'
+          }
+        ],
+      data : []
+      };
+
+    $scope.refreshData = function () {
+      CampaignsCollectionModel.getAll().then(function(response) {
+        console.log(response);
+        $scope.campaignListOptions.data = response;
+      }, function errorCallback(response) {
+        console.log('error', response);
+      });
+
+      UsersCollectionModel.getAll().then(function(response) {
+            console.log(response);
+            $scope.usersList = response;
+          }, function errorCallback(response) {
+            console.log('error', response);
+          });
+
+    };
+
+    $scope.editCampaign = function(_row) {
+      var row = angular.copy(_row);
+      var instance = $uibModal.open({
+        animation: true,
+        ariaLabelledBy: 'modal-title-top',
+        ariaDescribedBy: 'modal-body-top',
+        templateUrl: 'views/admin/campaigns/edit_campaign.html',
+        size: 'lg',
+        controller: function($scope) {
+          var $ctrl = this;
+          $scope.name = 'top';
+
+          $ctrl.user = row;
+
+          $scope.save = function () {
+            $ctrl.saveError = "";
+            if($ctrl.campaignForm.$valid){
+              $ctrl.user.save().then((resp)=>{
+                _row = resp;
+                instance.close();
+              }, (err) => {
+                $ctrl.saveError = err && err.message || "Failed to save user.";
+              })
+            }
+
+          };
+
+          $scope.cancel = function () {
+            $ctrl.saveError = "";
+            instance.dismiss('cancel');
+          };
+
+        },
+        controllerAs: '$ctrl'
+      });
+
+    };
+
+    $scope.addCampaign = function() {
+      var instance = $uibModal.open({
+        animation: true,
+        ariaLabelledBy: 'modal-title-top',
+        ariaDescribedBy: 'modal-body-top',
+        templateUrl: 'views/admin/campaigns/add_campaign.html',
+        size: 'lg',
+        controller: function($scope) {
+          var $ctrl = this;
+          $scope.name = 'top';
+
+          $ctrl.newCampaign = new CampaignModel({})
+
+          $scope.save = function () {
+            $ctrl.saveError = "";
+            if($ctrl.newCampaignForm.$valid){
+              $ctrl.newCampaign.save().then((resp)=>{
+                console.log(resp)
+                instance.close();
+              }, (err) => {
+                $ctrl.saveError = err && err.message || "Failed to save user.";
+              })
+            }
+
+          };
+
+          $scope.cancel = function () {
+            $ctrl.saveError = "";
+            instance.dismiss('cancel');
+          };
+
+        },
+        controllerAs: '$ctrl'
+      });
+    };
+
+    $scope.refreshData();
+  }
 function ArchievesController($http, $scope) {}
 
 function SettingsController($http, $scope) {}

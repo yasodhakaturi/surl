@@ -17,7 +17,7 @@ angular.module("views/admin/archieves.html", []).run(["$templateCache", function
 
 angular.module("views/admin/campaigns.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/admin/campaigns.html",
-    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12 text-center m-t-md\"> <h2> Welcome to biTRAZ admin campaigns </h2> <p>Special <strong>Analytic Trace Application</strong> for your mobile marketing campaigns.</p> </div> </div> <div class=\"row\"> <div class=\"col-sm-12\"> <ul> <li>list of campaigns</li> <li>add campaign</li> <li>edit campaign</li> </ul> </div> </div> </div> </div>");
+    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12\"> <h2> Campaigns </h2> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <ul class=\"list-inline text-right\"> <li><div class=\"btn btn-primary\" ng-click=\"addCampaign()\">Add Campaign</div> </li> </ul> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <div id=\"campaignList\" ui-grid=\"campaignListOptions\" class=\"grid\"></div> </div> </div> </div> </div>");
 }]);
 
 angular.module("views/admin/campaigns/add_campaign.html", []).run(["$templateCache", function($templateCache) {
@@ -29,139 +29,62 @@ angular.module("views/admin/campaigns/add_campaign.html", []).run(["$templateCac
     "            <h3 class=\"modal-title\" id=\"modal-title\">Add a Campaign</h3>\n" +
     "        </div>\n" +
     "\n" +
-    "            <ng-form class=\"form-horizontal\" name=\"$ctrl.newUserForm\" novalidate >\n" +
-    "                <div class=\"modal-body\" id=\"modal-body\">\n" +
-    "                    <div class=\"form-group\">\n" +
-    "                        <label class=\"col-sm-2 control-label\">User Name</label>\n" +
-    "\n" +
-    "                        <div class=\"col-sm-10\">\n" +
-    "                            <input type=\"text\" ng-required=\"true\" name=\"username\" placeholder=\"User Name\" class=\"form-control\" ng-model=\"$ctrl.newUser.UserName\" />\n" +
-    "                            <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newUserForm.username.$invalid && $ctrl.newUserForm.username.$touched\">\n" +
-    "                                <span ng-if=\"$ctrl.newUserForm.username.$error.required\">Name is required</span>\n" +
-    "                            </small>\n" +
-    "                        </div>\n" +
-    "\n" +
-    "                    </div>\n" +
-    "                    <div class=\"form-group\">\n" +
-    "                        <label class=\"col-sm-2 control-label\">Email</label>\n" +
-    "\n" +
-    "                        <div class=\"col-sm-10\">\n" +
-    "                            <input type=\"email\" ng-required=\"true\" name=\"email\" placeholder=\"Email\" class=\"form-control\" ng-model=\"$ctrl.newUser.Email\" />\n" +
-    "                            <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newUserForm.email.$invalid && $ctrl.newUserForm.email.$touched\">\n" +
-    "                                <span ng-if=\"$ctrl.newUserForm.email.$error.required\">Email is required</span>\n" +
-    "                                <span ng-if=\"!$ctrl.newUserForm.email.$error.required && $ctrl.newUserForm.email.$error.email\">Invalid Email</span>\n" +
-    "                            </small>\n" +
-    "                        </div>\n" +
-    "                    </div>\n" +
-    "\n" +
-    "                    <div class=\"form-group\">\n" +
-    "                        <label class=\"col-sm-2 control-label\">Password</label>\n" +
-    "\n" +
-    "                        <div class=\"col-sm-10\">\n" +
-    "                            <input id=\"pw1\" type=\"password\" ng-required=\"true\" ng-minlength=\"8\" name=\"password\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.newUser.Password\" />\n" +
-    "                            <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newUserForm.password.$invalid && $ctrl.newUserForm.password.$touched\">\n" +
-    "                                <span ng-if=\"$ctrl.newUserForm.password.$error.required\">Password is required</span>\n" +
-    "                                <span ng-if=\"!$ctrl.newUserForm.password.$error.required && $ctrl.newUserForm.password.$error.minlength\">Minimum 8 characters are required.</span>\n" +
-    "                            </small>\n" +
-    "                        </div>\n" +
-    "                    </div>\n" +
-    "\n" +
-    "                    <div class=\"form-group\">\n" +
-    "                        <label class=\"col-sm-2 control-label\">Password</label>\n" +
-    "\n" +
-    "                        <div class=\"col-sm-10\">\n" +
-    "                            <input id=\"pw2\" pw-check='pw1' type=\"password\" ng-required=\"true\" ng-minlength=\"8\" name=\"repassword\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.newUser.RePassword\" />\n" +
-    "                            <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newUserForm.repassword.$invalid && $ctrl.newUserForm.repassword.$touched\">\n" +
-    "                                <span ng-if=\"$ctrl.newUserForm.repassword.$error.required\">Re Password is required</span>\n" +
-    "                                <span ng-if=\"!$ctrl.newUserForm.repassword.$error.required && $ctrl.newUserForm.repassword.$error.minlength\">Minimum 8 characters are required.</span>\n" +
-    "                                <span ng-if=\"!$ctrl.newUserForm.repassword.$error.required && !$ctrl.newUserForm.repassword.$error.minlength && $ctrl.newUserForm.repassword.$error.pwmatch\">Re Password Not Matched</span>\n" +
-    "                            </small>\n" +
-    "                        </div>\n" +
-    "                    </div>\n" +
-    "\n" +
-    "                    <div class=\"form-group\">\n" +
-    "                        <label class=\"col-sm-2 control-label\">Active</label>\n" +
-    "\n" +
-    "                        <div class=\"col-sm-10\">\n" +
-    "                            <input type=\"checkbox\" name=\"isActive\"  class=\"form-control\" ng-model=\"$ctrl.newUser.IsActive\" />\n" +
-    "                        </div>\n" +
-    "                    </div>\n" +
-    "                </div>\n" +
-    "                <div class=\"modal-footer\">\n" +
-    "                    <small class=\"text-danger\" ng-if=\"$ctrl.saveError\">Error: {{$ctrl.saveError}} </small>\n" +
-    "                    <button class=\"btn btn-default\" type=\"submit\" ng-click=\"cancel()\">Cancel</button>\n" +
-    "                    <button class=\"btn btn-primary\" type=\"submit\" ng-class=\"{'disabled': !$ctrl.newUserForm.$valid}\" ng-disabled=\"!$ctrl.newUserForm.$valid\"  ng-click=\"save($ctrl.newUser)\">Save changes</button>\n" +
-    "                </div>\n" +
-    "            </ng-form>\n" +
-    "    </div>\n" +
-    "</div>\n" +
-    "");
-}]);
-
-angular.module("views/admin/campaigns/campaign_list.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("views/admin/campaigns/campaign_list.html",
-    "<div id=\"edit_user\">\n" +
-    "\n" +
-    "    <div class=\"content\" animate-panel effect=\"zoomIn\">\n" +
-    "        <div class=\"modal-header\">\n" +
-    "            <h3 class=\"modal-title\" id=\"modal-title\">Change User Password</h3>\n" +
-    "        </div>\n" +
-    "\n" +
-    "        <ng-form class=\"form-horizontal\" name=\"$ctrl.userForm\" novalidate >\n" +
+    "        <ng-form class=\"form-horizontal\" name=\"$ctrl.newCampaignForm\" novalidate >\n" +
     "            <div class=\"modal-body\" id=\"modal-body\">\n" +
     "                <div class=\"form-group\">\n" +
-    "                    <label class=\"col-sm-2 control-label\">User Name</label>\n" +
+    "                    <label class=\"col-sm-3 control-label\">Campaign Name</label>\n" +
     "\n" +
-    "                    <div class=\"col-sm-10\">\n" +
-    "                        {{$ctrl.user.UserName}}\n" +
+    "                    <div class=\"col-sm-9\">\n" +
+    "                        <input type=\"text\" ng-required=\"true\" name=\"name\" placeholder=\"Campaign Name\" class=\"form-control\" ng-model=\"$ctrl.newCampaign.CampaignName\" />\n" +
+    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newCampaignForm.name.$invalid && $ctrl.newCampaignForm.username.$touched\">\n" +
+    "                            <span ng-if=\"$ctrl.newCampaignForm.name.$error.required\">Name is required</span>\n" +
+    "                        </small>\n" +
     "                    </div>\n" +
     "\n" +
     "                </div>\n" +
     "                <div class=\"form-group\">\n" +
-    "                    <label class=\"col-sm-2 control-label\">Email</label>\n" +
+    "                    <label class=\"col-sm-3 control-label\">Enable Password</label>\n" +
     "\n" +
-    "                    <div class=\"col-sm-10\">\n" +
-    "                        {{$ctrl.user.Email}}\n" +
+    "                    <div class=\"col-sm-9\">\n" +
+    "                        <input type=\"checkbox\" name=\"hasPassword\"  class=\"form-control\" ng-model=\"$ctrl.newCampaign.hasPassword\" />\n" +
     "                    </div>\n" +
     "                </div>\n" +
+    "                <div class=\"form-group\" ng-if=\"$ctrl.newCampaign.hasPassword\">\n" +
+    "                    <label class=\"col-sm-3 control-label\">Password</label>\n" +
     "\n" +
-    "                <div class=\"form-group\">\n" +
-    "                    <label class=\"col-sm-2 control-label\">Password</label>\n" +
-    "\n" +
-    "                    <div class=\"col-sm-10\">\n" +
-    "                        <input id=\"pw1\" type=\"password\" ng-required=\"true\" ng-minlength=\"8\" name=\"password\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.user.Password\" />\n" +
-    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.userForm.password.$invalid && $ctrl.userForm.password.$touched\">\n" +
-    "                            <span ng-if=\"$ctrl.userForm.password.$error.required\">Password is required</span>\n" +
-    "                            <span ng-if=\"!$ctrl.userForm.password.$error.required && $ctrl.userForm.password.$error.minlength\">Minimum 8 characters are required.</span>\n" +
+    "                    <div class=\"col-sm-9\">\n" +
+    "                        <input id=\"pw1\" type=\"password\" ng-required=\"!!$ctrl.newCampaign.hasPassword\" ng-minlength=\"8\" name=\"password\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.newCampaign.Password\" />\n" +
+    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newCampaignForm.password.$invalid && $ctrl.newCampaignForm.password.$touched\">\n" +
+    "                            <span ng-if=\"$ctrl.newCampaignForm.password.$error.required\">Password is required</span>\n" +
+    "                            <span ng-if=\"!$ctrl.newCampaignForm.password.$error.required && $ctrl.newCampaignForm.password.$error.minlength\">Minimum 8 characters are required.</span>\n" +
     "                        </small>\n" +
     "                    </div>\n" +
     "                </div>\n" +
     "\n" +
-    "                <div class=\"form-group\">\n" +
-    "                    <label class=\"col-sm-2 control-label\">Re-Password</label>\n" +
     "\n" +
-    "                    <div class=\"col-sm-10\">\n" +
-    "                        <input id=\"pw2\" pw-check='pw1' type=\"password\" ng-required=\"true\" ng-minlength=\"8\" name=\"repassword\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.user.RePassword\" />\n" +
-    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.userForm.repassword.$invalid && $ctrl.userForm.repassword.$touched\">\n" +
-    "                            <span ng-if=\"$ctrl.userForm.repassword.$error.required\">Re Password is required</span>\n" +
-    "                            <span ng-if=\"!$ctrl.userForm.repassword.$error.required && $ctrl.userForm.repassword.$error.minlength\">Minimum 8 characters are required.</span>\n" +
-    "                            <span ng-if=\"!$ctrl.userForm.repassword.$error.required && !$ctrl.userForm.repassword.$error.minlength && $ctrl.userForm.repassword.$error.pwmatch\">Re Password Not Matched</span>\n" +
-    "                        </small>\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label class=\"col-sm-3 control-label\">Active</label>\n" +
+    "\n" +
+    "                    <div class=\"col-sm-9\">\n" +
+    "                        <input type=\"checkbox\" name=\"isActive\"  class=\"form-control\" ng-model=\"$ctrl.newCampaign.IsActive\" />\n" +
     "                    </div>\n" +
     "                </div>\n" +
     "\n" +
     "                <div class=\"form-group\">\n" +
-    "                    <label class=\"col-sm-2 control-label\">Active</label>\n" +
+    "                    <label class=\"col-sm-3 control-label\">Assign to Client</label>\n" +
     "\n" +
-    "                    <div class=\"col-sm-10\">\n" +
-    "                        {{!!$ctrl.user.IsActive}}\n" +
+    "                    <div class=\"col-sm-9\">\n" +
+    "                        <select ng-required=\"true\" name=\"client\" ng-model=\"$ctrl.newCampaign.cid\" placeholder=\"Select Client\" class=\"form-control\" ng-options=\"user.id as user.UserName for user in usersList\"></select>\n" +
+    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newCampaignForm.client.$invalid && $ctrl.newCampaignForm.client.$touched\">\n" +
+    "                            <span ng-if=\"$ctrl.newCampaignForm.client.$error.required\">Client is required</span>\n" +
+    "                        </small>\n" +
     "                    </div>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "            <div class=\"modal-footer\">\n" +
     "                <small class=\"text-danger\" ng-if=\"$ctrl.saveError\">Error: {{$ctrl.saveError}} </small>\n" +
     "                <button class=\"btn btn-default\" type=\"submit\" ng-click=\"cancel()\">Cancel</button>\n" +
-    "                <button class=\"btn btn-primary\" type=\"submit\" ng-class=\"{'disabled': !$ctrl.userForm.$valid}\" ng-disabled=\"!$ctrl.userForm.$valid\"  ng-click=\"save($ctrl.user)\">Save changes</button>\n" +
+    "                <button class=\"btn btn-primary\" type=\"submit\" ng-class=\"{'disabled': !$ctrl.newCampaignForm.$valid}\" ng-disabled=\"!$ctrl.newCampaignForm.$valid\"  ng-click=\"save($ctrl.newCampaign)\">Save changes</button>\n" +
     "            </div>\n" +
     "        </ng-form>\n" +
     "    </div>\n" +
@@ -169,53 +92,76 @@ angular.module("views/admin/campaigns/campaign_list.html", []).run(["$templateCa
     "");
 }]);
 
+angular.module("views/admin/campaigns/campaign_list.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("views/admin/campaigns/campaign_list.html",
+    "");
+}]);
+
 angular.module("views/admin/campaigns/edit_campaign.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/admin/campaigns/edit_campaign.html",
-    "<div id=\"edit_user\">\n" +
+    "<div id=\"add_user\">\n" +
     "\n" +
     "    <div class=\"content\" animate-panel effect=\"zoomIn\">\n" +
     "        <div class=\"modal-header\">\n" +
-    "            <h3 class=\"modal-title\" id=\"modal-title\">Edit a User</h3>\n" +
+    "            <h3 class=\"modal-title\" id=\"modal-title\">Edit a Campaign</h3>\n" +
     "        </div>\n" +
     "\n" +
-    "        <ng-form class=\"form-horizontal\" name=\"$ctrl.userForm\" novalidate >\n" +
+    "        <ng-form class=\"form-horizontal\" name=\"$ctrl.newCampaignForm\" novalidate >\n" +
     "            <div class=\"modal-body\" id=\"modal-body\">\n" +
     "                <div class=\"form-group\">\n" +
-    "                    <label class=\"col-sm-2 control-label\">User Name</label>\n" +
+    "                    <label class=\"col-sm-3 control-label\">Campaign Name</label>\n" +
     "\n" +
-    "                    <div class=\"col-sm-10\">\n" +
-    "                        <input type=\"text\" ng-required=\"true\" name=\"username\" placeholder=\"User Name\" class=\"form-control\" ng-model=\"$ctrl.user.UserName\" />\n" +
-    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.userForm.username.$invalid && $ctrl.userForm.username.$touched\">\n" +
-    "                            <span ng-if=\"$ctrl.userForm.username.$error.required\">Name is required</span>\n" +
+    "                    <div class=\"col-sm-9\">\n" +
+    "                        <input type=\"text\" ng-required=\"true\" name=\"name\" placeholder=\"Campaign Name\" class=\"form-control\" ng-model=\"$ctrl.newCampaign.CampaignName\" />\n" +
+    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newCampaignForm.name.$invalid && $ctrl.newCampaignForm.username.$touched\">\n" +
+    "                            <span ng-if=\"$ctrl.newCampaignForm.name.$error.required\">Name is required</span>\n" +
     "                        </small>\n" +
     "                    </div>\n" +
     "\n" +
     "                </div>\n" +
     "                <div class=\"form-group\">\n" +
-    "                    <label class=\"col-sm-2 control-label\">Email</label>\n" +
+    "                    <label class=\"col-sm-3 control-label\">Enable Password</label>\n" +
     "\n" +
-    "                    <div class=\"col-sm-10\">\n" +
-    "                        {{$ctrl.user.Email}}\n" +
-    "                        <!--<input type=\"email\" ng-required=\"true\" name=\"email\" placeholder=\"Email\" class=\"form-control\" ng-model=\"$ctrl.user.Email\" />-->\n" +
-    "                        <!--<small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.userForm.email.$invalid && $ctrl.userForm.email.$touched\">-->\n" +
-    "                            <!--<span ng-if=\"$ctrl.userForm.email.$error.required\">Email is required</span>-->\n" +
-    "                            <!--<span ng-if=\"!$ctrl.userForm.email.$error.required && $ctrl.userForm.email.$error.email\">Invalid Email</span>-->\n" +
-    "                        <!--</small>-->\n" +
+    "                    <div class=\"col-sm-9\">\n" +
+    "                        <input type=\"checkbox\" name=\"hasPassword\"  class=\"form-control\" ng-model=\"$ctrl.newCampaign.hasPassword\" />\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "                <div class=\"form-group\" ng-if=\"$ctrl.newCampaign.hasPassword\">\n" +
+    "                    <label class=\"col-sm-3 control-label\">Password</label>\n" +
+    "\n" +
+    "                    <div class=\"col-sm-9\">\n" +
+    "                        <input id=\"pw1\" type=\"password\" ng-required=\"!!$ctrl.newCampaign.hasPassword\" ng-minlength=\"8\" name=\"password\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.newCampaign.Password\" />\n" +
+    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newCampaignForm.password.$invalid && $ctrl.newCampaignForm.password.$touched\">\n" +
+    "                            <span ng-if=\"$ctrl.newCampaignForm.password.$error.required\">Password is required</span>\n" +
+    "                            <span ng-if=\"!$ctrl.newCampaignForm.password.$error.required && $ctrl.newCampaignForm.password.$error.minlength\">Minimum 8 characters are required.</span>\n" +
+    "                        </small>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "\n" +
+    "\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label class=\"col-sm-3 control-label\">Active</label>\n" +
+    "\n" +
+    "                    <div class=\"col-sm-9\">\n" +
+    "                        <input type=\"checkbox\" name=\"isActive\"  class=\"form-control\" ng-model=\"$ctrl.newCampaign.IsActive\" />\n" +
     "                    </div>\n" +
     "                </div>\n" +
     "\n" +
     "                <div class=\"form-group\">\n" +
-    "                    <label class=\"col-sm-2 control-label\">Active</label>\n" +
+    "                    <label class=\"col-sm-3 control-label\">Assign to Client</label>\n" +
     "\n" +
-    "                    <div class=\"col-sm-10\">\n" +
-    "                        <input type=\"checkbox\" name=\"isActive\"  class=\"form-control\" ng-model=\"$ctrl.user.IsActive\" />\n" +
+    "                    <div class=\"col-sm-9\">\n" +
+    "                        <select ng-required=\"true\" name=\"client\" ng-model=\"$ctrl.newCampaign.cid\" placeholder=\"Select Client\" class=\"form-control\" ng-options=\"user.id as user.UserName for user in usersList\"></select>\n" +
+    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newCampaignForm.client.$invalid && $ctrl.newCampaignForm.client.$touched\">\n" +
+    "                            <span ng-if=\"$ctrl.newCampaignForm.client.$error.required\">Client is required</span>\n" +
+    "                        </small>\n" +
     "                    </div>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "            <div class=\"modal-footer\">\n" +
     "                <small class=\"text-danger\" ng-if=\"$ctrl.saveError\">Error: {{$ctrl.saveError}} </small>\n" +
     "                <button class=\"btn btn-default\" type=\"submit\" ng-click=\"cancel()\">Cancel</button>\n" +
-    "                <button class=\"btn btn-primary\" type=\"submit\" ng-class=\"{'disabled': !$ctrl.userForm.$valid}\" ng-disabled=\"!$ctrl.userForm.$valid\"  ng-click=\"save($ctrl.user)\">Save changes</button>\n" +
+    "                <button class=\"btn btn-primary\" type=\"submit\" ng-class=\"{'disabled': !$ctrl.newCampaignForm.$valid}\" ng-disabled=\"!$ctrl.newCampaignForm.$valid\"  ng-click=\"save($ctrl.newCampaign)\">Save changes</button>\n" +
     "            </div>\n" +
     "        </ng-form>\n" +
     "    </div>\n" +
@@ -784,128 +730,135 @@ angular.module("views/common/dashboard/urls_generated_tmpl.html", []).run(["$tem
 angular.module("views/common/directives/analytics_layout.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/common/directives/analytics_layout.html",
     "<section class=\"anlaytics-layout-container \" style=\"padding-top:0px;\">\n" +
-    "    <div class=\"row\" style=\"padding-bottom: 5px;\">\n" +
-    "        <div class=\"col-lg-12 refresh-block\">\n" +
+    "    <div ng-show=\"!$ctrl.loading\">\n" +
+    "        <div class=\"row\" style=\"padding-bottom: 5px;\">\n" +
+    "            <div class=\"col-lg-12 refresh-block\">\n" +
     "            <span class=\"pull-right\">\n" +
     "                <!--View Refreshes in {{$ctrl.timeLeft}} Seconds <a ng-click=\"$ctrl.resetTime()\"><i class=\"fa fa-refresh\"></i></a>-->\n" +
     "                Refresh View <a ng-click=\"$ctrl.resetTime()\"><i class=\"fa fa-refresh\"></i></a>\n" +
     "            </span>\n" +
     "\n" +
+    "            </div>\n" +
     "        </div>\n" +
-    "    </div>\n" +
-    "    <div class=\"row\">\n" +
-    "        <dashboard-layout config=\"$ctrl.dashboardConfig\"></dashboard-layout>\n" +
-    "    </div>\n" +
-    "    <div class=\"row\">\n" +
-    "        <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "            <div class=\"panel panel-default\">\n" +
-    "                <div class=\"panel-body\">\n" +
-    "                    <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "                        <div class=\"dashboard_graph\">\n" +
+    "        <div class=\"row\">\n" +
+    "            <dashboard-layout config=\"$ctrl.dashboardConfig\"></dashboard-layout>\n" +
+    "        </div>\n" +
+    "        <div class=\"row\">\n" +
+    "            <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                <div class=\"panel panel-default\">\n" +
+    "                    <div class=\"panel-body\">\n" +
+    "                        <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                            <div class=\"dashboard_graph\">\n" +
     "\n" +
-    "                            <div class=\"row x_title\">\n" +
-    "                                <div class=\"col-md-8\">\n" +
-    "                                    <h3>User Activities<small style=\"padding-left: 10px\">timeline presentation</small></h3>\n" +
-    "                                </div>\n" +
-    "                                <div class=\"col-md-4\">\n" +
-    "                                    <div id=\"reportrange\" class=\"pull-right\" style=\"background: #fff; cursor: pointer; padding: 5px 10px; border: 0px solid #ccc; width: 100%;\">\n" +
-    "                                        <i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i>\n" +
-    "                                        <span style=\"display: inline-block;width: calc(100% - 30px);\"><input date-range-picker id=\"daterange3\" name=\"daterange3\" class=\"form-control date-picker\" type=\"text\"\n" +
+    "                                <div class=\"row x_title\">\n" +
+    "                                    <div class=\"col-md-8\">\n" +
+    "                                        <h3>User Activities<small style=\"padding-left: 10px\">timeline presentation</small></h3>\n" +
+    "                                    </div>\n" +
+    "                                    <div class=\"col-md-4\">\n" +
+    "                                        <div id=\"reportrange\" class=\"pull-right\" style=\"background: #fff; cursor: pointer; padding: 5px 10px; border: 0px solid #ccc; width: 100%;\">\n" +
+    "                                            <i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i>\n" +
+    "                                        <span style=\"display: inline-block;width: calc(100% - 40px);\"><input date-range-picker id=\"daterange3\" name=\"daterange3\" class=\"form-control date-picker\" type=\"text\"\n" +
     "                                                                                                             ng-model=\"date\" options=\"opts\" required/></span> <b class=\"caret\"></b>\n" +
-    "\n" +
+    "                                        </div>\n" +
     "                                    </div>\n" +
     "                                </div>\n" +
-    "                            </div>\n" +
     "\n" +
-    "                            <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "                                <div id=\"placeholder33\" style=\"height: 260px; display: none\" class=\"demo-placeholder\"></div>\n" +
-    "                                <div style=\"width: 100%;\">\n" +
-    "                                    <highchart id=\"canvas_dahs\" config=\"chartConfig\" class=\"demo-placeholder\" style=\"width: 100%; height:270px;\"></highchart>\n" +
+    "                                <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                                    <div id=\"placeholder33\" style=\"height: 260px; display: none\" class=\"demo-placeholder\"></div>\n" +
+    "                                    <div style=\"width: 100%;\">\n" +
+    "                                        <highchart id=\"canvas_dahs\" config=\"chartConfig\" class=\"demo-placeholder\" style=\"width: 100%; height:270px;\"></highchart>\n" +
+    "                                    </div>\n" +
     "                                </div>\n" +
+    "                                <div class=\"clearfix\"></div>\n" +
     "                            </div>\n" +
-    "                            <div class=\"clearfix\"></div>\n" +
+    "                        </div>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "\n" +
+    "        <div class=\"row\">\n" +
+    "            <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                <div class=\"panel panel-default\">\n" +
+    "                    <div class=\"panel-body\">\n" +
+    "                        <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                            <div class=\"dashboard_graph\">\n" +
+    "\n" +
+    "                                <div class=\"row x_title\">\n" +
+    "                                    <div class=\"col-md-6\">\n" +
+    "                                        <h3>Visitors location <small>geo-presentation</small></h3>\n" +
+    "                                    </div>\n" +
+    "                                </div>\n" +
+    "\n" +
+    "                                <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                                    <div style=\"width: 100%;\">\n" +
+    "                                        <highchart id=\"world-map-gdp\" config=\"locationConfig\" class=\"columnscol-md-12 col-sm-12 col-xs-12\" style=\"height: 400px\">\n" +
+    "\n" +
+    "                                        </highchart>\n" +
+    "                                    </div>\n" +
+    "                                </div>\n" +
+    "\n" +
+    "                                <div class=\"clearfix\"></div>\n" +
+    "                            </div>\n" +
+    "                        </div>\n" +
+    "\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"row\">\n" +
+    "            <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                <div class=\"panel panel-default\">\n" +
+    "                    <div class=\"panel-body\">\n" +
+    "                        <div class=\"col-md-6 col-sm-6 col-xs-6\">\n" +
+    "                            <div class=\"dashboard_graph \">\n" +
+    "\n" +
+    "                                <div class=\"row x_title\">\n" +
+    "                                    <div class=\"col-md-12 text-center\">\n" +
+    "                                        <h3>Devices</h3>\n" +
+    "                                    </div>\n" +
+    "                                </div>\n" +
+    "                                <div class=\"row\">\n" +
+    "                                    <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                                        <!--<div id=\"placeholder33\" style=\"height: 360px; display: none\" class=\"demo-placeholder\"></div>-->\n" +
+    "                                        <div style=\"width: 100%;\">\n" +
+    "                                            <highchart id=\"devices-chart\" config=\"deviceConfig\"  style=\"height:300px;\"></highchart>\n" +
+    "                                        </div>\n" +
+    "                                    </div>\n" +
+    "                                </div>\n" +
+    "\n" +
+    "                                <div class=\"clearfix\"></div>\n" +
+    "                            </div>\n" +
+    "                        </div>\n" +
+    "                        <div class=\"col-md-6 col-sm-6 col-xs-6\">\n" +
+    "                            <div class=\"dashboard_graph \">\n" +
+    "\n" +
+    "                                <div class=\"row x_title\">\n" +
+    "                                    <div class=\"col-md-12 text-center\">\n" +
+    "                                        <h3>Platforms</h3>\n" +
+    "                                    </div>\n" +
+    "                                </div>\n" +
+    "                                <div class=\"row\">\n" +
+    "                                    <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                                        <!--<div id=\"placeholder33\" style=\"height: 360px; display: none\" class=\"demo-placeholder\"></div>-->\n" +
+    "                                        <div style=\"width: 100%;\">\n" +
+    "                                            <highchart id=\"platform-chart\" config=\"platformConfig\" style=\"height:300px;\"></highchart>\n" +
+    "                                        </div>\n" +
+    "                                    </div>\n" +
+    "                                </div>\n" +
+    "                                <div class=\"clearfix\"></div>\n" +
+    "                            </div>\n" +
     "                        </div>\n" +
     "                    </div>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "        </div>\n" +
     "    </div>\n" +
-    "\n" +
-    "    <div class=\"row\">\n" +
-    "        <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "            <div class=\"panel panel-default\">\n" +
-    "                <div class=\"panel-body\">\n" +
-    "                    <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "                        <div class=\"dashboard_graph\">\n" +
-    "\n" +
-    "                            <div class=\"row x_title\">\n" +
-    "                                <div class=\"col-md-6\">\n" +
-    "                                    <h3>Visitors location <small>geo-presentation</small></h3>\n" +
-    "                                </div>\n" +
-    "                            </div>\n" +
-    "\n" +
-    "                            <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "                                <div style=\"width: 100%;\">\n" +
-    "                                    <highchart id=\"world-map-gdp\" config=\"locationConfig\" class=\"columnscol-md-12 col-sm-12 col-xs-12\" style=\"height: 400px\">\n" +
-    "\n" +
-    "                                    </highchart>\n" +
-    "                                </div>\n" +
-    "                            </div>\n" +
-    "\n" +
-    "                            <div class=\"clearfix\"></div>\n" +
-    "                        </div>\n" +
-    "                    </div>\n" +
-    "\n" +
-    "                </div>\n" +
-    "            </div>\n" +
-    "        </div>\n" +
-    "    </div>\n" +
-    "    <div class=\"row\">\n" +
-    "        <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "            <div class=\"panel panel-default\">\n" +
-    "                <div class=\"panel-body\">\n" +
-    "                    <div class=\"col-md-6 col-sm-6 col-xs-6\">\n" +
-    "                        <div class=\"dashboard_graph \">\n" +
-    "\n" +
-    "                            <div class=\"row x_title\">\n" +
-    "                                <div class=\"col-md-12 text-center\">\n" +
-    "                                    <h3>Devices</h3>\n" +
-    "                                </div>\n" +
-    "                            </div>\n" +
-    "                            <div class=\"row\">\n" +
-    "                                <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "                                    <!--<div id=\"placeholder33\" style=\"height: 360px; display: none\" class=\"demo-placeholder\"></div>-->\n" +
-    "                                    <div style=\"width: 100%;\">\n" +
-    "                                        <highchart id=\"devices-chart\" config=\"deviceConfig\"  style=\"height:300px;\"></highchart>\n" +
-    "                                    </div>\n" +
-    "                                </div>\n" +
-    "                            </div>\n" +
-    "\n" +
-    "                            <div class=\"clearfix\"></div>\n" +
-    "                        </div>\n" +
-    "                    </div>\n" +
-    "                    <div class=\"col-md-6 col-sm-6 col-xs-6\">\n" +
-    "                        <div class=\"dashboard_graph \">\n" +
-    "\n" +
-    "                            <div class=\"row x_title\">\n" +
-    "                                <div class=\"col-md-12 text-center\">\n" +
-    "                                    <h3>Platforms</h3>\n" +
-    "                                </div>\n" +
-    "                            </div>\n" +
-    "                            <div class=\"row\">\n" +
-    "                                <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "                                    <!--<div id=\"placeholder33\" style=\"height: 360px; display: none\" class=\"demo-placeholder\"></div>-->\n" +
-    "                                    <div style=\"width: 100%;\">\n" +
-    "                                        <highchart id=\"platform-chart\" config=\"platformConfig\" style=\"height:300px;\"></highchart>\n" +
-    "                                    </div>\n" +
-    "                                </div>\n" +
-    "                            </div>\n" +
-    "                            <div class=\"clearfix\"></div>\n" +
-    "                        </div>\n" +
-    "                    </div>\n" +
-    "                </div>\n" +
-    "            </div>\n" +
-    "        </div>\n" +
+    "    <div class=\"row\" ng-hide=\"$ctrl.loading\">\n" +
+    "        <div class=\"splash-title\">\n" +
+    "            <h1>Loading..</h1>\n" +
+    "            <p></p>\n" +
+    "            <img src=\"images/loading-bars.svg\" width=\"64\" height=\"64\"/></div>\n" +
     "    </div>\n" +
     "\n" +
     "</section>");

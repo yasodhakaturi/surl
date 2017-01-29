@@ -3,22 +3,26 @@
 
     <div class="content" animate-panel effect="zoomIn">
         <div class="row">
-            <div class="col-lg-12 text-center m-t-md">
+            <div class="col-lg-12">
                 <h2>
-                    Welcome to biTRAZ admin campaigns
+                    Campaigns
                 </h2>
-
-                <p>Special <strong>Analytic Trace Application</strong> for your mobile marketing campaigns.</p>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12">
-                <ul>
-                    <li>list of campaigns</li>
-                    <li>add campaign</li>
-                    <li>edit campaign</li>
+            <div class="col-lg-8 col-md-10 col-sm-12">
+                <ul class="list-inline text-right">
+                    <li><div class="btn btn-primary" ng-click="addCampaign()">Add Campaign</div> </li>
                 </ul>
             </div>
         </div>
+        <div class="row">
+            <div class="col-lg-8 col-md-10 col-sm-12">
+                <div id="campaignList" ui-grid="campaignListOptions" class="grid"></div>
+            </div>
+        </div>
+
     </div>
+
+
 </div>
