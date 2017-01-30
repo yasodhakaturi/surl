@@ -2,7 +2,7 @@
 
     <div class="content" animate-panel effect="zoomIn">
         <div class="modal-header">
-            <h3 class="modal-title" id="modal-title">Add a Campaign</h3>
+            <h3 class="modal-title" id="modal-title">Edit a Campaign</h3>
         </div>
 
         <ng-form class="form-horizontal" name="$ctrl.newCampaignForm" novalidate >
@@ -18,57 +18,34 @@
                     </div>
 
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Enable Password</label>
+                <div class="form-group" ng-if="$ctrl.newCampaign.HasPassword">
+                    <label class="col-sm-3 control-label">Edit Password</label>
 
-                    <div class="col-sm-10">
-                        <input type="checkbox" name="hasPassword"  class="form-control" ng-model="$ctrl.newCampaign.hasPassword" />
+                    <div class="col-sm-9">
+                        <input type="checkbox" name="EditPassword"  class="form-control" ng-model="$ctrl.newCampaign.EditPassword" />
                     </div>
                 </div>
-                <div class="form-group" ng-show="$ctrl.newCampaign.hasPassword">
-                    <label class="col-sm-2 control-label">Password</label>
+                <div class="form-group" ng-if="$ctrl.newCampaign.EditPassword">
+                    <label class="col-sm-3 control-label">Password</label>
 
-                    <div class="col-sm-10">
-                        <input id="pw1" type="password" ng-required="$ctrl.newCampaign.hasPassword" ng-minlength="8" name="password" placeholder="Password" class="form-control" ng-model="$ctrl.newCampaign.Password" />
+                    <div class="col-sm-9">
+                        <input id="pw1" type="password" ng-required="!!$ctrl.newCampaign.EditPassword" ng-minlength="8" name="password" placeholder="Password" class="form-control" ng-model="$ctrl.newCampaign.Password" />
                         <small  class="form-text text-muted text-danger" ng-if="$ctrl.newCampaignForm.password.$invalid && $ctrl.newCampaignForm.password.$touched">
                             <span ng-if="$ctrl.newCampaignForm.password.$error.required">Password is required</span>
                             <span ng-if="!$ctrl.newCampaignForm.password.$error.required && $ctrl.newCampaignForm.password.$error.minlength">Minimum 8 characters are required.</span>
                         </small>
                     </div>
                 </div>
+
+
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">Start Date</label>
+                    <label class="col-sm-3 control-label">Active</label>
 
                     <div class="col-sm-9">
-                        <input type="text" ng-required="true" name="startDate" placeholder="Start Date" class="form-control" ng-model="$ctrl.newCampaign.startDate" />
-                        <small  class="form-text text-muted text-danger" ng-if="$ctrl.newCampaignForm.startDate.$invalid && $ctrl.newCampaignForm.startDate.$touched">
-                            <span ng-if="$ctrl.newCampaignForm.startDate.$error.required">Email is required</span>
-                            <span ng-if="!$ctrl.newCampaignForm.startDate.$error.required && $ctrl.newCampaignForm.startDate.$error.email">Invalid Start Date</span>
-                        </small>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">End Date</label>
-
-                    <div class="col-sm-10">
-                        <input type="text" ng-required="true" name="endDate" placeholder="End Date" class="form-control" ng-model="$ctrl.newCampaign.endDate" />
-                        <small  class="form-text text-muted text-danger" ng-if="$ctrl.newCampaignForm.endDate.$invalid && $ctrl.newCampaignForm.endDate.$touched">
-                            <span ng-if="$ctrl.newCampaignForm.endDate.$error.required">Email is required</span>
-                            <span ng-if="!$ctrl.newCampaignForm.endDate.$error.required && $ctrl.newCampaignForm.endDate.$error.email">Invalid Start Date</span>
-                        </small>
-                    </div>
-                </div>
-
-
-
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Active</label>
-
-                    <div class="col-sm-10">
                         <input type="checkbox" name="isActive"  class="form-control" ng-model="$ctrl.newCampaign.IsActive" />
                     </div>
                 </div>
+
             </div>
             <div class="modal-footer">
                 <small class="text-danger" ng-if="$ctrl.saveError">Error: {{$ctrl.saveError}} </small>

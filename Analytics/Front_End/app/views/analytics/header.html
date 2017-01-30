@@ -13,8 +13,9 @@
         <div class="collapse mobile-navbar" id="mobile-collapse">
             <ul class="nav navbar-nav">
                 <li ng-class="{'active':active == 'home'}"><a class="page-scroll" href="#page-top">Home</a></li>
-                <li ng-class="{'active':active == 'analytics'}"><a class="page-scroll" page-scroll href="#analytics">Analytics</a></li>
-                <li ng-class="{'active':active == 'security'}"><a class="page-scroll" page-scroll href="#security">Security </a></li>
+                <li ng-class="{'active':active == 'analytics'}"><a class="page-scroll" page-scroll ui-sref="bitraz.main.analytics">Analytics</a></li>
+                <li ng-class="{'active':active == 'campaigns'}"><a class="page-scroll" page-scroll ui-sref="bitraz.main.campaigns">Campaigns</a></li>
+                <li ng-class="{'active':active == 'security'}"><a class="page-scroll" page-scroll ui-sref="bitraz.main.settings">Security </a></li>
                 <li><a class="page-scroll" page-scroll ng-click="logout()">Logout</a></li>
             </ul>
         </div>
@@ -50,21 +51,7 @@
 
 
                         </tr>
-                        <tr>
-                            <td>
-                                <a ui-sref="bitraz.main.users">
-                                    <i class="pe pe-7s-users text-success"></i>
-                                    <h5>Users</h5>
-                                </a>
-                            </td>
 
-                            <td>
-                                <a ui-sref="bitraz.main.archieves">
-                                    <i class="pe pe-7s-box1 text-success"></i>
-                                    <h5>Archieve</h5>
-                                </a>
-                            </td>
-                        </tr>
                         </tbody>
                     </table>
 

@@ -18,18 +18,18 @@
                     </div>
 
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Enable Password</label>
+                <div class="form-group" ng-if="$ctrl.newCampaign.HasPassword">
+                    <label class="col-sm-3 control-label">Edit Password</label>
 
                     <div class="col-sm-9">
-                        <input type="checkbox" name="hasPassword"  class="form-control" ng-model="$ctrl.newCampaign.hasPassword" />
+                        <input type="checkbox" name="EditPassword"  class="form-control" ng-model="$ctrl.newCampaign.EditPassword" />
                     </div>
                 </div>
-                <div class="form-group" ng-if="$ctrl.newCampaign.hasPassword">
+                <div class="form-group" ng-if="$ctrl.newCampaign.EditPassword">
                     <label class="col-sm-3 control-label">Password</label>
 
                     <div class="col-sm-9">
-                        <input id="pw1" type="password" ng-required="!!$ctrl.newCampaign.hasPassword" ng-minlength="8" name="password" placeholder="Password" class="form-control" ng-model="$ctrl.newCampaign.Password" />
+                        <input id="pw1" type="password" ng-required="!!$ctrl.newCampaign.EditPassword" ng-minlength="8" name="password" placeholder="Password" class="form-control" ng-model="$ctrl.newCampaign.Password" />
                         <small  class="form-text text-muted text-danger" ng-if="$ctrl.newCampaignForm.password.$invalid && $ctrl.newCampaignForm.password.$touched">
                             <span ng-if="$ctrl.newCampaignForm.password.$error.required">Password is required</span>
                             <span ng-if="!$ctrl.newCampaignForm.password.$error.required && $ctrl.newCampaignForm.password.$error.minlength">Minimum 8 characters are required.</span>
@@ -50,7 +50,7 @@
                     <label class="col-sm-3 control-label">Assign to Client</label>
 
                     <div class="col-sm-9">
-                        <select ng-required="true" name="client" ng-model="$ctrl.newCampaign.cid" placeholder="Select Client" class="form-control" ng-options="user.id as user.UserName for user in usersList"></select>
+                        <select ng-required="true" name="client" ng-model="$ctrl.newCampaign.CreatedUserId" placeholder="Select Client" class="form-control" ng-options="user.id as user.UserName for user in $ctrl.customerList"></select>
                         <small  class="form-text text-muted text-danger" ng-if="$ctrl.newCampaignForm.client.$invalid && $ctrl.newCampaignForm.client.$touched">
                             <span ng-if="$ctrl.newCampaignForm.client.$error.required">Client is required</span>
                         </small>

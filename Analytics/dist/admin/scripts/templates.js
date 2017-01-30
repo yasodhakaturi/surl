@@ -7,7 +7,7 @@ angular.module("views/admin/admin.html", []).run(["$templateCache", function($te
 
 angular.module("views/admin/analytics.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/admin/analytics.html",
-    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12 text-right\"> <span> Choose a Campaign</span> <select name=\"selectedCampaign\" ng-model=\"selectedCampaign\"> <option value=\"{{campaign.rid}}\" ng-repeat=\"campaign in campaigns\"> {{campaign.title || \"Campaign (\" + campaign.rid + \")\"}} : {{campaign.createdOn | date: 'MM/dd/yyyy'}} - {{campaign.endDate | date: 'MM/dd/yyyy' || 'Till Date'}} </select> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> <analytics-layout campaign-id=\"selectedCampaign\" data-range=\"selectedCampaign\"></analytics-layout> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> </div> </div> </div> </div>");
+    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\" ng-show=\"!$root.pageLoading\"> <div class=\"row\"> <div class=\"col-lg-12 text-right\"> <span> Choose a Campaign</span> <select name=\"selectedCampaign\" ng-model=\"selectedCampaign\"> <option value=\"{{campaign.rid}}\" ng-repeat=\"campaign in campaigns\"> {{campaign.title || \"Campaign (\" + campaign.rid + \")\"}} : {{campaign.createdOn | date: 'MM/dd/yyyy'}} - {{campaign.endDate | date: 'MM/dd/yyyy' || 'Till Date'}} </select> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> <analytics-layout campaign-id=\"selectedCampaign\" data-range=\"selectedCampaign\"></analytics-layout> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> </div> </div> </div> </div>");
 }]);
 
 angular.module("views/admin/archieves.html", []).run(["$templateCache", function($templateCache) {
@@ -17,7 +17,7 @@ angular.module("views/admin/archieves.html", []).run(["$templateCache", function
 
 angular.module("views/admin/campaigns.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/admin/campaigns.html",
-    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12\"> <h2> Campaigns </h2> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <ul class=\"list-inline text-right\"> <li><div class=\"btn btn-primary\" ng-click=\"addCampaign()\">Add Campaign</div> </li> </ul> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <div id=\"campaignList\" ui-grid=\"campaignListOptions\" class=\"grid\"></div> </div> </div> </div> </div>");
+    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\" ng-show=\"!$rootScope.pageLoading\"> <div class=\"row\"> <div class=\"col-lg-12\"> <h2> Campaigns </h2> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <ul class=\"list-inline text-right\"> <li><div class=\"btn btn-primary\" ng-click=\"addCampaign()\">Add Campaign</div> </li> </ul> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <div id=\"campaignList\" ui-grid=\"campaignListOptions\" class=\"grid\"></div> </div> </div> </div> </div>");
 }]);
 
 angular.module("views/admin/campaigns/add_campaign.html", []).run(["$templateCache", function($templateCache) {
@@ -29,14 +29,16 @@ angular.module("views/admin/campaigns/add_campaign.html", []).run(["$templateCac
     "            <h3 class=\"modal-title\" id=\"modal-title\">Add a Campaign</h3>\n" +
     "        </div>\n" +
     "\n" +
-    "        <ng-form class=\"form-horizontal\" name=\"$ctrl.newCampaignForm\" novalidate >\n" +
+    "        <ng-form class=\"form-horizontal\" name=\"$ctrl.newCampaignForm\" novalidate>\n" +
     "            <div class=\"modal-body\" id=\"modal-body\">\n" +
     "                <div class=\"form-group\">\n" +
     "                    <label class=\"col-sm-3 control-label\">Campaign Name</label>\n" +
     "\n" +
     "                    <div class=\"col-sm-9\">\n" +
-    "                        <input type=\"text\" ng-required=\"true\" name=\"name\" placeholder=\"Campaign Name\" class=\"form-control\" ng-model=\"$ctrl.newCampaign.CampaignName\" />\n" +
-    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newCampaignForm.name.$invalid && $ctrl.newCampaignForm.username.$touched\">\n" +
+    "                        <input type=\"text\" ng-required=\"true\" name=\"name\" placeholder=\"Campaign Name\"\n" +
+    "                               class=\"form-control\" ng-model=\"$ctrl.newCampaign.CampaignName\"/>\n" +
+    "                        <small class=\"form-text text-muted text-danger\"\n" +
+    "                               ng-if=\"$ctrl.newCampaignForm.name.$invalid && $ctrl.newCampaignForm.username.$touched\">\n" +
     "                            <span ng-if=\"$ctrl.newCampaignForm.name.$error.required\">Name is required</span>\n" +
     "                        </small>\n" +
     "                    </div>\n" +
@@ -46,15 +48,19 @@ angular.module("views/admin/campaigns/add_campaign.html", []).run(["$templateCac
     "                    <label class=\"col-sm-3 control-label\">Enable Password</label>\n" +
     "\n" +
     "                    <div class=\"col-sm-9\">\n" +
-    "                        <input type=\"checkbox\" name=\"hasPassword\"  class=\"form-control\" ng-model=\"$ctrl.newCampaign.hasPassword\" />\n" +
+    "                        <input type=\"checkbox\" name=\"HasPassword\" class=\"form-control\"\n" +
+    "                               ng-model=\"$ctrl.newCampaign.HasPassword\"/>\n" +
     "                    </div>\n" +
     "                </div>\n" +
-    "                <div class=\"form-group\" ng-if=\"$ctrl.newCampaign.hasPassword\">\n" +
+    "                <div class=\"form-group\" ng-if=\"$ctrl.newCampaign.HasPassword\">\n" +
     "                    <label class=\"col-sm-3 control-label\">Password</label>\n" +
     "\n" +
     "                    <div class=\"col-sm-9\">\n" +
-    "                        <input id=\"pw1\" type=\"password\" ng-required=\"!!$ctrl.newCampaign.hasPassword\" ng-minlength=\"8\" name=\"password\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.newCampaign.Password\" />\n" +
-    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newCampaignForm.password.$invalid && $ctrl.newCampaignForm.password.$touched\">\n" +
+    "                        <input id=\"pw1\" type=\"password\" ng-required=\"!!$ctrl.newCampaign.HasPassword\" ng-minlength=\"8\"\n" +
+    "                               name=\"password\" placeholder=\"Password\" class=\"form-control\"\n" +
+    "                               ng-model=\"$ctrl.newCampaign.Password\"/>\n" +
+    "                        <small class=\"form-text text-muted text-danger\"\n" +
+    "                               ng-if=\"$ctrl.newCampaignForm.password.$invalid && $ctrl.newCampaignForm.password.$touched\">\n" +
     "                            <span ng-if=\"$ctrl.newCampaignForm.password.$error.required\">Password is required</span>\n" +
     "                            <span ng-if=\"!$ctrl.newCampaignForm.password.$error.required && $ctrl.newCampaignForm.password.$error.minlength\">Minimum 8 characters are required.</span>\n" +
     "                        </small>\n" +
@@ -66,7 +72,8 @@ angular.module("views/admin/campaigns/add_campaign.html", []).run(["$templateCac
     "                    <label class=\"col-sm-3 control-label\">Active</label>\n" +
     "\n" +
     "                    <div class=\"col-sm-9\">\n" +
-    "                        <input type=\"checkbox\" name=\"isActive\"  class=\"form-control\" ng-model=\"$ctrl.newCampaign.IsActive\" />\n" +
+    "                        <input type=\"checkbox\" name=\"isActive\" class=\"form-control\"\n" +
+    "                               ng-model=\"$ctrl.newCampaign.IsActive\"/>\n" +
     "                    </div>\n" +
     "                </div>\n" +
     "\n" +
@@ -74,17 +81,22 @@ angular.module("views/admin/campaigns/add_campaign.html", []).run(["$templateCac
     "                    <label class=\"col-sm-3 control-label\">Assign to Client</label>\n" +
     "\n" +
     "                    <div class=\"col-sm-9\">\n" +
-    "                        <select ng-required=\"true\" name=\"client\" ng-model=\"$ctrl.newCampaign.cid\" placeholder=\"Select Client\" class=\"form-control\" ng-options=\"user.id as user.UserName for user in usersList\"></select>\n" +
-    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newCampaignForm.client.$invalid && $ctrl.newCampaignForm.client.$touched\">\n" +
+    "                        <select ng-required=\"true\" name=\"client\" ng-model=\"$ctrl.newCampaign.CreatedUserId\"\n" +
+    "                                placeholder=\"Select Client\" class=\"form-control\"\n" +
+    "                                ng-options=\"user.id as user.UserName for user in $ctrl.customerList\"></select>\n" +
+    "                        <small class=\"form-text text-muted text-danger\"\n" +
+    "                               ng-if=\"$ctrl.newCampaignForm.client.$invalid && $ctrl.newCampaignForm.client.$touched\">\n" +
     "                            <span ng-if=\"$ctrl.newCampaignForm.client.$error.required\">Client is required</span>\n" +
     "                        </small>\n" +
     "                    </div>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "            <div class=\"modal-footer\">\n" +
-    "                <small class=\"text-danger\" ng-if=\"$ctrl.saveError\">Error: {{$ctrl.saveError}} </small>\n" +
+    "                <small class=\"text-danger\" ng-if=\"$ctrl.saveError\">Error: {{$ctrl.saveError}}</small>\n" +
     "                <button class=\"btn btn-default\" type=\"submit\" ng-click=\"cancel()\">Cancel</button>\n" +
-    "                <button class=\"btn btn-primary\" type=\"submit\" ng-class=\"{'disabled': !$ctrl.newCampaignForm.$valid}\" ng-disabled=\"!$ctrl.newCampaignForm.$valid\"  ng-click=\"save($ctrl.newCampaign)\">Save changes</button>\n" +
+    "                <button class=\"btn btn-primary\" type=\"submit\" ng-class=\"{'disabled': !$ctrl.newCampaignForm.$valid}\"\n" +
+    "                        ng-disabled=\"!$ctrl.newCampaignForm.$valid\" ng-click=\"save($ctrl.newCampaign)\">Save changes\n" +
+    "                </button>\n" +
     "            </div>\n" +
     "        </ng-form>\n" +
     "    </div>\n" +
@@ -119,18 +131,18 @@ angular.module("views/admin/campaigns/edit_campaign.html", []).run(["$templateCa
     "                    </div>\n" +
     "\n" +
     "                </div>\n" +
-    "                <div class=\"form-group\">\n" +
-    "                    <label class=\"col-sm-3 control-label\">Enable Password</label>\n" +
+    "                <div class=\"form-group\" ng-if=\"$ctrl.newCampaign.HasPassword\">\n" +
+    "                    <label class=\"col-sm-3 control-label\">Edit Password</label>\n" +
     "\n" +
     "                    <div class=\"col-sm-9\">\n" +
-    "                        <input type=\"checkbox\" name=\"hasPassword\"  class=\"form-control\" ng-model=\"$ctrl.newCampaign.hasPassword\" />\n" +
+    "                        <input type=\"checkbox\" name=\"EditPassword\"  class=\"form-control\" ng-model=\"$ctrl.newCampaign.EditPassword\" />\n" +
     "                    </div>\n" +
     "                </div>\n" +
-    "                <div class=\"form-group\" ng-if=\"$ctrl.newCampaign.hasPassword\">\n" +
+    "                <div class=\"form-group\" ng-if=\"$ctrl.newCampaign.EditPassword\">\n" +
     "                    <label class=\"col-sm-3 control-label\">Password</label>\n" +
     "\n" +
     "                    <div class=\"col-sm-9\">\n" +
-    "                        <input id=\"pw1\" type=\"password\" ng-required=\"!!$ctrl.newCampaign.hasPassword\" ng-minlength=\"8\" name=\"password\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.newCampaign.Password\" />\n" +
+    "                        <input id=\"pw1\" type=\"password\" ng-required=\"!!$ctrl.newCampaign.EditPassword\" ng-minlength=\"8\" name=\"password\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.newCampaign.Password\" />\n" +
     "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newCampaignForm.password.$invalid && $ctrl.newCampaignForm.password.$touched\">\n" +
     "                            <span ng-if=\"$ctrl.newCampaignForm.password.$error.required\">Password is required</span>\n" +
     "                            <span ng-if=\"!$ctrl.newCampaignForm.password.$error.required && $ctrl.newCampaignForm.password.$error.minlength\">Minimum 8 characters are required.</span>\n" +
@@ -151,7 +163,7 @@ angular.module("views/admin/campaigns/edit_campaign.html", []).run(["$templateCa
     "                    <label class=\"col-sm-3 control-label\">Assign to Client</label>\n" +
     "\n" +
     "                    <div class=\"col-sm-9\">\n" +
-    "                        <select ng-required=\"true\" name=\"client\" ng-model=\"$ctrl.newCampaign.cid\" placeholder=\"Select Client\" class=\"form-control\" ng-options=\"user.id as user.UserName for user in usersList\"></select>\n" +
+    "                        <select ng-required=\"true\" name=\"client\" ng-model=\"$ctrl.newCampaign.CreatedUserId\" placeholder=\"Select Client\" class=\"form-control\" ng-options=\"user.id as user.UserName for user in $ctrl.customerList\"></select>\n" +
     "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newCampaignForm.client.$invalid && $ctrl.newCampaignForm.client.$touched\">\n" +
     "                            <span ng-if=\"$ctrl.newCampaignForm.client.$error.required\">Client is required</span>\n" +
     "                        </small>\n" +

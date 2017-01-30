@@ -1,4 +1,5 @@
 var chance = require("chance").Chance();
+var model = require("./models.js");
 
 exports.login = function(request){
   var role;
@@ -42,5 +43,13 @@ exports.logout = function(query){
 
 exports.user = function(query){
   return {user_info: {user_id: 1, user_role:'Member', user_name:'test'}, redirected_url:'Index/'};
+};
+
+exports.list = function(query){
+  var count = chance.integer({min: 0, max: 10});
+  return  chance.n(function () {
+      return model.adminUserModel()
+    }, count)
+
 };
 

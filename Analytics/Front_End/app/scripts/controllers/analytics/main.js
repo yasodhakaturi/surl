@@ -51,31 +51,46 @@ function HomeController($http, $scope, $rootScope) {
 
 }
 
-function CampaignsController($scope, $http, $uibModal, CampaignsCollectionModel, CampaignModel) {
+function CampaignsController($scope, $rootScope, $http, $uibModal, CampaignsCollectionModel, CampaignModel) {
     $scope.campaignListOptions = {
         enableSorting: true,
         columnDefs: [
-          { name:'Name', field: 'title' },
-          { name:'Is Protected', field: 'isPasswordProtected'},
-          { name:'Created On', field: 'created_on' },
-          { name:'Created By', field: 'created_by' },
-          { name:'Status', field: 'IsActive'},
+          { name:'Name', field: 'CampaignName' },
+          { name:'Is Protected', field: 'HasPassword', cellTemplate:'<div>' +
+                                                             '<span ng-if="row.entity.HasPassword">Active</span>' +
+                                                             '<span ng-if="!row.entity.HasPassword">In Active</span>' +
+                                                             '&nbsp;' +
+                                                             '</div>'},
+          { name:'Created On', field: 'CreatedOn', type:'date', format:'mm/dd/yyyy' },
+          { name:'Status', field: 'IsActive', cellTemplate:'<div>' +
+                                                              '<span ng-if="row.entity.IsActive">Active</span>' +
+                                                              '<span ng-if="!row.entity.IsActive">In Active</span>' +
+                                                              '&nbsp;' +
+                                                              '</div>'},
           { name:'Actions', cellTemplate:'<div>' +
                       '<a ng-click="grid.appScope.editCampaign(row.entity)">Edit</a>' +
                       '&nbsp;' +
                       '</div>'
           }
         ],
-      data : []
+        data : []
       };
 
+    $scope.errorMessage = "";
+    $rootScope.pageLoading = true;
+
     $scope.refreshData = function () {
+      $rootScope.pageLoading = true;
       CampaignsCollectionModel.getAll().then(function(response) {
         console.log(response);
-        $scope.userListOptions.data = response;
+        $scope.campaignListOptions.data = response;
+        $rootScope.pageLoading = false;
       }, function errorCallback(response) {
         console.log('error', response);
+        $rootScope.pageLoading = false;
+        $scope.errorMessage = "Error: failed to load campaign info";
       });
+
     };
 
     $scope.editCampaign = function(_row) {
@@ -84,18 +99,18 @@ function CampaignsController($scope, $http, $uibModal, CampaignsCollectionModel,
         animation: true,
         ariaLabelledBy: 'modal-title-top',
         ariaDescribedBy: 'modal-body-top',
-        templateUrl: 'views/admin/campaigns/edit_campaign.html',
+        templateUrl: 'views/analytics/campaigns/edit_campaign.html',
         size: 'lg',
         controller: function($scope) {
           var $ctrl = this;
           $scope.name = 'top';
 
-          $ctrl.user = row;
+          $ctrl.newCampaign = row;
 
           $scope.save = function () {
             $ctrl.saveError = "";
-            if($ctrl.campaignForm.$valid){
-              $ctrl.user.save().then((resp)=>{
+            if($ctrl.newCampaignForm.$valid){
+              $ctrl.newCampaign.save().then((resp)=>{
                 _row = resp;
                 instance.close();
               }, (err) => {
@@ -121,19 +136,18 @@ function CampaignsController($scope, $http, $uibModal, CampaignsCollectionModel,
         animation: true,
         ariaLabelledBy: 'modal-title-top',
         ariaDescribedBy: 'modal-body-top',
-        templateUrl: 'views/admin/campaigns/add_campaign.html',
+        templateUrl: 'views/analytics/campaigns/add_campaign.html',
         size: 'lg',
         controller: function($scope) {
           var $ctrl = this;
           $scope.name = 'top';
 
-          $ctrl.newCampaign = new CampaignModel({})
+          $ctrl.newCampaign = new CampaignModel({});
 
           $scope.save = function () {
             $ctrl.saveError = "";
             if($ctrl.newCampaignForm.$valid){
               $ctrl.newCampaign.save().then((resp)=>{
-                console.log(resp)
                 instance.close();
               }, (err) => {
                 $ctrl.saveError = err && err.message || "Failed to save user.";

@@ -13,11 +13,16 @@ exports.adminUserModel = function(){
 
 exports.campaignModel = function(){
   return {
-    "id": chance.integer({min: 100, max: 99999}),
-    "rid": chance.string({length: 10,pool: 'abcdefghijklmnopqrstuv'}) ,
-    "title": chance.sentence({words: 2}),
-    "createdOn": '2017-01-27T11:40:43',
-    "endDate": chance.date({string: true, american: true})
+    "Id": chance.integer({min: 100, max: 99999}),
+    "ReferenceNumber": chance.string({length: 10,pool: 'abcdefghijklmnopqrstuv'}) ,
+    "CampaignName": chance.sentence({words: 2}),
+    "CreatedOn": '2017-01-27T11:40:43',
+    "CreatedUserId": chance.integer({min: 100, max: 99999}),
+    "CreatedUserName": chance.sentence({words: 2}),
+    "CreatedUserEmail": chance.email(),
+    "CreatedUserActiveState": chance.bool(),
+    "IsActive": chance.bool(),
+    "HasPassword": chance.bool()
   }
 };
 

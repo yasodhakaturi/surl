@@ -12,7 +12,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
         var getAllDefer = $q.defer();
         $http({
           method: 'GET',
-          url: appConfig.apiEndPoint + '/api/CustomerApi'
+          url: appConfig.apiEndPoint + '/Customer'
         })
           .then((response) => {
             var users = [];
@@ -46,7 +46,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
           //save
           $http({
             method: 'POST',
-            url: appConfig.apiEndPoint + '/api/CustomerApi',
+            url: appConfig.apiEndPoint + '/Customer/AddClient',
             data: {UserName: this.UserName, Email: this.Email, Password: this.Password, IsActive: this.IsActive}
           }).then((userObj) => {
             console.log('user save', userObj)
@@ -60,7 +60,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
           //update
           $http({
             method: 'PUT',
-            url: appConfig.apiEndPoint + '/api/CustomerApi/'+this.id,
+            url: appConfig.apiEndPoint + '/Customer/UpdateClient',
             data: {id: this.id, UserName: this.UserName, Email: this.Email,  IsActive: this.IsActive}
           }).then((userObj) => {
             console.log('user update', userObj);
@@ -77,7 +77,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
         let refDefer = $q.defer();
         $http({
           method: 'PUT',
-          url: appConfig.apiEndPoint + '/api/Users/'+this.id,
+          url: appConfig.apiEndPoint + '/Customer/UpdateClient',
           data: {id: this.id, Password: this.Password}
         }).then((userObj) => {
           console.log('user update', userObj);

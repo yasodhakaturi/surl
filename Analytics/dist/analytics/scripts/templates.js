@@ -12,7 +12,7 @@ angular.module("views/analytics/archieves.html", []).run(["$templateCache", func
 
 angular.module("views/analytics/campaigns.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/analytics/campaigns.html",
-    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12\"> <h2> Campaigns </h2> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <ul class=\"list-inline text-right\"> <li><div class=\"btn btn-primary\" ng-click=\"addCampaign()\">Add Campaign</div> </li> </ul> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <div id=\"campaignList\" ui-grid=\"campaignListOptions\" class=\"grid\"></div> </div> </div> </div> </div>");
+    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\" ng-show=\"!$rootScope.pageLoading\"> <div class=\"row\"> <div class=\"col-lg-12\"> <h2> Campaigns </h2> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <ul class=\"list-inline text-right\"> <li><div class=\"btn btn-primary\" ng-click=\"addCampaign()\">Add Campaign</div> </li> </ul> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <div id=\"campaignList\" ui-grid=\"campaignListOptions\" class=\"grid\"></div> </div> </div> </div> </div>");
 }]);
 
 angular.module("views/analytics/campaigns/add_campaign.html", []).run(["$templateCache", function($templateCache) {
@@ -24,14 +24,16 @@ angular.module("views/analytics/campaigns/add_campaign.html", []).run(["$templat
     "            <h3 class=\"modal-title\" id=\"modal-title\">Add a Campaign</h3>\n" +
     "        </div>\n" +
     "\n" +
-    "        <ng-form class=\"form-horizontal\" name=\"$ctrl.newCampaignForm\" novalidate >\n" +
+    "        <ng-form class=\"form-horizontal\" name=\"$ctrl.newCampaignForm\" novalidate>\n" +
     "            <div class=\"modal-body\" id=\"modal-body\">\n" +
     "                <div class=\"form-group\">\n" +
     "                    <label class=\"col-sm-3 control-label\">Campaign Name</label>\n" +
     "\n" +
     "                    <div class=\"col-sm-9\">\n" +
-    "                        <input type=\"text\" ng-required=\"true\" name=\"name\" placeholder=\"Campaign Name\" class=\"form-control\" ng-model=\"$ctrl.newCampaign.CampaignName\" />\n" +
-    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newCampaignForm.name.$invalid && $ctrl.newCampaignForm.username.$touched\">\n" +
+    "                        <input type=\"text\" ng-required=\"true\" name=\"name\" placeholder=\"Campaign Name\"\n" +
+    "                               class=\"form-control\" ng-model=\"$ctrl.newCampaign.CampaignName\"/>\n" +
+    "                        <small class=\"form-text text-muted text-danger\"\n" +
+    "                               ng-if=\"$ctrl.newCampaignForm.name.$invalid && $ctrl.newCampaignForm.username.$touched\">\n" +
     "                            <span ng-if=\"$ctrl.newCampaignForm.name.$error.required\">Name is required</span>\n" +
     "                        </small>\n" +
     "                    </div>\n" +
@@ -41,15 +43,19 @@ angular.module("views/analytics/campaigns/add_campaign.html", []).run(["$templat
     "                    <label class=\"col-sm-3 control-label\">Enable Password</label>\n" +
     "\n" +
     "                    <div class=\"col-sm-9\">\n" +
-    "                        <input type=\"checkbox\" name=\"hasPassword\"  class=\"form-control\" ng-model=\"$ctrl.newCampaign.hasPassword\" />\n" +
+    "                        <input type=\"checkbox\" name=\"HasPassword\" class=\"form-control\"\n" +
+    "                               ng-model=\"$ctrl.newCampaign.HasPassword\"/>\n" +
     "                    </div>\n" +
     "                </div>\n" +
-    "                <div class=\"form-group\" ng-if=\"$ctrl.newCampaign.hasPassword\">\n" +
+    "                <div class=\"form-group\" ng-if=\"$ctrl.newCampaign.HasPassword\">\n" +
     "                    <label class=\"col-sm-3 control-label\">Password</label>\n" +
     "\n" +
     "                    <div class=\"col-sm-9\">\n" +
-    "                        <input id=\"pw1\" type=\"password\" ng-required=\"!!$ctrl.newCampaign.hasPassword\" ng-minlength=\"8\" name=\"password\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.newCampaign.Password\" />\n" +
-    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newCampaignForm.password.$invalid && $ctrl.newCampaignForm.password.$touched\">\n" +
+    "                        <input id=\"pw1\" type=\"password\" ng-required=\"!!$ctrl.newCampaign.HasPassword\" ng-minlength=\"8\"\n" +
+    "                               name=\"password\" placeholder=\"Password\" class=\"form-control\"\n" +
+    "                               ng-model=\"$ctrl.newCampaign.Password\"/>\n" +
+    "                        <small class=\"form-text text-muted text-danger\"\n" +
+    "                               ng-if=\"$ctrl.newCampaignForm.password.$invalid && $ctrl.newCampaignForm.password.$touched\">\n" +
     "                            <span ng-if=\"$ctrl.newCampaignForm.password.$error.required\">Password is required</span>\n" +
     "                            <span ng-if=\"!$ctrl.newCampaignForm.password.$error.required && $ctrl.newCampaignForm.password.$error.minlength\">Minimum 8 characters are required.</span>\n" +
     "                        </small>\n" +
@@ -61,14 +67,18 @@ angular.module("views/analytics/campaigns/add_campaign.html", []).run(["$templat
     "                    <label class=\"col-sm-3 control-label\">Active</label>\n" +
     "\n" +
     "                    <div class=\"col-sm-9\">\n" +
-    "                        <input type=\"checkbox\" name=\"isActive\"  class=\"form-control\" ng-model=\"$ctrl.newCampaign.IsActive\" />\n" +
+    "                        <input type=\"checkbox\" name=\"isActive\" class=\"form-control\"\n" +
+    "                               ng-model=\"$ctrl.newCampaign.IsActive\"/>\n" +
     "                    </div>\n" +
     "                </div>\n" +
+    "\n" +
     "            </div>\n" +
     "            <div class=\"modal-footer\">\n" +
-    "                <small class=\"text-danger\" ng-if=\"$ctrl.saveError\">Error: {{$ctrl.saveError}} </small>\n" +
+    "                <small class=\"text-danger\" ng-if=\"$ctrl.saveError\">Error: {{$ctrl.saveError}}</small>\n" +
     "                <button class=\"btn btn-default\" type=\"submit\" ng-click=\"cancel()\">Cancel</button>\n" +
-    "                <button class=\"btn btn-primary\" type=\"submit\" ng-class=\"{'disabled': !$ctrl.newCampaignForm.$valid}\" ng-disabled=\"!$ctrl.newCampaignForm.$valid\"  ng-click=\"save($ctrl.newCampaign)\">Save changes</button>\n" +
+    "                <button class=\"btn btn-primary\" type=\"submit\" ng-class=\"{'disabled': !$ctrl.newCampaignForm.$valid}\"\n" +
+    "                        ng-disabled=\"!$ctrl.newCampaignForm.$valid\" ng-click=\"save($ctrl.newCampaign)\">Save changes\n" +
+    "                </button>\n" +
     "            </div>\n" +
     "        </ng-form>\n" +
     "    </div>\n" +
@@ -87,7 +97,7 @@ angular.module("views/analytics/campaigns/edit_campaign.html", []).run(["$templa
     "\n" +
     "    <div class=\"content\" animate-panel effect=\"zoomIn\">\n" +
     "        <div class=\"modal-header\">\n" +
-    "            <h3 class=\"modal-title\" id=\"modal-title\">Add a Campaign</h3>\n" +
+    "            <h3 class=\"modal-title\" id=\"modal-title\">Edit a Campaign</h3>\n" +
     "        </div>\n" +
     "\n" +
     "        <ng-form class=\"form-horizontal\" name=\"$ctrl.newCampaignForm\" novalidate >\n" +
@@ -103,57 +113,34 @@ angular.module("views/analytics/campaigns/edit_campaign.html", []).run(["$templa
     "                    </div>\n" +
     "\n" +
     "                </div>\n" +
-    "                <div class=\"form-group\">\n" +
-    "                    <label class=\"col-sm-2 control-label\">Enable Password</label>\n" +
+    "                <div class=\"form-group\" ng-if=\"$ctrl.newCampaign.HasPassword\">\n" +
+    "                    <label class=\"col-sm-3 control-label\">Edit Password</label>\n" +
     "\n" +
-    "                    <div class=\"col-sm-10\">\n" +
-    "                        <input type=\"checkbox\" name=\"hasPassword\"  class=\"form-control\" ng-model=\"$ctrl.newCampaign.hasPassword\" />\n" +
+    "                    <div class=\"col-sm-9\">\n" +
+    "                        <input type=\"checkbox\" name=\"EditPassword\"  class=\"form-control\" ng-model=\"$ctrl.newCampaign.EditPassword\" />\n" +
     "                    </div>\n" +
     "                </div>\n" +
-    "                <div class=\"form-group\" ng-show=\"$ctrl.newCampaign.hasPassword\">\n" +
-    "                    <label class=\"col-sm-2 control-label\">Password</label>\n" +
+    "                <div class=\"form-group\" ng-if=\"$ctrl.newCampaign.EditPassword\">\n" +
+    "                    <label class=\"col-sm-3 control-label\">Password</label>\n" +
     "\n" +
-    "                    <div class=\"col-sm-10\">\n" +
-    "                        <input id=\"pw1\" type=\"password\" ng-required=\"$ctrl.newCampaign.hasPassword\" ng-minlength=\"8\" name=\"password\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.newCampaign.Password\" />\n" +
+    "                    <div class=\"col-sm-9\">\n" +
+    "                        <input id=\"pw1\" type=\"password\" ng-required=\"!!$ctrl.newCampaign.EditPassword\" ng-minlength=\"8\" name=\"password\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.newCampaign.Password\" />\n" +
     "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newCampaignForm.password.$invalid && $ctrl.newCampaignForm.password.$touched\">\n" +
     "                            <span ng-if=\"$ctrl.newCampaignForm.password.$error.required\">Password is required</span>\n" +
     "                            <span ng-if=\"!$ctrl.newCampaignForm.password.$error.required && $ctrl.newCampaignForm.password.$error.minlength\">Minimum 8 characters are required.</span>\n" +
     "                        </small>\n" +
     "                    </div>\n" +
     "                </div>\n" +
+    "\n" +
+    "\n" +
     "                <div class=\"form-group\">\n" +
-    "                    <label class=\"col-sm-3 control-label\">Start Date</label>\n" +
+    "                    <label class=\"col-sm-3 control-label\">Active</label>\n" +
     "\n" +
     "                    <div class=\"col-sm-9\">\n" +
-    "                        <input type=\"text\" ng-required=\"true\" name=\"startDate\" placeholder=\"Start Date\" class=\"form-control\" ng-model=\"$ctrl.newCampaign.startDate\" />\n" +
-    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newCampaignForm.startDate.$invalid && $ctrl.newCampaignForm.startDate.$touched\">\n" +
-    "                            <span ng-if=\"$ctrl.newCampaignForm.startDate.$error.required\">Email is required</span>\n" +
-    "                            <span ng-if=\"!$ctrl.newCampaignForm.startDate.$error.required && $ctrl.newCampaignForm.startDate.$error.email\">Invalid Start Date</span>\n" +
-    "                        </small>\n" +
-    "                    </div>\n" +
-    "                </div>\n" +
-    "\n" +
-    "                <div class=\"form-group\">\n" +
-    "                    <label class=\"col-sm-2 control-label\">End Date</label>\n" +
-    "\n" +
-    "                    <div class=\"col-sm-10\">\n" +
-    "                        <input type=\"text\" ng-required=\"true\" name=\"endDate\" placeholder=\"End Date\" class=\"form-control\" ng-model=\"$ctrl.newCampaign.endDate\" />\n" +
-    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.newCampaignForm.endDate.$invalid && $ctrl.newCampaignForm.endDate.$touched\">\n" +
-    "                            <span ng-if=\"$ctrl.newCampaignForm.endDate.$error.required\">Email is required</span>\n" +
-    "                            <span ng-if=\"!$ctrl.newCampaignForm.endDate.$error.required && $ctrl.newCampaignForm.endDate.$error.email\">Invalid Start Date</span>\n" +
-    "                        </small>\n" +
-    "                    </div>\n" +
-    "                </div>\n" +
-    "\n" +
-    "\n" +
-    "\n" +
-    "                <div class=\"form-group\">\n" +
-    "                    <label class=\"col-sm-2 control-label\">Active</label>\n" +
-    "\n" +
-    "                    <div class=\"col-sm-10\">\n" +
     "                        <input type=\"checkbox\" name=\"isActive\"  class=\"form-control\" ng-model=\"$ctrl.newCampaign.IsActive\" />\n" +
     "                    </div>\n" +
     "                </div>\n" +
+    "\n" +
     "            </div>\n" +
     "            <div class=\"modal-footer\">\n" +
     "                <small class=\"text-danger\" ng-if=\"$ctrl.saveError\">Error: {{$ctrl.saveError}} </small>\n" +
@@ -168,7 +155,7 @@ angular.module("views/analytics/campaigns/edit_campaign.html", []).run(["$templa
 
 angular.module("views/analytics/header.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/analytics/header.html",
-    "<div id=\"logo\" class=\"light-version\"> <a ng-href=\"#\"><span class=\"logo\"></span></a> </div> <nav role=\"navigation\"> <!-- <minimaliza-menu></minimaliza-menu> --> <div class=\"small-logo\"> <a ng-href=\"#\"><span class=\"logo\"></span></a> </div> <div class=\"mobile-menu\" ng-if=\"$root.userInfo.user_id\"> <button type=\"button\" class=\"navbar-toggle mobile-menu-toggle\" data-toggle=\"collapse\" data-target=\"#mobile-collapse\"> <i class=\"fa fa-chevron-down\"></i> </button> <div class=\"collapse mobile-navbar\" id=\"mobile-collapse\"> <ul class=\"nav navbar-nav\"> <li ng-class=\"{'active':active == 'home'}\"><a class=\"page-scroll\" href=\"#page-top\">Home</a></li> <li ng-class=\"{'active':active == 'analytics'}\"><a class=\"page-scroll\" page-scroll href=\"#analytics\">Analytics</a></li> <li ng-class=\"{'active':active == 'security'}\"><a class=\"page-scroll\" page-scroll href=\"#security\">Security </a></li> <li><a class=\"page-scroll\" page-scroll ng-click=\"logout()\">Logout</a></li> </ul> </div> </div> <div class=\"navbar-right\" ng-if=\"$root.userInfo.user_id\"> <ul class=\"nav navbar-nav no-borders\"> <li uib-dropdown> <a ui-sref=\"bitraz.main.index\" uib-dropdown-toggle> <i class=\"pe-7s-home\"></i> </a> </li> <li uib-dropdown> <a uib-dropdown-toggle> <i class=\"pe-7s-graph\"></i> </a> <div uib-dropdown-menu class=\"hdropdown bigmenu animated flipInX\"> <table> <tbody> <tr> <td> <a ui-sref=\"bitraz.main.analytics\"> <i class=\"pe pe-7s-graph1 text-danger\"></i> <h5>Analytics</h5> </a>  <td> <a ui-sref=\"bitraz.main.campaigns\"> <i class=\"pe pe-7s-portfolio text-info\"></i> <h5>Campaigns</h5> </a>   <tr> <td> <a ui-sref=\"bitraz.main.users\"> <i class=\"pe pe-7s-users text-success\"></i> <h5>Users</h5> </a>  <td> <a ui-sref=\"bitraz.main.archieves\"> <i class=\"pe pe-7s-box1 text-success\"></i> <h5>Archieve</h5> </a>    </table> </div> </li> <li> <a ui-sref=\"bitraz.main.settings\"> <i class=\"pe-7s-config\"></i> </a> </li> <li> <a ng-click=\"logout()\"> <i class=\"pe-7s-power\"></i> </a> </li> </ul> </div> </nav>");
+    "<div id=\"logo\" class=\"light-version\"> <a ng-href=\"#\"><span class=\"logo\"></span></a> </div> <nav role=\"navigation\"> <!-- <minimaliza-menu></minimaliza-menu> --> <div class=\"small-logo\"> <a ng-href=\"#\"><span class=\"logo\"></span></a> </div> <div class=\"mobile-menu\" ng-if=\"$root.userInfo.user_id\"> <button type=\"button\" class=\"navbar-toggle mobile-menu-toggle\" data-toggle=\"collapse\" data-target=\"#mobile-collapse\"> <i class=\"fa fa-chevron-down\"></i> </button> <div class=\"collapse mobile-navbar\" id=\"mobile-collapse\"> <ul class=\"nav navbar-nav\"> <li ng-class=\"{'active':active == 'home'}\"><a class=\"page-scroll\" href=\"#page-top\">Home</a></li> <li ng-class=\"{'active':active == 'analytics'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.analytics\">Analytics</a></li> <li ng-class=\"{'active':active == 'campaigns'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.campaigns\">Campaigns</a></li> <li ng-class=\"{'active':active == 'security'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.settings\">Security </a></li> <li><a class=\"page-scroll\" page-scroll ng-click=\"logout()\">Logout</a></li> </ul> </div> </div> <div class=\"navbar-right\" ng-if=\"$root.userInfo.user_id\"> <ul class=\"nav navbar-nav no-borders\"> <li uib-dropdown> <a ui-sref=\"bitraz.main.index\" uib-dropdown-toggle> <i class=\"pe-7s-home\"></i> </a> </li> <li uib-dropdown> <a uib-dropdown-toggle> <i class=\"pe-7s-graph\"></i> </a> <div uib-dropdown-menu class=\"hdropdown bigmenu animated flipInX\"> <table> <tbody> <tr> <td> <a ui-sref=\"bitraz.main.analytics\"> <i class=\"pe pe-7s-graph1 text-danger\"></i> <h5>Analytics</h5> </a>  <td> <a ui-sref=\"bitraz.main.campaigns\"> <i class=\"pe pe-7s-portfolio text-info\"></i> <h5>Campaigns</h5> </a>    </table> </div> </li> <li> <a ui-sref=\"bitraz.main.settings\"> <i class=\"pe-7s-config\"></i> </a> </li> <li> <a ng-click=\"logout()\"> <i class=\"pe-7s-power\"></i> </a> </li> </ul> </div> </nav>");
 }]);
 
 angular.module("views/analytics/index.html", []).run(["$templateCache", function($templateCache) {
