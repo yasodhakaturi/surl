@@ -18,18 +18,29 @@
                     </div>
 
                 </div>
-                <div class="form-group" ng-if="$ctrl.newCampaign.HasPassword">
-                    <label class="col-sm-3 control-label">Edit Password</label>
+                <div class="form-group" >
+                    <label class="col-sm-3 control-label" ng-if="$ctrl.newCampaign.HasPassword">Edit Password</label>
+                    <label class="col-sm-3 control-label" ng-if="!$ctrl.newCampaign.HasPassword">Add Password</label>
 
                     <div class="col-sm-9">
                         <input type="checkbox" name="EditPassword"  class="form-control" ng-model="$ctrl.newCampaign.EditPassword" />
                     </div>
                 </div>
+
+                <div class="form-group" ng-if="$ctrl.newCampaign.HasPassword && $ctrl.newCampaign.EditPassword">
+                    <label class="col-sm-3 control-label" ng-if="$ctrl.newCampaign.HasPassword">Remove Password</label>
+
+                    <div class="col-sm-9">
+                        <input type="checkbox" name="RemovePassword"  class="form-control" ng-model="$ctrl.newCampaign.RemovePassword" />
+                    </div>
+                </div>
+
                 <div class="form-group" ng-if="$ctrl.newCampaign.EditPassword">
                     <label class="col-sm-3 control-label">Password</label>
 
                     <div class="col-sm-9">
-                        <input id="pw1" type="password" ng-required="!!$ctrl.newCampaign.EditPassword" ng-minlength="8" name="password" placeholder="Password" class="form-control" ng-model="$ctrl.newCampaign.Password" />
+                        <input id="pw1" type="password" ng-required="!!$ctrl.newCampaign.EditPassword && !$ctrl.newCampaign.RemovePassword" ng-minlength="$ctrl.newCampaign.RemovePassword ? 0 : 8" name="password" placeholder="Password" class="form-control" ng-model="$ctrl.newCampaign.Password" ng-disabled="$ctrl.newCampaign.RemovePassword" />
+
                         <small  class="form-text text-muted text-danger" ng-if="$ctrl.newCampaignForm.password.$invalid && $ctrl.newCampaignForm.password.$touched">
                             <span ng-if="$ctrl.newCampaignForm.password.$error.required">Password is required</span>
                             <span ng-if="!$ctrl.newCampaignForm.password.$error.required && $ctrl.newCampaignForm.password.$error.minlength">Minimum 8 characters are required.</span>

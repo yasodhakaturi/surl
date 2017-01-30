@@ -2,7 +2,7 @@ angular.module('bitraz.template', ['views/common/analytics.html', 'views/common/
 
 angular.module("views/common/analytics.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/common/analytics.html",
-    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\" ng-if=\"isLoaded\"> <div class=\"row\"> <div class=\"col-lg-12 text-right\"> <span> Choose a Campaign</span> <select name=\"selectedCampaign\" ng-model=\"selectedCampaign\" ng-change=\"campaignChange(selectedCampaign)\"> <option value=\"{{campaign.rid}}\" ng-repeat=\"campaign in campaigns\" ng-selected=\"campaign.rid == selectedCampaign\"> {{campaign.title || \"Campaign (\" + campaign.rid + \")\"}} : {{campaign.createdOn | date: 'mm.dd.yyyy'}} - {{campaign.inActiveDate | date: 'mm.dd.yyyy' || 'Till Date'}} </select> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> <analytics-layout campaign-id=\"selectedCampaign\"></analytics-layout> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> </div> </div> </div> </div>");
+    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\" ng-if=\"isLoaded\"> <div class=\"row\"> <div class=\"col-lg-12 text-right\"> <span> Choose a Campaign</span> <select name=\"selectedCampaign\" ng-model=\"selectedCampaign\" ng-change=\"campaignChange(selectedCampaign)\"> <option value=\"{{campaign.ReferenceNumber}}\" ng-repeat=\"campaign in campaigns\" ng-selected=\"campaign.ReferenceNumber == selectedCampaign\"> {{campaign.CampaignName || \"Campaign (\" + campaign.ReferenceNumber + \")\"}} : {{campaign.CreatedDate | date: 'MM.dd.yyyy'}} </select> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> <analytics-layout campaign-id=\"selectedCampaign\"></analytics-layout> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> </div> </div> </div> </div>");
 }]);
 
 angular.module("views/common/dashboard/activities_tmpl.html", []).run(["$templateCache", function($templateCache) {
@@ -457,12 +457,12 @@ angular.module("views/common/directives/analytics_layout.html", []).run(["$templ
     "            </div>\n" +
     "        </div>\n" +
     "    </div>\n" +
-    "    <div class=\"row\" ng-hide=\"$ctrl.loading\">\n" +
-    "        <div class=\"splash-title\">\n" +
-    "            <h1>Loading..</h1>\n" +
-    "            <p></p>\n" +
-    "            <img src=\"images/loading-bars.svg\" width=\"64\" height=\"64\"/></div>\n" +
-    "    </div>\n" +
+    "    <!--<div class=\"row\" ng-hide=\"$ctrl.loading\">-->\n" +
+    "        <!--<div class=\"splash-title\">-->\n" +
+    "            <!--<h1>Loading..</h1>-->\n" +
+    "            <!--<p></p>-->\n" +
+    "            <!--<img src=\"images/loading-bars.svg\" width=\"64\" height=\"64\"/></div>-->\n" +
+    "    <!--</div>-->\n" +
     "\n" +
     "</section>");
 }]);

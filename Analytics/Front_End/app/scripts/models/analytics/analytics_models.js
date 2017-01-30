@@ -59,7 +59,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
         }else{
           //update
           $http({
-            method: 'PUT',
+            method: 'POST',
             url: appConfig.apiEndPoint + '/Customer/UpdateClient',
             data: {id: this.id, UserName: this.UserName, Email: this.Email,  IsActive: this.IsActive}
           }).then((userObj) => {
@@ -128,7 +128,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
             this.Id = data.Id || null;
             this.CampaignName = data.CampaignName;
             this.ReferenceNumber = data.ReferenceNumber;
-            this.CreatedOn = data.CreatedOn || '';
+            this.CreatedOn = data.CreatedDate || '';
             this.CreatedUserId = data.CreatedUserId || '';
             this.CreatedUserName = data.CreatedUserName || '';
             this.CreatedUserEmail = data.CreatedUserEmail || '';
@@ -144,10 +144,12 @@ angular.module('bitraz.models', ['bitraz.models.common'])
 
             if(!this.Id){
               //save
-              var data = {CampaignName: this.name, IsActive: this.IsActive, CreatedUserId: this.CreatedUserId};
+              var data = {CampaignName: this.CampaignName, IsActive: this.IsActive, CreatedUserId: this.CreatedUserId};
               if(this.Password !=''){
-                data.Password = this.Password
-              }
+                data.Pwd = this.Password
+              }else{
+                 data.Pwd = false;
+               }
               $http({
                 method: 'POST',
                 url: appConfig.apiEndPoint + '/Campaign/AddCampaign',
@@ -163,16 +165,18 @@ angular.module('bitraz.models', ['bitraz.models.common'])
             }else{
               //update
               var data = {Id:this.Id, CampaignName: this.CampaignName, IsActive: this.IsActive};
-              if(this.EditPassword && this.Password !=''){
-                data.Password = this.Password
+              if(this.EditPassword && this.RemovePassword){
+                data.Pwd = '';
+              }else if(this.EditPassword && this.Password !=''){
+                data.Pwd = this.Password
               }
               $http({
-                method: 'PUT',
+                method: 'POST',
                 url: appConfig.apiEndPoint + '/Campaign/UpdateCampaign',
                 data: data
               }).then((campaignObj) => {
                 console.log('campaign update', campaignObj);
-                refDefer.resolve(new CampaignModel(campaignObj.data));
+                refDefer.resolve(new Campaign(campaignObj.data));
               }, (err) => {
                 console.log('campaign update failed', err);
                 refDefer.reject(err);

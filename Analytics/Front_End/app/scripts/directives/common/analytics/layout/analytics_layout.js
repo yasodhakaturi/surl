@@ -7,7 +7,7 @@ angular.module("bitraz")
     controller: ["$scope", "$rootScope", "$uibModal", "$timeout", "highchartsNG", "RidService", "$interval", function ($scope, $rootScope, $uibModal, $timeout, highchartsNG, RidService, $interval) {
       let $ctrl = this;
 
-      $ctrl.loading = true;
+      $rootScope.pageLoading = true;
 
       $scope.data = {
         "activity": [],
@@ -299,6 +299,7 @@ angular.module("bitraz")
       $ctrl.$onChanges = (changes) => {
         if(changes.campaignId && !changes.campaignId.isFirstChange()){
           $ctrl.params.rid = changes.campaignId.currentValue;
+          $ctrl.firstTime = true;
           $ctrl.loadData($ctrl.params);
         }
       };
@@ -309,7 +310,7 @@ angular.module("bitraz")
         $scope.deviceConfig.series[0].data =  $scope.data.devices;
         $scope.chartConfig.series[0].data =  _.map($scope.data.activity, (activity)=>{return [(new Date(activity.RequestedDate)).getTime(), activity.RequestCount];});
       };
-
+      $ctrl.firstTime = true;
       $ctrl.loadData = (params) => {
         $ctrl.dashboardConfig = {
           type:'campaign',
@@ -319,17 +320,23 @@ angular.module("bitraz")
         if(timer){
           $interval.cancel(timer);
         }
-        $ctrl.loading = true;
+        if($ctrl.firstTime){
+          $rootScope.pageLoading = true;
+        }
+
         RidService.getCounts(params).$promise.then((resp)=>{
           $scope.data = resp;
-          $ctrl.loading = false;
+
+          $rootScope.pageLoading = false;
           $ctrl.refreshCharts();
           $ctrl.reflow();
           timer = $interval(function(){
             $ctrl.resetTime();
           },60000);
+          $ctrl.firstTime = false;
         }, (err)=>{
           console.log("failed to load summary", err);
+          $rootScope.pageLoading = false;
         });
         // $timeout($ctrl.tick, tickInterval);
       };
@@ -362,6 +369,12 @@ angular.module("bitraz")
         // $ctrl.timeLeft = timeLimit;
         $ctrl.$onInit();
       };
+
+      $ctrl.onDestroy = () => {
+        if(timer){
+          $interval.cancel(timer);
+        }
+      }
 
     }]
   });

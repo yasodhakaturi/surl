@@ -101,7 +101,10 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, CampaignsColl
         ariaDescribedBy: 'modal-body-top',
         templateUrl: 'views/analytics/campaigns/edit_campaign.html',
         size: 'lg',
-        controller: function($scope) {
+        resolve: {
+           'parentScope': ()=>{ return $scope;}
+         },
+        controller: function($scope, parentScope) {
           var $ctrl = this;
           $scope.name = 'top';
 
@@ -111,7 +114,7 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, CampaignsColl
             $ctrl.saveError = "";
             if($ctrl.newCampaignForm.$valid){
               $ctrl.newCampaign.save().then((resp)=>{
-                _row = resp;
+                _row = angular.extend(_row,resp);
                 instance.close();
               }, (err) => {
                 $ctrl.saveError = err && err.message || "Failed to save user.";
@@ -138,7 +141,10 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, CampaignsColl
         ariaDescribedBy: 'modal-body-top',
         templateUrl: 'views/analytics/campaigns/add_campaign.html',
         size: 'lg',
-        controller: function($scope) {
+        resolve: {
+         'parentScope': ()=>{ return $scope;}
+        },
+        controller: function($scope, parentScope) {
           var $ctrl = this;
           $scope.name = 'top';
 
@@ -148,6 +154,7 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, CampaignsColl
             $ctrl.saveError = "";
             if($ctrl.newCampaignForm.$valid){
               $ctrl.newCampaign.save().then((resp)=>{
+                parentScope.campaignListOptions.data.push(resp);
                 instance.close();
               }, (err) => {
                 $ctrl.saveError = err && err.message || "Failed to save user.";

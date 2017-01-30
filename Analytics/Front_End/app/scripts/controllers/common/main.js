@@ -65,7 +65,7 @@ function AnalyticsController($rootScope, $state, $scope, CampaignService, $locat
         if(res){
           $scope.campaigns = res || [];
 
-          if(_.indexOf(_.map($scope.campaigns, 'rid'), $scope.selectedCampaign) < 0){
+          if(_.indexOf(_.map($scope.campaigns, 'ReferenceNumber'), $scope.selectedCampaign) < 0){
             $scope.selectedCampaign = $scope.campaigns[0].rid;
             $state.go('.', {rid: $scope.selectedCampaign}, {notify: false});
           }
