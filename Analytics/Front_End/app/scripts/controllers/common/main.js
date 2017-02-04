@@ -78,7 +78,7 @@ function AnalyticsController($rootScope, $state, $scope, CampaignService, $locat
           $scope.campaigns = res || [];
 
           if(_.indexOf(_.map($scope.campaigns, 'ReferenceNumber'), $scope.selectedCampaign) < 0){
-            $scope.selectedCampaign = $scope.campaigns[0].rid;
+            $scope.selectedCampaign = $scope.campaigns[0].ReferenceNumber;
             $state.go('.', {rid: $scope.selectedCampaign}, {notify: false});
           }
           $scope.isLoaded = true;
