@@ -2,8 +2,6 @@
     <div class="content" animate-panel effect="zoomIn">
         <div class="row" ng-show="isLoaded">
             <div ng-if="!isAuthorized">
-                <p>1.Ask for RID before showing analytics</p>
-                <p>2.Validate rid, if authentication is required ask for password. else proceed</p>
                 <form novalidate name="ridRequest">
                     <div class="col-sm-12">
                         <div class="row">
@@ -15,7 +13,7 @@
                             <input type="password" name="referencePswd" ng-model="rid.password" ng-required="true" /></label>
                         </div>
                         <div class="row">
-                            <label><input type="submit" ng-click="validateRid(rid)" value="Save" /></label>
+                            <label><input type="submit" ng-click="validateRid(rid)" value="Verify" /></label>
 
                         </div>
                         <span class="text-danger" ng-if="error"> error: {{error}}</span>

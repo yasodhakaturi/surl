@@ -10,11 +10,11 @@ function LoginController($rootScope, $scope, AuthService, appConfig, $state, $lo
   $scope.pswd = '';
   $scope.loading = false;
 
-  $scope.login = () => {
+  $scope.login = (loginForm) => {
     $scope.loading = true;
     $scope.loginError = '';
-    if($scope.loginForm.$valid){
-      AuthService.login({uname: $scope.uname, password: $scope.pswd}).$promise.then((res)=>{
+    if(loginForm.$valid){
+      AuthService.login({uname: loginForm.username.$viewValue, password: loginForm.password.$viewValue}).$promise.then((res)=>{
         if(res.error){
           $scope.loginError = res.error && res.error.message;
         }else{
@@ -23,10 +23,10 @@ function LoginController($rootScope, $scope, AuthService, appConfig, $state, $lo
           if($state.params.redirect_url){
             $window.location.href = $state.params.redirect_url ? $state.params.redirect_url : '/';
           }else{
-            if(res.redirect_url){
-              $window.location.href = res.redirect_url || '/';
+            if(res.redirected_url){
+              $window.location.href = res.redirected_url || '/';
             }else{
-              $location.path('/');
+              $state.go('bitraz.main.analytics', {}, {location: 'replace'})
             }
           }
         }
@@ -36,8 +36,8 @@ function LoginController($rootScope, $scope, AuthService, appConfig, $state, $lo
       });
       $scope.loading = false;
     }else{
-      if ($scope.loginForm.$invalid) {
-        angular.forEach($scope.loginForm.$error, function (field) {
+      if (loginForm.$invalid) {
+        angular.forEach(loginForm.$error, function (field) {
           angular.forEach(field, function(errorField){
             errorField.$setTouched();
           });
@@ -46,6 +46,18 @@ function LoginController($rootScope, $scope, AuthService, appConfig, $state, $lo
       $scope.loading = false;
     }
   }
+
+  $scope.redirectUser = () => {
+    if($rootScope.userInfo.isAdmin){
+      $window.location.href = '/Admin';
+    }else if($rootScope.userInfo.isClient){
+      $window.location.href = '/Analytics';
+    }else{
+      $state.go('bitraz.main.analytics', {}, {location: 'replace'})
+    }
+  }
+
+  $rootScope.pageLoading = false;
 
 }
 
