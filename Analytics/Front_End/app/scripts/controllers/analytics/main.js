@@ -19,7 +19,6 @@ angular
 
 function AppController($http, $scope) {}
 function HeaderController($rootScope, $scope, $state, AuthService, appConfig, $window) {
-  console.log('HeaderController', $state, AuthService, appConfig)
   $scope.active = $state.current.data.activeMenu;
 
   $rootScope.$on('$stateChangeStart', function (event, toState, toStateParams, fromState, fromStateParams) {
@@ -69,7 +68,8 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, CampaignsColl
                                                               '</div>'},
           { name:'Actions', cellTemplate:'<div>' +
                       '<a ng-click="grid.appScope.editCampaign(row.entity)">Edit</a>' +
-                      '&nbsp;' +
+                      '&nbsp;&nbsp;&nbsp;' +
+                      '<a ui-sref="bitraz.main.analytics({rid:row.entity.ReferenceNumber})">View</a>' +
                       '</div>'
           }
         ],
@@ -82,7 +82,6 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, CampaignsColl
     $scope.refreshData = function () {
       $rootScope.pageLoading = true;
       CampaignsCollectionModel.getAll().then(function(response) {
-        console.log(response);
         $scope.campaignListOptions.data = response;
         $rootScope.pageLoading = false;
       }, function errorCallback(response) {
@@ -180,7 +179,7 @@ function SettingsController($http, $scope) {}
 function UsersController($http, $scope) {}
 function appCtrl($http, $scope) {
 
-  console.log($scope, $http)
+  //console.log($scope, $http)
 
 
 }

@@ -19,7 +19,6 @@ angular
 
 function AppController($http, $scope) {}
 function HeaderController($rootScope, $scope, $state, AuthService, appConfig, $window) {
-  console.log('HeaderController', $state, AuthService, appConfig);
   $scope.active = $state.current.data.activeMenu;
 
   $rootScope.$on('$stateChangeStart', function (event, toState, toStateParams, fromState, fromStateParams) {
@@ -70,7 +69,8 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
                                                               '</div>'},
           { name:'Actions', cellTemplate:'<div>' +
                       '<a ng-click="grid.appScope.editCampaign(row.entity)">Edit</a>' +
-                      '&nbsp;' +
+                      '&nbsp;&nbsp;&nbsp;' +
+                      '<a ui-sref="bitraz.main.analytics({rid:row.entity.ReferenceNumber})" >View</a>' +
                       '</div>'
           }
         ],
@@ -83,11 +83,9 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
     $scope.refreshData = function () {
       $rootScope.pageLoading = true;
       CampaignsCollectionModel.getAll().then(function(response) {
-        console.log(response);
         $scope.campaignListOptions.data = response;
         $rootScope.pageLoading = false;
       }, function errorCallback(response) {
-        console.log('error', response);
         $rootScope.pageLoading = false;
         $scope.errorMessage = "Error: failed to load campaign info";
       });
@@ -210,7 +208,6 @@ function UsersController($scope, $http, $uibModal, UsersCollectionModel, UserMod
   
   $scope.refreshData = function () {
     UsersCollectionModel.getAll().then(function(response) {
-      console.log(response);
       $scope.userListOptions.data = response;
     }, function errorCallback(response) {
       console.log('error', response);
@@ -272,7 +269,6 @@ function UsersController($scope, $http, $uibModal, UsersCollectionModel, UserMod
           $ctrl.saveError = "";
           if($ctrl.newUserForm.$valid){
             $ctrl.newUser.save().then((resp)=>{
-              console.log(resp)
               instance.close();
             }, (err) => {
               $ctrl.saveError = err && err.message || "Failed to save user.";

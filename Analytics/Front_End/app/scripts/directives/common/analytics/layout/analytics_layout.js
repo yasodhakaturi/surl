@@ -331,8 +331,11 @@ angular.module("bitraz")
           $ctrl.refreshCharts();
           $ctrl.reflow();
           timer = $interval(function(){
-            $ctrl.resetTime();
-          },60000);
+            if(moment(params.DateTo).isSame(moment(), 'day')){
+              $ctrl.resetTime();
+            }
+
+          },10000);
           $ctrl.firstTime = false;
         }, (err)=>{
           console.log("failed to load summary", err);
@@ -370,7 +373,7 @@ angular.module("bitraz")
         $ctrl.$onInit();
       };
 
-      $ctrl.onDestroy = () => {
+      $ctrl.$onDestroy = () => {
         if(timer){
           $interval.cancel(timer);
         }

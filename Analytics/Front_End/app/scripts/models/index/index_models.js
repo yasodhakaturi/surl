@@ -49,7 +49,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
             url: appConfig.apiEndPoint + '/Customer/AddClient',
             data: {UserName: this.UserName, Email: this.Email, Password: this.Password, IsActive: this.IsActive}
           }).then((userObj) => {
-            console.log('user save', userObj)
+//            console.log('user save', userObj)
             refDefer.resolve(new UserModel(userObj.data));
           }, (err) => {
             console.log('user save failed', err);
@@ -63,7 +63,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
             url: appConfig.apiEndPoint + '/Customer/UpdateClient',
             data: {id: this.id, UserName: this.UserName, Email: this.Email,  IsActive: this.IsActive}
           }).then((userObj) => {
-            console.log('user update', userObj);
+//            console.log('user update', userObj);
             refDefer.resolve(new UserModel(userObj.data));
           }, (err) => {
             console.log('user update failed', err);
@@ -80,7 +80,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
           url: appConfig.apiEndPoint + '/Customer/UpdateClient',
           data: {id: this.id, Password: this.Password}
         }).then((userObj) => {
-          console.log('user update', userObj);
+//          console.log('user update', userObj);
           refDefer.resolve(new UserModel(userObj.data));
         }, (err) => {
           console.log('user update failed', err);

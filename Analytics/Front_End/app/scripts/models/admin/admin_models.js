@@ -49,7 +49,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
             url: appConfig.apiEndPoint + '/Customer/AddClient',
             data: {UserName: this.UserName, Email: this.Email, Password: this.Password, IsActive: this.IsActive}
           }).then((userObj) => {
-            console.log('user save', userObj)
+//            console.log('user save', userObj)
             refDefer.resolve(new UserModel(userObj.data));
           }, (err) => {
             console.log('user save failed', err);
@@ -63,7 +63,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
             url: appConfig.apiEndPoint + '/Customer/UpdateClient',
             data: {id: this.id, UserName: this.UserName, Email: this.Email,  IsActive: this.IsActive}
           }).then((userObj) => {
-            console.log('user update', userObj);
+//            console.log('user update', userObj);
             refDefer.resolve(new UserModel(userObj.data));
           }, (err) => {
             console.log('user update failed', err);
@@ -80,7 +80,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
           url: appConfig.apiEndPoint + '/Customer/UpdateClient',
           data: {id: this.id, Password: this.Password}
         }).then((userObj) => {
-          console.log('user update', userObj);
+//          console.log('user update', userObj);
           refDefer.resolve(new UserModel(userObj.data));
         }, (err) => {
           console.log('user update failed', err);
@@ -155,7 +155,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
               url: appConfig.apiEndPoint + '/Campaign/AddCampaign',
               data: data
             }).then((campaignObj) => {
-              console.log('campaign save', campaignObj)
+//              console.log('campaign save', campaignObj)
               var newCampaign = new Campaign(campaignObj.data);
               refDefer.resolve(newCampaign);
             }, (err) => {
@@ -165,7 +165,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
 
           }else{
             //update
-            var data = {Id:this.Id, CampaignName: this.CampaignName, ReferenceNumber: this.ReferenceNumber,  IsActive: this.IsActive};
+            var data = {ReferenceNumber:this.ReferenceNumber, CampaignName: this.CampaignName, ReferenceNumber: this.ReferenceNumber,  IsActive: this.IsActive};
             if(this.EditPassword && this.RemovePassword){
               data.Pwd = '';
             }else if(this.EditPassword && this.Password !=''){
@@ -176,7 +176,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
               url: appConfig.apiEndPoint + '/Campaign/UpdateCampaign',
               data: data
             }).then((campaignObj) => {
-              console.log('campaign update', campaignObj);
+//              console.log('campaign update', campaignObj);
 
               //CampaignsCollectionModel.push(newCampaign);
               refDefer.resolve(new Campaign(campaignObj.data));
