@@ -23,8 +23,8 @@ function LoginController($rootScope, $scope, AuthService, appConfig, $state, $lo
           if($state.params.redirect_url){
             $window.location.href = $state.params.redirect_url ? $state.params.redirect_url : '/';
           }else{
-            if(res.redirected_url){
-              $window.location.href = res.redirected_url || '/';
+            if(res.redirect_url){
+              $window.location.href = res.redirect_url || '/';
             }else{
               $state.go('bitraz.main.analytics', {}, {location: 'replace'})
             }
