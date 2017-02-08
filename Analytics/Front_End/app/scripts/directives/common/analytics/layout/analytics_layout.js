@@ -335,7 +335,7 @@ angular.module("bitraz")
               $ctrl.resetTime();
             }
 
-          },10000);
+          },120000);
           $ctrl.firstTime = false;
         }, (err)=>{
           console.log("failed to load summary", err);
