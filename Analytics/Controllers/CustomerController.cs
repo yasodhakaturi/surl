@@ -18,53 +18,65 @@ namespace Analytics.Controllers
         // GET: Customer
         public JsonResult Index(string id)
         {
-        //    return View();
-        //}
-        //public JsonResult GetclientDetails()
-        //{
+            //    return View();
+            //}
+            //public JsonResult GetclientDetails()
+            //{
             List<ClientView1> objc = new List<ClientView1>();
             ClientView1 obj = new ClientView1();
             int id1 = Convert.ToInt32(id);
             try
             {
-                if (id == null && Session["id"] != null)
+                if (Session["id"] != null)
                 {
-                    //get all client detials
-                    objc = (from c in dc.Clients
-                            select new ClientView1
-                            {
-                                id = c.PK_ClientID,
-                                UserName = c.UserName,
-                                Email = c.Email,
-                                IsActive = c.IsActive
-                                //Password = c.Password
-                            }).ToList();
+                    if (id == null && Session["id"] != null)
+                    {
+                        //get all client detials
+                        objc = (from c in dc.Clients
+                                select new ClientView1
+                                {
+                                    id = c.PK_ClientID,
+                                    UserName = c.UserName,
+                                    Email = c.Email,
+                                    IsActive = c.IsActive
+                                    //Password = c.Password
+                                }).ToList();
+                        return Json(objc, JsonRequestBehavior.AllowGet);
+
+                    }
+                    else if (id != null && Session["id"] != null)
+                    {
+                        obj = (from c in dc.Clients
+                               where c.PK_ClientID == id1
+                               select new ClientView1
+                               {
+                                   id = c.PK_ClientID,
+                                   UserName = c.UserName,
+                                   Email = c.Email,
+                                   IsActive = c.IsActive
+                                   //Password = c.Password
+                               }).SingleOrDefault();
+                        return Json(obj, JsonRequestBehavior.AllowGet);
+
+                    }
+
+
                     return Json(objc, JsonRequestBehavior.AllowGet);
-
                 }
-                else if (id != null && Session["id"] != null)
+                else
                 {
-                obj = (from c in dc.Clients
-                                        where c.PK_ClientID==id1
-                                        select new ClientView1
-                                        {
-                                            id = c.PK_ClientID,
-                                            UserName = c.UserName,
-                                            Email = c.Email,
-                                            IsActive = c.IsActive
-                                            //Password = c.Password
-                                        }).SingleOrDefault();
-                return Json(obj, JsonRequestBehavior.AllowGet);
+                    Error obj_err = new Error();
+                    Errormessage errmesobj = new Errormessage();
+                    errmesobj.message = "Session Expired.";
+                    obj_err.error = errmesobj;
+                    return Json(obj_err, JsonRequestBehavior.AllowGet);
 
                 }
-                
-
-                return Json(objc,JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
-                return Json(objc,JsonRequestBehavior.AllowGet);
+                return Json(objc, JsonRequestBehavior.AllowGet);
             }
         }
         public JsonResult Search(string username, string email, bool? isactive)
@@ -112,7 +124,7 @@ namespace Analytics.Controllers
                                       IsActive = c.IsActive
                                   }).ToList();
                 }
-                return Json(obj_search,JsonRequestBehavior.AllowGet);
+                return Json(obj_search, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -128,7 +140,7 @@ namespace Analytics.Controllers
             }
         }
 
-               
+
         [System.Web.Mvc.HttpPost]
         public JsonResult AddClient(string UserName, string Email, string Password, bool IsActive)
         //public JsonResult AddClient([FromBody]JToken jObject)
@@ -143,36 +155,48 @@ namespace Analytics.Controllers
                 //bool IsActive = (bool)jObject["IsActive"];
                 Client isEmailExists = new OperationsBO().CheckClientEmail(Email);
                 //Client obj1 = new Client();
-                if (isEmailExists == null && Session["id"] != null)
+                if (Session["id"] != null)
                 {
-                    //add client details
-                    string ApiKey = new OperationsBO().GetApiKey();
-                    obj.UserName = UserName;
-                    obj.Email = Email;
-                    obj.Password = Password;
-                    obj.APIKey = ApiKey;
-                    obj.IsActive = IsActive;
-                    obj.Role = "Client";
-                    obj.CreatedDate = DateTime.Today;
-                    dc.Clients.Add(obj);
-                    dc.SaveChanges();
+                    if (isEmailExists == null && Session["id"] != null)
+                    {
+                        //add client details
+                        string ApiKey = new OperationsBO().GetApiKey();
+                        obj.UserName = UserName;
+                        obj.Email = Email;
+                        obj.Password = Password;
+                        obj.APIKey = ApiKey;
+                        obj.IsActive = IsActive;
+                        obj.Role = "Client";
+                        obj.CreatedDate = DateTime.Today;
+                        dc.Clients.Add(obj);
+                        dc.SaveChanges();
+                    }
+                    else
+                    {
+                        Error obj_err = new Error();
+                        Errormessage errmesobj = new Errormessage();
+                        errmesobj.message = "client already exists.";
+                        obj_err.error = errmesobj;
+
+                        return Json(obj_err, JsonRequestBehavior.AllowGet);
+                    }
+                    return Json(obj, JsonRequestBehavior.AllowGet);
+                    //obj.SetSerializableProperties(fields);
+                    //return Json(obj, new Newtonsoft.Json.JsonSerializerSettings()
+                    //{
+                    //    ContractResolver = new ShouldSerializeContractResolver1()
+                    //});
+
                 }
                 else
                 {
                     Error obj_err = new Error();
                     Errormessage errmesobj = new Errormessage();
-                    errmesobj.message = "client already exists.";
+                    errmesobj.message = "Session Expired.";
                     obj_err.error = errmesobj;
-
                     return Json(obj_err, JsonRequestBehavior.AllowGet);
+
                 }
-                return Json(obj, JsonRequestBehavior.AllowGet);
-                //obj.SetSerializableProperties(fields);
-                //return Json(obj, new Newtonsoft.Json.JsonSerializerSettings()
-                //{
-                //    ContractResolver = new ShouldSerializeContractResolver1()
-                //});
-                
             }
             catch (Exception ex)
             {
@@ -183,31 +207,43 @@ namespace Analytics.Controllers
                 obj_err.error = errmesobj;
 
                 return Json(obj_err, JsonRequestBehavior.AllowGet);
-               // return Json(obj,JsonRequestBehavior.AllowGet);
+                // return Json(obj,JsonRequestBehavior.AllowGet);
             }
         }
         //public JsonResult UpdateClient([FromBody]JToken jObject)
         [System.Web.Mvc.HttpPost]
-        public JsonResult UpdateClient(string UserName, string Email, bool IsActive)    
-    {
-             Client obj1 = new Client();
-            try{
-            //string id = (string)jObject["id"];
-            //string UserName = (string)jObject["UserName"];
-            //string Email = (string)jObject["Email"];
-            ////string Password = (string)jObject["Password"];
-            //bool? IsActive = (bool)jObject["IsActive"];
-             // int id1 = Convert.ToInt32(Session["id"]);
-            //string fields = "UserName,Email,IsActive";
-            //Client isEmailExists = new OperationsBO().CheckClientEmail(Email);
-            Client obj = dc.Clients.Where(c => c.Email == Email).SingleOrDefault();
-            if (obj != null && Session["id"]!=null)
-                new OperationsBO().UpdateClient(UserName, Email, IsActive);
-            else
-                obj = obj1;
-            return Json(obj, JsonRequestBehavior.AllowGet);
-                
-             }
+        public JsonResult UpdateClient(string UserName, string Email, bool IsActive)
+        {
+            Client obj1 = new Client();
+            try
+            {
+                //string id = (string)jObject["id"];
+                //string UserName = (string)jObject["UserName"];
+                //string Email = (string)jObject["Email"];
+                ////string Password = (string)jObject["Password"];
+                //bool? IsActive = (bool)jObject["IsActive"];
+                // int id1 = Convert.ToInt32(Session["id"]);
+                //string fields = "UserName,Email,IsActive";
+                //Client isEmailExists = new OperationsBO().CheckClientEmail(Email);
+                if (Session["id"] != null)
+                {
+                    Client obj = dc.Clients.Where(c => c.Email == Email).SingleOrDefault();
+                    if (obj != null && Session["id"] != null)
+                        new OperationsBO().UpdateClient(UserName, Email, IsActive);
+                    else
+                        obj = obj1;
+                    return Json(obj, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    Error obj_err = new Error();
+                    Errormessage errmesobj = new Errormessage();
+                    errmesobj.message = "Session Expired.";
+                    obj_err.error = errmesobj;
+                    return Json(obj_err, JsonRequestBehavior.AllowGet);
+
+                }
+            }
             catch (Exception ex)
             {
                 ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
@@ -220,36 +256,48 @@ namespace Analytics.Controllers
 
         }
 
-       // public JsonResult DeleteClient([FromBody]JToken jObject)
+        // public JsonResult DeleteClient([FromBody]JToken jObject)
         [System.Web.Mvc.HttpPost]
         public JsonResult DeleteClient(string Email)
         {
             Client obj1 = new Client();
-            try{
-            //string id = (string)jObject["id"];
-            //string UserName = (string)jObject["UserName"];
-            //string Email = (string)jObject["Email"];
-            //string Password = (string)jObject["Password"];
-            //bool? IsActive = (bool)jObject["IsActive"];
-            //int id1 = Convert.ToInt32(Session["id"]);
-            //string fields = "UserName,Email,IsActive";
-            Client obj = new OperationsBO().CheckClientEmail(Email);
-            //Client obj = dc.Clients.Where(c => c.PK_ClientID == isEmailExists.PK_ClientID).Select(c1 => c1).SingleOrDefault();
-            if (obj != null && Session["id"] != null)
+            try
             {
-                if (obj.IsActive == true)
+                //string id = (string)jObject["id"];
+                //string UserName = (string)jObject["UserName"];
+                //string Email = (string)jObject["Email"];
+                //string Password = (string)jObject["Password"];
+                //bool? IsActive = (bool)jObject["IsActive"];
+                //int id1 = Convert.ToInt32(Session["id"]);
+                //string fields = "UserName,Email,IsActive";
+                if (Session["id"] != null)
                 {
-                    obj.IsActive = false;
-                    obj.UpdatedDate = DateTime.UtcNow;
-                    dc.SaveChanges();
+                    Client obj = new OperationsBO().CheckClientEmail(Email);
+                    //Client obj = dc.Clients.Where(c => c.PK_ClientID == isEmailExists.PK_ClientID).Select(c1 => c1).SingleOrDefault();
+                    if (obj != null && Session["id"] != null)
+                    {
+                        if (obj.IsActive == true)
+                        {
+                            obj.IsActive = false;
+                            obj.UpdatedDate = DateTime.UtcNow;
+                            dc.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        obj = obj1;
+                    }
+                    return Json(obj, JsonRequestBehavior.AllowGet);
                 }
-            }
-            else
-            {
-                obj = obj1;  
-            }
-            return Json(obj, JsonRequestBehavior.AllowGet);
+                else
+                {
+                    Error obj_err = new Error();
+                    Errormessage errmesobj = new Errormessage();
+                    errmesobj.message = "Session Expired.";
+                    obj_err.error = errmesobj;
+                    return Json(obj_err, JsonRequestBehavior.AllowGet);
 
+                }
             }
             catch (Exception ex)
             {

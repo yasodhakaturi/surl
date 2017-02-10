@@ -222,6 +222,7 @@ namespace Analytics.Helpers.BO
             appobj.analytics = "/Analytics";
             appobj.landing = "/Home";
             obj.apiUrl = appobj;
+            obj.env = env;
             return obj;
         }
         public string IpAddress()
@@ -454,7 +455,20 @@ namespace Analytics.Helpers.BO
                 ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
             }
         }
-
+        public void UpdateHashid(int pk_uid, string Hashid)
+        {
+            try
+            {
+                //string strQuery = "Update MMPersonMessage set Status = 'R' where FKMessageId = (" + messageid + ") and FKToPersonId = (" + personid + ")";
+                DateTime utcdt = DateTime.UtcNow;
+                string strQuery = "Update UIDDATA set UniqueNumber = '" + Hashid + "' where PK_Uid ='" + pk_uid + "'";
+                SqlHelper.ExecuteNonQuery(Helper.ConnectionString, CommandType.Text, strQuery);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+            }
+        }
         //public CountsData GetCountsData(SqlDataReader myReader,string filterBy,string DateFrom,string DateTo)
         //{
 

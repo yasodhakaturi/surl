@@ -14,6 +14,7 @@ namespace Analytics.Controllers
         shortenURLEntities dc = new shortenURLEntities();
 
         public ActionResult Index()
+        
         {
             //var rnd = new Random();
             //string unsuffled = "0123456789ABCDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmopqrstuvwxyz-.!~*'_";
@@ -21,7 +22,13 @@ namespace Analytics.Controllers
             UserViewModel obj = new UserViewModel();
             string url = Request.Url.ToString();
             obj = new OperationsBO().GetViewConfigDetails(url);
+            //int t = 0;
+            //for (int r = 0; r < 100000; r++)
+            //{
 
+            //    Helper.GenerateUniqueIDs();
+            //    t = r;
+            //}
             return View(obj);
             //return View();
         }

@@ -20,6 +20,7 @@
         <EntityTypeShape EntityType="shortenURLModel.LoginHistory" Width="1.5" PointX="7.375" PointY="4.75" />
         <AssociationConnector Association="shortenURLModel.FK_UIDDATA_Client" />
         <AssociationConnector Association="shortenURLModel.FK_UIDDATA_UIDDATA" />
+        <EntityTypeShape EntityType="shortenURLModel.UniqueNumbers_Test" Width="1.5" PointX="7.375" PointY="7.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

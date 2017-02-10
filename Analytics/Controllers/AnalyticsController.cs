@@ -30,17 +30,19 @@ namespace Analytics.Controllers
         }
         public JsonResult GETSummary(string rid)
         {
-            
+
             DashBoardSummary obj = new DashBoardSummary();
 
             try
             {
-                if (Session["id"] != null && Session["id"] !="" && rid == null)
+                if (Session["id"] != null)
                 {
-                    int c_id = (int)Session["id"];
+                    if (Session["id"] != null && rid == null)
+                    {
+                        int c_id = (int)Session["id"];
 
-                    //if (cid != "" && cid != null)
-                    //{
+                        //if (cid != "" && cid != null)
+                        //{
                         Client obj_client = dc.Clients.Where(x => x.PK_ClientID == c_id).Select(y => y).SingleOrDefault();
                         if (obj_client != null)
                         {
@@ -104,18 +106,18 @@ namespace Analytics.Controllers
                            .Translate<month>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).SingleOrDefault();
 
                             List<recentCampaigns> objr = (from r in recentCampaigns
-                                                    select new recentCampaigns()
-                                                    {
-                                                        id = r.id,
-                                                        rid = r.rid,
-                                                        visits = r.visits,
-                                                        users = r.users,
-                                                        status = r.status,
-                                                        //crd = r.createdOn.Value.ToString("MM/dd/yyyyThh:mm:ss")
-                                                        createdOn = r.crd.Value.ToString("yyyy-MM-ddThh:mm:ss"),
-                                                        endDate = (r.endd==null)?null:(r.endd.Value.ToString("yyyy-MM-ddThh:mm:ss"))
+                                                          select new recentCampaigns()
+                                                          {
+                                                              id = r.id,
+                                                              rid = r.rid,
+                                                              visits = r.visits,
+                                                              users = r.users,
+                                                              status = r.status,
+                                                              //crd = r.createdOn.Value.ToString("MM/dd/yyyyThh:mm:ss")
+                                                              createdOn = r.crd.Value.ToString("yyyy-MM-ddThh:mm:ss"),
+                                                              endDate = (r.endd == null) ? null : (r.endd.Value.ToString("yyyy-MM-ddThh:mm:ss"))
 
-                                                    }).ToList();
+                                                          }).ToList();
 
                             activities obj_act = new activities();
                             obj.totalUrls = totalUrls;
@@ -129,19 +131,19 @@ namespace Analytics.Controllers
                             obj.activities = obj_act;
                         }
                         return Json(obj, JsonRequestBehavior.AllowGet);
-                    //}
-                    //else
-                    //{
-                    //    return Json(obj);
-                    //}
-                }
-                else if (Session["id"] != null && Session["id"] != "" && rid != null && rid != "")
-                {
-                    //if (cid != "" && cid != null)
-                    //{
-                    int c_id = (int)Session["id"];
+                        //}
+                        //else
+                        //{
+                        //    return Json(obj);
+                        //}
+                    }
+                    else if (Session["id"] != null && rid != null && rid != "")
+                    {
+                        //if (cid != "" && cid != null)
+                        //{
+                        int c_id = (int)Session["id"];
 
-                    CampaignSummary objc=new CampaignSummary();
+                        CampaignSummary objc = new CampaignSummary();
                         Client obj_client = dc.Clients.Where(x => x.PK_ClientID == c_id).Select(y => y).SingleOrDefault();
                         RIDDATA objr = dc.RIDDATAs.Where(x => x.ReferenceNumber == rid).Select(y => y).SingleOrDefault();
 
@@ -176,11 +178,11 @@ namespace Analytics.Controllers
                            .ObjectContext
                            .Translate<visits>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).SingleOrDefault();
 
-                           // // Move to locations result 
-                           // myReader.NextResult();
-                           // lastactivity lastactivity = ((IObjectContextAdapter)dc)
-                           //.ObjectContext
-                           //.Translate<lastactivity>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).SingleOrDefault();
+                            // // Move to locations result 
+                            // myReader.NextResult();
+                            // lastactivity lastactivity = ((IObjectContextAdapter)dc)
+                            //.ObjectContext
+                            //.Translate<lastactivity>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).SingleOrDefault();
 
                             // Move to locations result 
                             myReader.NextResult();
@@ -208,18 +210,26 @@ namespace Analytics.Controllers
                             obj_act.last7days = last7days;
                             obj_act.month = month;
                             objc.activities = obj_act;
-                        
+
                         }
                         return Json(objc, JsonRequestBehavior.AllowGet);
 
-                        }
-                else
+                    }
+                    //else
+                    //{
+                    //    Error obj_err = new Error();
+                    //    Errormessage errmesobj = new Errormessage();
+                    //    errmesobj.message = "unauthorized user.";
+                    //    obj_err.error = errmesobj;
+
+                    //    return Json(obj_err, JsonRequestBehavior.AllowGet);
+                    //}
+                }
                 {
                     Error obj_err = new Error();
                     Errormessage errmesobj = new Errormessage();
-                    errmesobj.message = "unauthorized user.";
+                    errmesobj.message = "Session Expired.";
                     obj_err.error = errmesobj;
-
                     return Json(obj_err, JsonRequestBehavior.AllowGet);
                 }
             }
@@ -235,21 +245,21 @@ namespace Analytics.Controllers
             }
         }
 
-         
-            
+
+
         public JsonResult GETAllCampaigns()
         {
             List<CampaignsList> objc = new List<CampaignsList>();
             try
             {
                 int c_id;
-                if (Session["id"] != null &&  Session["id"].ToString()!="")
+                if (Session["id"] != null&&Helper.CurrentUserRole.ToLower()=="client")
                 {
                     //if (cid != "" && cid != null)
                     //{
                     //c_id = Convert.ToInt32(cid);
                     c_id = (int)Session["id"];
-                    Client obj_client = dc.Clients.Where(x => x.PK_ClientID ==c_id).Select(y => y).SingleOrDefault();
+                    Client obj_client = dc.Clients.Where(x => x.PK_ClientID == c_id).Select(y => y).SingleOrDefault();
                     if (obj_client != null)
                     {
                         //objc = (from r in dc.RIDDATAs
@@ -269,7 +279,7 @@ namespace Analytics.Controllers
                                                           id = r.PK_Rid,
                                                           rid = r.ReferenceNumber,
                                                           createdOn = r.CreatedDate,
-                                                          CampaignName=r.CampaignName,
+                                                          CampaignName = r.CampaignName,
                                                           //createdOn=dateformatt(r.CreatedDate),
                                                           endDate = r.EndDate
 
@@ -305,11 +315,38 @@ namespace Analytics.Controllers
                     //else
                     //    return Json(objc);
                 }
+                else if(Session["id"]!=null && Helper.CurrentUserRole.ToLower()=="admin")
+                {
+                    List<CampaignsList1> objc1 = (from r in dc.RIDDATAs
+                                                  select new CampaignsList1()
+                                                  {
+                                                      id = r.PK_Rid,
+                                                      rid = r.ReferenceNumber,
+                                                      createdOn = r.CreatedDate,
+                                                      CampaignName = r.CampaignName,
+                                                      //createdOn=dateformatt(r.CreatedDate),
+                                                      endDate = r.EndDate
+
+                                                  }).OrderByDescending(x => x.createdOn).ToList();
+                    objc = (from r in objc1
+                            select new CampaignsList()
+                            {
+                                id = r.id,
+                                rid = r.rid,
+                                createdOn = r.createdOn.Value.ToString("yyyy-MM-ddThh:mm:ss"),
+                                CampaignName = r.CampaignName,
+                                //createdOn=dateformatt(r.CreatedDate),
+                                endDate = (r.endDate == null) ? null : (r.endDate.Value.ToString("yyyy-MM-ddThh:mm:ss"))
+
+                            }).ToList();
+                    return Json(objc, JsonRequestBehavior.AllowGet);
+
+                }
                 else
                 {
                     Error obj_err = new Error();
                     Errormessage errmesobj = new Errormessage();
-                    errmesobj.message = "unauthorized user.";
+                    errmesobj.message = "Session Expired.";
                     obj_err.error = errmesobj;
 
                     return Json(obj_err, JsonRequestBehavior.AllowGet);
@@ -336,8 +373,8 @@ namespace Analytics.Controllers
                 if (rid != "" && rid != null && Session["id"] != null)
                 {
                     CountsData countobj = new CountsData();
-                   // long decodedvalue = new ConvertionBO().BaseToLong(Fk_Uniqueid);
-                   //int Uniqueid_SHORTURLDATA = Convert.ToInt32(decodedvalue);
+                    // long decodedvalue = new ConvertionBO().BaseToLong(Fk_Uniqueid);
+                    //int Uniqueid_SHORTURLDATA = Convert.ToInt32(decodedvalue);
                     //int? rid = (from u in dc.UIDandRIDDatas
                     //            where u.PK_UniqueId == Uniqueid_SHORTURLDATA
                     //            select u.UIDorRID).SingleOrDefault();
@@ -384,21 +421,21 @@ namespace Analytics.Controllers
                       .Translate<BrowserWiseData>(myReader, "SHORTURLDATAs", MergeOption.AppendOnly).ToList();
 
                         List<DayWiseData> objr = new List<DayWiseData>();
-                        if(activity!=null)
-                        { 
-                        objr = (from r in activity
-                                                  select new DayWiseData()
-                                                  {
-                                                      RequestedDate=r.RequestedDate.Value.ToString("yyyy-MM-ddThh:mm:ss"),
-                                                      RequestCount = r.RequestCount
-                                                      //r.crd.Value.ToString("yyyy-MM-ddThh:mm:ss"),
+                        if (activity != null)
+                        {
+                            objr = (from r in activity
+                                    select new DayWiseData()
+                                    {
+                                        RequestedDate = r.RequestedDate.Value.ToString("yyyy-MM-ddThh:mm:ss"),
+                                        RequestCount = r.RequestCount
+                                        //r.crd.Value.ToString("yyyy-MM-ddThh:mm:ss"),
 
-                                                  }).ToList();
-                    }
+                                    }).ToList();
+                        }
                         //List<DayWiseData> objr = (from r in activity
                         //                              select new DayWiseData()
                         //                              {
-                                                          
+
                         //                                point=  r.RequestedDate.Value.ToString("yyyy-MM-ddThh:mm:ss")+','+r.RequestCount
                         //                                  //r.crd.Value.ToString("yyyy-MM-ddThh:mm:ss"),
 
@@ -409,16 +446,15 @@ namespace Analytics.Controllers
                         countobj.platforms = platforms;
 
                     }
-                        return Json(countobj, JsonRequestBehavior.AllowGet);
-                    
-                    }
+                    return Json(countobj, JsonRequestBehavior.AllowGet);
+
+                }
                 else
-               
                 {
                     Error obj_err = new Error();
                     Errormessage errmesobj = new Errormessage();
-                    if(Session["id"] == null)
-                     errmesobj.message = "please login";
+                    if (Session["id"] == null)
+                        errmesobj.message = "Session Expired";
                     else
                         errmesobj.message = "please pass reference number";
 

@@ -104,7 +104,7 @@ namespace Analytics
                 Client cl_obj = (from c in dc.Clients
                                  where c.APIKey == api_key
                                  select c).SingleOrDefault();
-                string Uniqueid="";
+                string Hashid = ""; int pk_uid = 0;
                 if(cl_obj != null)
                 { 
                 if (referencenumber.Trim() != "" && longurl.Trim() != "" && mobilenumber.Trim() != "")
@@ -124,21 +124,24 @@ namespace Analytics
                     if (objrid!=null)
                     {
                         //check data in UID table
-                        Uniqueid = (from registree in dc.UIDDATAs
+                        Hashid = (from registree in dc.UIDDATAs
                                         where registree.ReferenceNumber.Trim() == referencenumber.Trim() &&
                                         registree.Longurl.Trim() == longurl.Trim() &&
                                         registree.MobileNumber.Trim() == mobilenumber.Trim()
                                         select registree.UniqueNumber).SingleOrDefault();
                         //if data found in UIDDATA insert data into UIDDATA 
-                        if (Uniqueid==null)
+                        if (Hashid == null)
                         {
-                            Uniqueid = Helper.GetRandomAlphanumericString(5);
-                            new DataInsertionBO().InsertUIDdata(Uniqueid_RID, objrid.FK_ClientId, referencenumber, longurl, mobilenumber, Uniqueid);
-                            Uniqueid = (from registree in dc.UIDDATAs
+                            //Uniqueid = Helper.GetRandomAlphanumericString(5);
+                            new DataInsertionBO().InsertUIDdata(Uniqueid_RID, objrid.FK_ClientId, referencenumber, longurl, mobilenumber);
+                           
+                            pk_uid = (from registree in dc.UIDDATAs
                                             where registree.ReferenceNumber.Trim() == referencenumber.Trim() &&
                                             registree.Longurl.Trim() == longurl.Trim() &&
                                             registree.MobileNumber.Trim() == mobilenumber.Trim()
-                                            select registree.UniqueNumber).SingleOrDefault();
+                                            select registree.PK_Uid).SingleOrDefault();
+                            Hashid = Helper.GetHashID(pk_uid);
+                            new OperationsBO().UpdateHashid(pk_uid, Hashid);
                         }
 
                         //if data found in uiddata table get data frim UIDRIDDATA 
@@ -154,7 +157,7 @@ namespace Analytics
                         //obj.Base64Value = base64value;
                         //dc.SaveChanges();
                         //return base64value;
-                        return "http://g0.pe/"+Uniqueid;
+                        return "http://g0.pe/" + Hashid;
 
                     }
                     else
@@ -162,6 +165,7 @@ namespace Analytics
                         //UID_UIDRID = "NULL";
                         return "Referencenumber not valid";
                     }
+                    //return "";
                 }
                 else
                 {

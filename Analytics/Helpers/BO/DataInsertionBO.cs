@@ -19,7 +19,7 @@ namespace Analytics.Helpers.BO
         SqlConnection lSQLConn = null;
         SqlCommand lSQLCmd = new SqlCommand();
         string connStr = "";
-        public void InsertUIDdata(int fk_rid, int? fk_clientid, string referencenumber, string longurl, string mobilenumber, string Uniqueid)
+        public void InsertUIDdata(int fk_rid, int? fk_clientid, string referencenumber, string longurl, string mobilenumber)
         {
             connStr = ConfigurationManager.ConnectionStrings["shortenURLConnectionString"].ConnectionString;
             try
@@ -34,7 +34,6 @@ namespace Analytics.Helpers.BO
                 lSQLCmd.Parameters.Add(new SqlParameter("@referencenumber", referencenumber));
                 lSQLCmd.Parameters.Add(new SqlParameter("@longurl", longurl));
                 lSQLCmd.Parameters.Add(new SqlParameter("@mobilenumber", mobilenumber));
-                lSQLCmd.Parameters.Add(new SqlParameter("@Uniqueid", Uniqueid));
 
                 lSQLCmd.Connection = lSQLConn;
                 lSQLCmd.ExecuteNonQuery();

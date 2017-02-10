@@ -34,6 +34,7 @@ namespace Analytics
         public virtual DbSet<ErrorLog> ErrorLogs { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<LoginHistory> LoginHistories { get; set; }
+        public virtual DbSet<UniqueNumbers_Test> UniqueNumbers_Test { get; set; }
     
         public virtual int InsertintoUIDRID(string typediff, Nullable<int> uidorrid)
         {
@@ -69,7 +70,7 @@ namespace Analytics
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertRIDData", campaignNameParameter, referencenumberParameter, pwdParameter, clientidParameter);
         }
     
-        public virtual int InsertSHORTURLData(string ipv4, string ipv6, string browser, string browser_version, string city, string region, string country, string countrycode, string req_url, string useragent, string hostname, string deviceType, string isMobiledevice, Nullable<int> fk_uid, Nullable<int> fk_rid, Nullable<int> fK_clientid, Nullable<int> uniqueid)
+        public virtual int InsertSHORTURLData(string ipv4, string ipv6, string browser, string browser_version, string city, string region, string country, string countrycode, string req_url, string useragent, string hostname, string deviceType, string isMobiledevice, Nullable<int> fk_uid, Nullable<int> fk_rid, Nullable<int> fK_clientid)
         {
             var ipv4Parameter = ipv4 != null ?
                 new ObjectParameter("ipv4", ipv4) :
@@ -135,11 +136,7 @@ namespace Analytics
                 new ObjectParameter("FK_clientid", fK_clientid) :
                 new ObjectParameter("FK_clientid", typeof(int));
     
-            var uniqueidParameter = uniqueid.HasValue ?
-                new ObjectParameter("uniqueid", uniqueid) :
-                new ObjectParameter("uniqueid", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertSHORTURLData", ipv4Parameter, ipv6Parameter, browserParameter, browser_versionParameter, cityParameter, regionParameter, countryParameter, countrycodeParameter, req_urlParameter, useragentParameter, hostnameParameter, deviceTypeParameter, isMobiledeviceParameter, fk_uidParameter, fk_ridParameter, fK_clientidParameter, uniqueidParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertSHORTURLData", ipv4Parameter, ipv6Parameter, browserParameter, browser_versionParameter, cityParameter, regionParameter, countryParameter, countrycodeParameter, req_urlParameter, useragentParameter, hostnameParameter, deviceTypeParameter, isMobiledeviceParameter, fk_uidParameter, fk_ridParameter, fK_clientidParameter);
         }
     
         public virtual int InsertUIDData(Nullable<int> fk_rid, Nullable<int> fk_clientid, string referencenumber, string longurl, string mobilenumber, string uniqueid)
