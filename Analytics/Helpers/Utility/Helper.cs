@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HashidsNet;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -11,6 +12,84 @@ namespace Analytics.Helpers.Utility
 {
     public class Helper
     {
+        public static string GetHashID(int id)
+        {
+            var salt = new Hashids("this is my salt", 5);
+            var hashid = salt.Encode(id);
+            return hashid;
+        }
+
+        public static void GenerateUniqueIDs()
+        
+        {
+            int length = 5; int t=0;
+            shortenURLEntities dc = new shortenURLEntities();
+            const string alphanumericCharacters =
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+                "abcdefghijklmnopqrstuvwxyz" +
+                "0123456789";
+            try
+            {
+                //for (int r = 0; r < 1000; r++)
+                //{
+                    var characterArray = alphanumericCharacters.Distinct().ToArray();
+                    //if (characterArray.Length == 0)
+                    //    throw new ArgumentException("characterSet must not be empty", "characterSet");
+
+                    var bytes = new byte[length * 8];
+                    new RNGCryptoServiceProvider().GetBytes(bytes);
+                    var result = new char[length];
+                    for (int i1 = 0; i1 < length; i1++)
+                    {
+                        ulong value = BitConverter.ToUInt64(bytes, i1 * 8);
+                        result[i1] = characterArray[value % (uint)characterArray.Length];
+                    }
+                    UniqueNumbers_Test UOBJ = new UniqueNumbers_Test();
+                    UOBJ.uniqueid = new string(result);
+                    dc.UniqueNumbers_Test.Add(UOBJ);
+                    dc.SaveChanges();
+                    //t = r;
+               // }
+               //int t1 = t;
+            }
+            catch(Exception ex)
+            {
+                t++;
+            }
+
+        }
+
+        public static string GetRandomAlphanumericString(int length)
+        {
+            const string alphanumericCharacters =
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+                "abcdefghijklmnopqrstuvwxyz" +
+                "0123456789";
+            return GetRandomString(length, alphanumericCharacters);
+        }
+
+        public static string GetRandomString(int length, IEnumerable<char> characterSet)
+        {
+            //if (length < 0)
+            //    throw new ArgumentException("length must not be negative", "length");
+            //if (length > int.MaxValue / 8) // 250 million chars ought to be enough for anybody
+            //    throw new ArgumentException("length is too big", "length");
+            //if (characterSet == null)
+            //    throw new ArgumentNullException("characterSet");
+            var characterArray = characterSet.Distinct().ToArray();
+            //if (characterArray.Length == 0)
+            //    throw new ArgumentException("characterSet must not be empty", "characterSet");
+
+            var bytes = new byte[length * 8];
+            new RNGCryptoServiceProvider().GetBytes(bytes);
+            var result = new char[length];
+            for (int i = 0; i < length; i++)
+            {
+                ulong value = BitConverter.ToUInt64(bytes, i * 8);
+                result[i] = characterArray[value % (uint)characterArray.Length];
+            }
+            return new string(result);
+        }
         public static byte[] GetHashKey(string hashKey)
         {
             // Initialise
@@ -125,7 +204,15 @@ namespace Analytics.Helpers.Utility
 
             }
         }
-       
+        public static bool CurrentUserActiveStatus
+        {
+            get
+            {
+
+                return Convert.ToBoolean(HttpContext.Current.Session["userdata"].ToString().Split('^')[4]);
+
+            }
+        }
 
         //internal static string Decrypt(byte[] key, string encryptedString)
         //{

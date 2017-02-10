@@ -25,30 +25,30 @@ namespace Analytics.Helpers.BO
         SqlCommand lSQLCmd = new SqlCommand();
 
 
-        public bool CheckUniqueid(int Uniqueid_UIDRID, string type)
+        public UIDDATA CheckUniqueid(string Uniqueid_UIDRID)
         {
             try
             {
-                bool check;
-                int un_UIDRID = 0;
-                un_UIDRID = (from uniid in dc.UIDandRIDDatas
-                             where uniid.PK_UniqueId == Uniqueid_UIDRID && uniid.TypeDiff == type
-                             select uniid.PK_UniqueId).SingleOrDefault();
-                if (un_UIDRID != 0)
+               // bool check;
+                UIDDATA un_UID = new UIDDATA();
+                un_UID = (from uniid in dc.UIDDATAs
+                             where uniid.UniqueNumber == Uniqueid_UIDRID
+                             select uniid).SingleOrDefault();
+                if (un_UID != null)
                 {
-                    check = true;
-                    return check;
+                    //check = true;
+                    return un_UID;
                 }
                 else
                 {
-                    check = false;
-                    return check;
+                    //check = false;
+                    return un_UID;
                 }
             }
             catch (Exception ex)
             {
                 ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
-                return false;
+                return null;
             }
         }
         public bool CheckPassword_RIDDATA(int? rid, string pwd)
@@ -71,34 +71,33 @@ namespace Analytics.Helpers.BO
                 return false;
             }
         }
-        public int GetUniqueid(int Uniqueid_UIDRID, string type)
-        {
-            try
-            {
-                int un_UIDRID = 0;
-                un_UIDRID = (from uniid in dc.UIDandRIDDatas
-                             where uniid.UIDorRID == Uniqueid_UIDRID && uniid.TypeDiff == type
-                             select uniid.PK_UniqueId).SingleOrDefault();
-                if (un_UIDRID != 0)
-                    return un_UIDRID;
-                else
-                    return un_UIDRID;
-            }
-            catch (Exception ex)
-            {
-                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
-                return 0;
-            }
-        }
-        public string GetLongURL(int Uniqueid_ShortURL)
+        //public int GetUniqueid(int Uniqueid_UIDRID, string type)
+        //{
+        //    try
+        //    {
+        //        int un_UIDRID = 0;
+        //        un_UIDRID = (from uniid in dc.UIDandRIDDatas
+        //                     where uniid.UIDorRID == Uniqueid_UIDRID && uniid.TypeDiff == type
+        //                     select uniid.PK_UniqueId).SingleOrDefault();
+        //        if (un_UIDRID != 0)
+        //            return un_UIDRID;
+        //        else
+        //            return un_UIDRID;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+        //        return 0;
+        //    }
+        //}
+        public string GetLongURL(string Uniqueid_ShortURL)
         {
             try
             {
                 string LongURL = "";
-                LongURL = (from uniid in dc.UIDandRIDDatas
-                           join uidtable in dc.UIDDATAs on uniid.UIDorRID equals uidtable.PK_Uid
-                           where uniid.PK_UniqueId == Uniqueid_ShortURL
-                           select uidtable.Longurl).SingleOrDefault();
+                LongURL = (from uniid in dc.UIDDATAs
+                           where uniid.UniqueNumber == Uniqueid_ShortURL
+                           select uniid.Longurl).SingleOrDefault();
                 if (LongURL != "")
                     return LongURL;
                 else
@@ -111,86 +110,90 @@ namespace Analytics.Helpers.BO
             }
 
         }
-        public PWDDataBO GetUIDRIDDATA(int Uniqueid_UIDRID)
-        {
-            try
-            {
-                string pwd = null;
+        //public PWDDataBO GetUIDRIDDATA(int Uniqueid_UIDRID)
+        //{
+        //    try
+        //    {
+        //        string pwd = null;
                 
-                PWDDataBO obj = (from uniid in dc.UIDandRIDDatas
-                               where uniid.PK_UniqueId == Uniqueid_UIDRID  
-                               select new PWDDataBO
-                             {
-                                 typediff=uniid.TypeDiff,
-                                 UIDorRID=uniid.UIDorRID
-                             }).SingleOrDefault();
-                if (obj != null)
-                {
-                    if (obj.typediff == "2")
-                    {
-                        pwd = (from r in dc.RIDDATAs
-                               where r.PK_Rid == obj.UIDorRID
-                               select r.Pwd).SingleOrDefault();
-                        obj.pwd = pwd;
-                    }
-                    else
-                    {
-                        obj.pwd = pwd;
-                    }
-                    return obj;
-                }
-                else
-                    return null;
+        //        PWDDataBO obj = (from uniid in dc.UIDandRIDDatas
+        //                       where uniid.PK_UniqueId == Uniqueid_UIDRID  
+        //                       select new PWDDataBO
+        //                     {
+        //                         typediff=uniid.TypeDiff,
+        //                         UIDorRID=uniid.UIDorRID
+        //                     }).SingleOrDefault();
+        //        if (obj != null)
+        //        {
+        //            if (obj.typediff == "2")
+        //            {
+        //                pwd = (from r in dc.RIDDATAs
+        //                       where r.PK_Rid == obj.UIDorRID
+        //                       select r.Pwd).SingleOrDefault();
+        //                obj.pwd = pwd;
+        //            }
+        //            else
+        //            {
+        //                obj.pwd = pwd;
+        //            }
+        //            return obj;
+        //        }
+        //        else
+        //            return null;
                 
-            }
-            catch (Exception ex)
-            {
-                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
-                return null;
-            }
-        }
-        public int? GetUIDRID(int Uniqueid_UIDRID, string type)
-        {
-            try
-            {
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+        //        return null;
+        //    }
+        //}
+        //public int? GetUIDRID(int Uniqueid_UIDRID, string type)
+        //{
+        //    try
+        //    {
                 
-                int? un_UIDRID = 0;
-                un_UIDRID = (from uniid in dc.UIDandRIDDatas
-                             where uniid.PK_UniqueId == Uniqueid_UIDRID && uniid.TypeDiff == type
-                             select uniid.UIDorRID).SingleOrDefault();
-                if (un_UIDRID != 0)
-                {
+        //        int? un_UIDRID = 0;
+        //        un_UIDRID = (from uniid in dc.UIDandRIDDatas
+        //                     where uniid.PK_UniqueId == Uniqueid_UIDRID && uniid.TypeDiff == type
+        //                     select uniid.UIDorRID).SingleOrDefault();
+        //        if (un_UIDRID != 0)
+        //        {
 
-                    return un_UIDRID;
-                }
-                else
-                {
+        //            return un_UIDRID;
+        //        }
+        //        else
+        //        {
 
-                    return un_UIDRID;
-                }
-            }
-            catch (Exception ex)
-            {
-                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
-                return 0;
-            }
-        }
+        //            return un_UIDRID;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+        //        return 0;
+        //    }
+        //}
 
         public UserViewModel GetViewConfigDetails(string url)
         {
             UserViewModel obj = new UserViewModel();
             string env = ""; string appurl = "";
 
-             if (url.Contains(".com") || url.Contains("www."))
-              env = "prod";
-             else
-             env = "dev"; 
+            // if (url.Contains(".com") || url.Contains("www."))
+            //  env = "prod";
+            // else
+            // env = "dev"; 
 
-            obj.env = env;
-            if (url.Contains(".com") || url.Contains("www."))
-                appurl = url;
-            else
-                appurl = "http://localhost:3000";
+            //obj.env = env;
+            //if (url.Contains(".com") || url.Contains("www."))
+            //    appurl = url;
+            //else
+            //    appurl = "http://localhost:3000";
+
+            env = ConfigurationManager.AppSettings["env"].ToString();
+            appurl = ConfigurationManager.AppSettings["appurl"].ToString();
+
 
             obj.appUrl = appurl;
             UserInfo user_obj = new UserInfo();
@@ -219,7 +222,18 @@ namespace Analytics.Helpers.BO
             appobj.analytics = "/Analytics";
             appobj.landing = "/Home";
             obj.apiUrl = appobj;
+            obj.env = env;
             return obj;
+        }
+        public string IpAddress()
+        {
+            string strIpAddress;
+            strIpAddress = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            if (strIpAddress == null)
+            {
+                strIpAddress = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
+            }
+            return strIpAddress;
         }
         public void Monitize(string Shorturl)
         
@@ -227,13 +241,18 @@ namespace Analytics.Helpers.BO
             try
             {
                 string longurl = "";
-                long decodedvalue = new ConvertionBO().BaseToLong(Shorturl);
-                int Uniqueid_SHORTURLDATA = Convert.ToInt32(decodedvalue);
-                if (new OperationsBO().CheckUniqueid(Uniqueid_SHORTURLDATA, "1"))
+                //long decodedvalue = new ConvertionBO().BaseToLong(Shorturl);
+                //int Uniqueid_SHORTURLDATA = Convert.ToInt32(decodedvalue);
+                int Fk_UID = 0;
+                UIDDATA uid_obj = new UIDDATA();
+                uid_obj = new OperationsBO().CheckUniqueid(Shorturl);
+                //if (new OperationsBO().CheckUniqueid(Shorturl))
+                if (uid_obj != null)
                 {
-                    int? Fk_UID = (from u in dc.UIDandRIDDatas
-                                   where u.PK_UniqueId == Uniqueid_SHORTURLDATA && u.TypeDiff == "1"
-                                   select u.UIDorRID).SingleOrDefault();
+                    //int? Fk_UID = (from u in dc.UIDandRIDDatas
+                    //               where u.PK_UniqueId == Uniqueid_SHORTURLDATA && u.TypeDiff == "1"
+                    //               select u.UIDorRID).SingleOrDefault();
+                    Fk_UID = uid_obj.PK_Uid;
                     int? FK_RID = (from u in dc.UIDDATAs
                                    where u.PK_Uid == Fk_UID
                                    select u.FK_RID).SingleOrDefault();
@@ -241,7 +260,8 @@ namespace Analytics.Helpers.BO
                                         where r.PK_Rid == FK_RID
                                         select r.FK_ClientId).SingleOrDefault();
                     //retrive ipaddress and browser
-                    string ipv4 = new ConvertionBO().GetIP4Address();
+                    //string ipv4 = new ConvertionBO().GetIP4Address();
+                    string ipv4 = IpAddress();
                     string ipv6 = HttpContext.Current.Request.UserHostAddress;
                     string browser = HttpContext.Current.Request.Browser.Browser;
                     string browserversion = HttpContext.Current.Request.Browser.Version;
@@ -252,7 +272,8 @@ namespace Analytics.Helpers.BO
                     string devicetype = HttpContext.Current.Request.Browser.Platform;
                     string ismobiledevice = HttpContext.Current.Request.Browser.IsMobileDevice.ToString();
                     //retrieve longurl from uid
-                    longurl = new OperationsBO().GetLongURL(Uniqueid_SHORTURLDATA);
+                    longurl = uid_obj.Longurl;
+                    //longurl = new OperationsBO().GetLongURL(Uniqueid_SHORTURLDATA);
                     //if(longurl!=null)
                     //    HttpContext.Current.Response.Redirect(longurl);
 
@@ -289,7 +310,7 @@ namespace Analytics.Helpers.BO
                             CountryCode = (string)obj["country_code"];
                         }
                     }
-                    new DataInsertionBO().InsertShortUrldata(ipv4, ipv6, browser, browserversion, City, Region, Country, CountryCode, req_url, useragent, hostname, devicetype, ismobiledevice,Fk_UID,FK_RID,FK_clientid, Uniqueid_SHORTURLDATA);
+                    new DataInsertionBO().InsertShortUrldata(ipv4, ipv6, browser, browserversion, City, Region, Country, CountryCode, req_url, useragent, hostname, devicetype, ismobiledevice,Fk_UID,FK_RID,FK_clientid);
                 }
                 //WebOperationContext.Current.OutgoingResponse.StatusCode = System.Net.HttpStatusCode.Redirect;
                 //if (!longurl.StartsWith("http://") && !longurl.StartsWith("https://"))
@@ -369,27 +390,27 @@ namespace Analytics.Helpers.BO
                 ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
             }
         }
-        public void InsertUIDRIDData(string referencenumber)
-        {
-            try
-            {
-            int rid = dc.RIDDATAs.Where(r => r.ReferenceNumber == referencenumber).Select(x => x.PK_Rid).SingleOrDefault();
-            lSQLConn = new SqlConnection(connStr);
-            SqlDataReader myReader;
-            lSQLConn.Open();
-            lSQLCmd.CommandType = CommandType.StoredProcedure;
-            lSQLCmd.CommandText = "InsertintoUIDRID";
-            //lSQLCmd.Parameters.Add(new SqlParameter("@Fk_Uniqueid", Uniqueid_SHORTURLDATA));
-            lSQLCmd.Parameters.Add(new SqlParameter("@typediff", "2"));
-            lSQLCmd.Parameters.Add(new SqlParameter("@uidorrid", rid));
-            lSQLCmd.Connection = lSQLConn;
-            myReader = lSQLCmd.ExecuteReader();
-            }
-            catch (Exception ex)
-            {
-                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
-            }
-        }
+        //public void InsertUIDRIDData(string referencenumber)
+        //{
+        //    try
+        //    {
+        //    int rid = dc.RIDDATAs.Where(r => r.ReferenceNumber == referencenumber).Select(x => x.PK_Rid).SingleOrDefault();
+        //    lSQLConn = new SqlConnection(connStr);
+        //    SqlDataReader myReader;
+        //    lSQLConn.Open();
+        //    lSQLCmd.CommandType = CommandType.StoredProcedure;
+        //    lSQLCmd.CommandText = "InsertintoUIDRID";
+        //    //lSQLCmd.Parameters.Add(new SqlParameter("@Fk_Uniqueid", Uniqueid_SHORTURLDATA));
+        //    lSQLCmd.Parameters.Add(new SqlParameter("@typediff", "2"));
+        //    lSQLCmd.Parameters.Add(new SqlParameter("@uidorrid", rid));
+        //    lSQLCmd.Connection = lSQLConn;
+        //    myReader = lSQLCmd.ExecuteReader();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+        //    }
+        //}
 
 
         public bool CheckReferenceNumber(string referencenumber)
@@ -415,15 +436,18 @@ namespace Analytics.Helpers.BO
 
         }
 
-        public void UpdateCampaign(string referencenumber, string password, bool? isactive)
+        public void UpdateCampaign(string referencenumber,string CampaignName, string password, bool? isactive)
         {
             try
             {
                 string strQuery="";
-                if(password!="")
-                 strQuery = "Update RIDDATA set Pwd=" + password + ",IsActive=" + isactive + " where ReferenceNumber =" + referencenumber + "";
-                else
-                 strQuery = "Update RIDDATA set IsActive=" + isactive + " where ReferenceNumber =" + referencenumber + "";
+                DateTime dt = DateTime.UtcNow;
+                if (password != null && CampaignName!=null)
+                    strQuery = "Update RIDDATA set CampaignName='" + CampaignName + "',Pwd='" + password + "',IsActive='" + isactive + "',UpdatedDate='" + dt + "' where ReferenceNumber ='" + referencenumber + "'";
+                else if(CampaignName!=null && password==null)
+                    strQuery = "Update RIDDATA set CampaignName='" + CampaignName + "',IsActive='" + isactive + "',UpdatedDate='" + dt + "' where ReferenceNumber ='" + referencenumber + "'";
+                else if (CampaignName == null && password != null)
+                    strQuery = "Update RIDDATA set Pwd='" + password + "',IsActive='" + isactive + "',UpdatedDate='" + dt + "' where ReferenceNumber ='" + referencenumber + "'";
                 SqlHelper.ExecuteNonQuery(Helper.ConnectionString, CommandType.Text, strQuery);
             }
             catch (Exception ex)
@@ -431,7 +455,20 @@ namespace Analytics.Helpers.BO
                 ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
             }
         }
-
+        public void UpdateHashid(int pk_uid, string Hashid)
+        {
+            try
+            {
+                //string strQuery = "Update MMPersonMessage set Status = 'R' where FKMessageId = (" + messageid + ") and FKToPersonId = (" + personid + ")";
+                DateTime utcdt = DateTime.UtcNow;
+                string strQuery = "Update UIDDATA set UniqueNumber = '" + Hashid + "' where PK_Uid ='" + pk_uid + "'";
+                SqlHelper.ExecuteNonQuery(Helper.ConnectionString, CommandType.Text, strQuery);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+            }
+        }
         //public CountsData GetCountsData(SqlDataReader myReader,string filterBy,string DateFrom,string DateTo)
         //{
 

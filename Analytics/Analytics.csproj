@@ -53,6 +53,10 @@
       <HintPath>..\packages\AttributeRouting.Core.Http.3.5.6\lib\net40\AttributeRouting.Web.Http.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Hashids.net, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hashids.net.1.2.2\lib\net45\Hashids.net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
@@ -218,25 +222,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AnalyticsModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="APIControllers\AnalyticsApiController.cs" />
-    <Compile Include="APIControllers\CampaignApiController.cs" />
-    <Compile Include="APIControllers\CustomerApiController.cs" />
     <Compile Include="App_Start\ApplicationUser.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Client.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AnalyticsController.cs" />
-    <Compile Include="Controllers\AngularTemplatesController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\CampaignController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="ErrorLog.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
@@ -303,10 +303,10 @@
     <Compile Include="sysdiagram.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="UIDandRIDData.cs">
+    <Compile Include="UIDDATA.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="UIDDATA.cs">
+    <Compile Include="UniqueNumbers_Test.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
     <Compile Include="WebForm1.aspx.cs">
@@ -1284,6 +1284,7 @@
   <ItemGroup>
     <Folder Include="Views\Auth\" />
     <Folder Include="Views\Campaign\" />
+    <Folder Include="Views\Customer\" />
     <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>

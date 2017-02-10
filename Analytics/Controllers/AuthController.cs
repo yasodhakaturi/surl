@@ -13,13 +13,107 @@ namespace Analytics.Controllers
 {
     public class AuthController : Controller
     {
+        shortenURLEntities dc = new shortenURLEntities();
         // GET: Auth
         public ActionResult Index()
         {
             return View();
         }
-       
-        
+        public JsonResult ReferenceNumberVerification(string ReferenceNumber, string Password)
+        {
+            try
+            {
+                CampaignView1 objc = new CampaignView1();
+                if (ReferenceNumber != null && ReferenceNumber != "" && Password == null)
+                {
+                    RIDDATA obj = dc.RIDDATAs.Where(x => x.ReferenceNumber == ReferenceNumber).Select(y => y).SingleOrDefault();
+                    if (obj != null)
+                    {
+                         objc = (from c in dc.RIDDATAs
+                                              where c.ReferenceNumber == ReferenceNumber
+                                              select new CampaignView1()
+                                              {
+                                                  Id = c.PK_Rid,
+                                                  ReferenceNumber = c.ReferenceNumber,
+                                                  CampaignName = c.CampaignName,
+                                                  HasPassword = (c.Pwd != null && c.Pwd != string.Empty) ? true : false,
+                                                  //pwd = r.Pwd,
+                                                  IsActive = c.IsActive,
+                                                  CreatedDateStr = c.CreatedDate,
+                                              }).SingleOrDefault();
+                        objc.CreatedDate = objc.CreatedDateStr.Value.ToString("yyyy-MM-ddThh:mm:ss");
+                        return Json(objc, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        Error obj_err = new Error();
+                        Errormessage errmesobj = new Errormessage();
+                        errmesobj.message = "ReferenceNumber Not Found.";
+                        obj_err.error = errmesobj;
+
+                        return Json(obj_err, JsonRequestBehavior.AllowGet);
+                    }
+
+                }
+                else if (ReferenceNumber != null && ReferenceNumber != "" && Password != null && Password != "")
+                {
+                    RIDDATA obj = dc.RIDDATAs.Where(x => x.ReferenceNumber == ReferenceNumber && x.Pwd == Password).Select(y => y).SingleOrDefault();
+                    if (obj != null)
+                    {
+
+
+                         objc = (from c in dc.RIDDATAs
+                                              where c.ReferenceNumber == ReferenceNumber && c.Pwd == Password
+                                              select new CampaignView1()
+                                              {
+                                                  Id = c.PK_Rid,
+                                                  ReferenceNumber = c.ReferenceNumber,
+                                                  CampaignName = c.CampaignName,
+                                                  HasPassword = (c.Pwd != null && c.Pwd != string.Empty) ? true : false,
+                                                  //pwd = r.Pwd,
+                                                  IsActive = c.IsActive,
+                                                  CreatedDateStr = c.CreatedDate,
+                                              }).SingleOrDefault();
+                        objc.CreatedDate = objc.CreatedDateStr.Value.ToString("yyyy-MM-ddThh:mm:ss");
+                        return Json(objc, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        Error obj_err = new Error();
+                        Errormessage errmesobj = new Errormessage();
+                        errmesobj.message = "ReferenceNumber and Password doesnot match.";
+                        obj_err.error = errmesobj;
+
+                        return Json(obj_err, JsonRequestBehavior.AllowGet);
+                    }
+
+                }
+                //else
+                //{
+                //    if (ReferenceNumber == null && Password == null)
+                //    {
+                //        Error obj_err = new Error();
+                //        Errormessage errmesobj = new Errormessage();
+                //        errmesobj.message = " pass ReferenceNumber and Password.";
+                //        obj_err.error = errmesobj;
+
+                //        return Json(obj_err, JsonRequestBehavior.AllowGet);
+                //    }
+                //}
+                return Json(objc, JsonRequestBehavior.AllowGet);
+            }
+ catch (Exception ex)
+            {
+                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+                Error obj_err = new Error();
+                Errormessage errmesobj = new Errormessage();
+                errmesobj.message = "Exception Occured";
+                obj_err.error = errmesobj;
+
+                return Json(obj_err, JsonRequestBehavior.AllowGet);
+            }
+        }
+        [System.Web.Http.HttpPost]
         public JsonResult Login(string uname, string password)
      //   [System.Web.Http.HttpPost]
      //public JsonResult Login([FromBody]JToken jObject)    
@@ -39,7 +133,7 @@ namespace Analytics.Controllers
                     if (objAuthenticateBO.GetAuthenticateUser(uname, password, out loginCount, out checkCount, out contextData))
                     {
                         // contextData = contextData + "^" + Helper.UrlRef;
-                        byte[] hash = Helper.GetHashKey("yasodha.bitra@gmail.com" + "Analytics");
+                       // byte[] hash = Helper.GetHashKey("yasodha.bitra@gmail.com" + "Analytics");
 
                         Session["userdata"] = contextData;
                         Session["id"] = Helper.CurrentUserId;
@@ -99,12 +193,16 @@ namespace Analytics.Controllers
                    user_obj.user_id = Helper.CurrentUserId;
                    user_obj.user_name = Helper.CurrentUserName;
                    user_obj.user_role = Helper.CurrentUserRole;
-                   return Json(user_obj);
+                   return Json(user_obj, JsonRequestBehavior.AllowGet);
                }
                 else
                {
-                   message = "404 error";
-                   return Json(message);
+                   Error obj_err = new Error();
+                   Errormessage errmesobj = new Errormessage();
+                   errmesobj.message = "Session Expired.";
+                   obj_err.error = errmesobj;
+                   return Json(obj_err, JsonRequestBehavior.AllowGet);
+
                }
 
             }
@@ -126,12 +224,15 @@ namespace Analytics.Controllers
                     Session.Remove("id");
                     Session.Remove("userdata");
                    message="Successfully Logout";
-                    return Json(message);
+                    return Json(message,JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
-                    message = "No User Found";
-                    return Json(message);
+                    Error obj_err = new Error();
+                    Errormessage errmesobj = new Errormessage();
+                    errmesobj.message = "Session Expired.";
+                    obj_err.error = errmesobj;
+                    return Json(obj_err, JsonRequestBehavior.AllowGet);
                 }
             }
             catch (Exception ex)

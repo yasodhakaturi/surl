@@ -2,15 +2,29 @@
 @{
     ViewBag.Title = "Analytics";
 }
+<!DOCTYPE html>
+<html ng-app="bitraz">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"> <!-- Page title set in pageTitle directive -->
+    <title page-title>biTRAZ :: trace your link</title> <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+     <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
+    <link rel="stylesheet" href="../dist/analytics/styles/vendor.css">
+    <link rel="stylesheet" href="../dist/analytics/styles/style.css">
 
-<script type="text/javascript">
-    (function () {
-        window.appConfig = {
-            env: "@Model.env",
-            apiUrl: '@Model.appUrl',
-            appUrl:{admin: "@Model.apiUrl.admin",analytics:"@Model.apiUrl.analytics",landing:"@Model.apiUrl.landing"},
-            userInfo: { user_id: @Model.userInfo.user_id, UserName: "@Model.userInfo.user_name", isAdmin: @Model.isAdmin, isClient: @Model.isClient, isReadOnly: true }
-        }
-    })();</script>
-@Html.Partial("~/Views/Analytics/AnalyticsUI.cshtml")
-@*@Html.Partial("~/Views/Home/IndexUI.cshtml")*@
+
+    <script type="text/javascript">
+        (function () {
+            window.appConfig = {
+                env: "@Model.env",
+                apiUrl: '@Model.appUrl',
+                appUrl:{admin: "@Model.apiUrl.admin",analytics:"@Model.apiUrl.analytics",landing:"@Model.apiUrl.landing"},
+                userInfo: { user_id: @Model.userInfo.user_id, UserName: "@Model.userInfo.user_name", isAdmin: @Model.isAdmin, isClient: @Model.isClient, isReadOnly: true }
+            }
+        })();
+    </script>
+</head>
+    @Html.Partial("~/Views/Analytics/AnalyticsUI.cshtml")
+    @*@Html.Partial("~/Views/Home/IndexUI.cshtml")*@
+    
+</html>

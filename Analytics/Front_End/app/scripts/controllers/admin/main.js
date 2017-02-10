@@ -19,7 +19,6 @@ angular
 
 function AppController($http, $scope) {}
 function HeaderController($rootScope, $scope, $state, AuthService, appConfig, $window) {
-  console.log('HeaderController', $state, AuthService, appConfig);
   $scope.active = $state.current.data.activeMenu;
 
   $rootScope.$on('$stateChangeStart', function (event, toState, toStateParams, fromState, fromStateParams) {
@@ -51,7 +50,140 @@ function HomeController($http, $scope, $rootScope) {
 
 }
 
-function CampaignsController($http, $scope) {}
+function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollectionModel, CampaignsCollectionModel, CampaignModel) {
+    $scope.campaignListOptions = {
+        enableSorting: true,
+        columnDefs: [
+          { name:'Name', field: 'CampaignName' },
+          { name:'Is Protected', field: 'HasPassword', cellTemplate:'<div>' +
+                                                             '<span ng-if="row.entity.HasPassword">Active</span>' +
+                                                             '<span ng-if="!row.entity.HasPassword">In Active</span>' +
+                                                             '&nbsp;' +
+                                                             '</div>'},
+          { name:'Created On', field: 'CreatedOn', type:'date', format:'mm/dd/yyyy' },
+          { name:'Created By', field: 'CreatedUserName' },
+          { name:'Status', field: 'IsActive', cellTemplate:'<div>' +
+                                                              '<span ng-if="row.entity.IsActive">Active</span>' +
+                                                              '<span ng-if="!row.entity.IsActive">In Active</span>' +
+                                                              '&nbsp;' +
+                                                              '</div>'},
+          { name:'Actions', cellTemplate:'<div>' +
+                      '<a ng-click="grid.appScope.editCampaign(row.entity)">Edit</a>' +
+                      '&nbsp;&nbsp;&nbsp;' +
+                      '<a ui-sref="bitraz.main.analytics({rid:row.entity.ReferenceNumber})" >View</a>' +
+                      '</div>'
+          }
+        ],
+        data : []
+      };
+
+    $scope.errorMessage = "";
+    $rootScope.pageLoading = true;
+
+    $scope.refreshData = function () {
+      $rootScope.pageLoading = true;
+      CampaignsCollectionModel.getAll().then(function(response) {
+        $scope.campaignListOptions.data = response;
+        $rootScope.pageLoading = false;
+      }, function errorCallback(response) {
+        $rootScope.pageLoading = false;
+        $scope.errorMessage = "Error: failed to load campaign info";
+      });
+
+      UsersCollectionModel.getAll().then(function(response) {
+            $scope.usersList = response;
+          }, function errorCallback(response) {
+            console.log('error', response);
+          });
+    };
+
+    $scope.editCampaign = function(_row) {
+      var row = angular.copy(_row);
+      var instance = $uibModal.open({
+        animation: true,
+        ariaLabelledBy: 'modal-title-top',
+        ariaDescribedBy: 'modal-body-top',
+        templateUrl: 'views/admin/campaigns/edit_campaign.html',
+        size: 'lg',
+        controller: function($scope, customers) {
+          var $ctrl = this;
+          $scope.name = 'top';
+
+          $ctrl.newCampaign = row;
+
+          $ctrl.customerList = customers;
+
+          $scope.save = function () {
+            $ctrl.saveError = "";
+            if($ctrl.newCampaignForm.$valid){
+              $ctrl.newCampaign.save().then((resp)=>{
+
+                _row = angular.extend(_row,resp);
+                instance.close();
+              }, (err) => {
+                $ctrl.saveError = err && err.message || "Failed to save user.";
+              })
+            }
+
+          };
+
+          $scope.cancel = function () {
+            $ctrl.saveError = "";
+            instance.dismiss('cancel');
+          };
+
+        },
+        resolve: {
+          'customers': ()=>{ return $scope.usersList; }
+        },
+        controllerAs: '$ctrl'
+      });
+
+    };
+
+    $scope.addCampaign = function() {
+      var instance = $uibModal.open({
+        animation: true,
+        ariaLabelledBy: 'modal-title-top',
+        ariaDescribedBy: 'modal-body-top',
+        templateUrl: 'views/admin/campaigns/add_campaign.html',
+        size: 'lg',
+        controller: function($scope, customers, parentScope) {
+          var $ctrl = this;
+          $scope.name = 'top';
+
+          $ctrl.newCampaign = new CampaignModel({});
+          $ctrl.customerList = customers;
+
+          $scope.save = function () {
+            $ctrl.saveError = "";
+            if($ctrl.newCampaignForm.$valid){
+              $ctrl.newCampaign.save().then((resp)=>{
+              parentScope.campaignListOptions.data.push(resp);
+                instance.close();
+              }, (err) => {
+                $ctrl.saveError = err && err.message || "Failed to save user.";
+              })
+            }
+
+          };
+
+          $scope.cancel = function () {
+            $ctrl.saveError = "";
+            instance.dismiss('cancel');
+          };
+
+        },
+       resolve: {
+         'customers': ()=>{ return $scope.usersList; },
+         'parentScope': ()=>{ return $scope;}
+       },
+        controllerAs: '$ctrl'
+      });
+    };
+
+    $scope.refreshData();
+  }
 function ArchievesController($http, $scope) {}
 
 function SettingsController($http, $scope) {}
@@ -76,7 +208,6 @@ function UsersController($scope, $http, $uibModal, UsersCollectionModel, UserMod
   
   $scope.refreshData = function () {
     UsersCollectionModel.getAll().then(function(response) {
-      console.log(response);
       $scope.userListOptions.data = response;
     }, function errorCallback(response) {
       console.log('error', response);
@@ -138,7 +269,6 @@ function UsersController($scope, $http, $uibModal, UsersCollectionModel, UserMod
           $ctrl.saveError = "";
           if($ctrl.newUserForm.$valid){
             $ctrl.newUser.save().then((resp)=>{
-              console.log(resp)
               instance.close();
             }, (err) => {
               $ctrl.saveError = err && err.message || "Failed to save user.";

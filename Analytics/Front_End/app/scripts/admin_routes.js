@@ -161,14 +161,12 @@ angular.module('routes', [
     $rootScope.userInfo = appConfig.userInfo;
     $rootScope.pageLoading = false;
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toStateParams, fromState, fromStateParams) {
-      console.log(toState, toStateParams, fromState, fromStateParams, $location)
       $rootScope.isAuthenticationRequired = toState.data
         && toState.data.requiresLogin
         && !($rootScope.userInfo && $rootScope.userInfo.user_id);
 
       if ( $rootScope.isAuthenticationRequired ) {
         event.preventDefault();
-        console.log("#!" + $location.$$url)
         $state.go('bitraz.main.login', {redirect_url: $location.$$absUrl});
       }
     });

@@ -77,7 +77,17 @@ app.all("*", function (req, res, next) {
  }else if( /\/Analytics\/GETAllCampaigns/.exec(p)){
    var rid = require("./mock_data/chance/campaigns");
    res.json( rid.list() );
- }
+
+
+ } else if( /\/Campaign\/Search/.exec(p)){
+    var camp = require("./mock_data/chance/campaigns");
+    res.json( camp.list() );
+  }
+
+  else if( /\/Customer/.exec(p)){
+    var user = require("./mock_data/chance/user");
+    res.json( user.list() );
+  }
 
  else if( /\/Auth\/Login/.exec(p)){
    var user = require("./mock_data/chance/user");

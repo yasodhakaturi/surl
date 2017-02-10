@@ -24,7 +24,8 @@ namespace Analytics.Helpers.BO
                     property.ShouldSerialize = instance =>
                     {
                         var p = (Client)instance;
-                        return p.serializableProperties.Contains(property.PropertyName);
+                       // return p.serializableProperties.Contains(property.PropertyName);
+                        return true;
                     };
                 }
             }

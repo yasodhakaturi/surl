@@ -2,7 +2,7 @@ angular.module('bitraz.template', ['views/common/analytics.html', 'views/common/
 
 angular.module("views/common/analytics.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/common/analytics.html",
-    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\" ng-if=\"isLoaded\"> <div class=\"row\"> <div class=\"col-lg-12 text-right\"> <span> Choose a Campaign</span> <select name=\"selectedCampaign\" ng-model=\"selectedCampaign\" ng-change=\"campaignChange(selectedCampaign)\"> <option value=\"{{campaign.rid}}\" ng-repeat=\"campaign in campaigns\" ng-selected=\"campaign.rid == selectedCampaign\"> {{campaign.title || \"Campaign (\" + campaign.rid + \")\"}} : {{campaign.createdOn | date: 'mm.dd.yyyy'}} - {{campaign.inActiveDate | date: 'mm.dd.yyyy' || 'Till Date'}} </select> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> <analytics-layout campaign-id=\"selectedCampaign\"></analytics-layout> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> </div> </div> </div> </div>");
+    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\" ng-if=\"isLoaded\"> <div class=\"row\"> <div class=\"col-lg-12 text-right\"> <span> Choose a Campaign</span> <select name=\"selectedCampaign\" ng-model=\"selectedCampaign\" ng-change=\"campaignChange(selectedCampaign)\"> <option value=\"{{campaign.ReferenceNumber}}\" ng-repeat=\"campaign in campaigns\" ng-selected=\"campaign.ReferenceNumber == selectedCampaign\"> {{campaign.CampaignName || \"Campaign (\" + campaign.ReferenceNumber + \")\"}} : {{campaign.CreatedDate | date: 'MM.dd.yyyy'}} </select> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> <analytics-layout campaign-id=\"selectedCampaign\"></analytics-layout> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> </div> </div> </div> </div>");
 }]);
 
 angular.module("views/common/dashboard/activities_tmpl.html", []).run(["$templateCache", function($templateCache) {
@@ -240,10 +240,11 @@ angular.module("views/common/dashboard/total_users_tmpl.html", []).run(["$templa
     "                                Unique users across all campaigns\n" +
     "                            </span>\n" +
     "\n" +
-    "            <div class=\"progress m-t-xs full progress-small\" ng-init=\"percent = ($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1)\">\n" +
-    "                <div style=\"width: {{percent}}%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"{{percent}}\"\n" +
+    "            <div class=\"progress m-t-xs full progress-small\">\n" +
+    "\n" +
+    "                <div style=\"width: {{($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1) * 100}}%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"{{($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1) * 100}}\"\n" +
     "                     role=\"progressbar\" class=\" progress-bar progress-bar-success\">\n" +
-    "                    <span class=\"sr-only\">{{percent}}% Unique Users</span>\n" +
+    "                    <span class=\"sr-only\">{{($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1) * 100}}% Unique Users</span>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "\n" +
@@ -284,10 +285,10 @@ angular.module("views/common/dashboard/total_visits_tmpl.html", []).run(["$templ
     "                                Unique users visited\n" +
     "                            </span>\n" +
     "\n" +
-    "            <div class=\"progress m-t-xs full progress-small\" ng-init=\"percent = ($ctrl.data.visits || 0) / ($ctrl.data.uniqueVisits || 0)\">\n" +
-    "                <div style=\"width: {{percent}}%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"{{percent}}\"\n" +
+    "            <div class=\"progress m-t-xs full progress-small\" >\n" +
+    "                <div style=\"width: {{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100)}}%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"{{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100)}}\"\n" +
     "                     role=\"progressbar\" class=\" progress-bar progress-bar-success\">\n" +
-    "                    <span class=\"sr-only\">{{percent}}% Unique Visits</span>\n" +
+    "                    <span class=\"sr-only\">{{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100)}}% Unique Visits</span>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "\n" +
@@ -332,129 +333,136 @@ angular.module("views/common/dashboard/urls_generated_tmpl.html", []).run(["$tem
 angular.module("views/common/directives/analytics_layout.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/common/directives/analytics_layout.html",
     "<section class=\"anlaytics-layout-container \" style=\"padding-top:0px;\">\n" +
-    "    <div class=\"row\" style=\"padding-bottom: 5px;\">\n" +
-    "        <div class=\"col-lg-12 refresh-block\">\n" +
+    "    <div ng-show=\"!$ctrl.loading\">\n" +
+    "        <div class=\"row\" style=\"padding-bottom: 5px;\">\n" +
+    "            <div class=\"col-lg-12 refresh-block\">\n" +
     "            <span class=\"pull-right\">\n" +
     "                <!--View Refreshes in {{$ctrl.timeLeft}} Seconds <a ng-click=\"$ctrl.resetTime()\"><i class=\"fa fa-refresh\"></i></a>-->\n" +
     "                Refresh View <a ng-click=\"$ctrl.resetTime()\"><i class=\"fa fa-refresh\"></i></a>\n" +
     "            </span>\n" +
     "\n" +
+    "            </div>\n" +
     "        </div>\n" +
-    "    </div>\n" +
-    "    <div class=\"row\">\n" +
-    "        <dashboard-layout config=\"$ctrl.dashboardConfig\"></dashboard-layout>\n" +
-    "    </div>\n" +
-    "    <div class=\"row\">\n" +
-    "        <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "            <div class=\"panel panel-default\">\n" +
-    "                <div class=\"panel-body\">\n" +
-    "                    <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "                        <div class=\"dashboard_graph\">\n" +
+    "        <div class=\"row\">\n" +
+    "            <dashboard-layout config=\"$ctrl.dashboardConfig\"></dashboard-layout>\n" +
+    "        </div>\n" +
+    "        <div class=\"row\">\n" +
+    "            <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                <div class=\"panel panel-default\">\n" +
+    "                    <div class=\"panel-body\">\n" +
+    "                        <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                            <div class=\"dashboard_graph\">\n" +
     "\n" +
-    "                            <div class=\"row x_title\">\n" +
-    "                                <div class=\"col-md-8\">\n" +
-    "                                    <h3>User Activities<small style=\"padding-left: 10px\">timeline presentation</small></h3>\n" +
-    "                                </div>\n" +
-    "                                <div class=\"col-md-4\">\n" +
-    "                                    <div id=\"reportrange\" class=\"pull-right\" style=\"background: #fff; cursor: pointer; padding: 5px 10px; border: 0px solid #ccc; width: 100%;\">\n" +
-    "                                        <i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i>\n" +
-    "                                        <span style=\"display: inline-block;width: calc(100% - 30px);\"><input date-range-picker id=\"daterange3\" name=\"daterange3\" class=\"form-control date-picker\" type=\"text\"\n" +
+    "                                <div class=\"row x_title\">\n" +
+    "                                    <div class=\"col-md-8\">\n" +
+    "                                        <h3>User Activities<small style=\"padding-left: 10px\">timeline presentation</small></h3>\n" +
+    "                                    </div>\n" +
+    "                                    <div class=\"col-md-4\">\n" +
+    "                                        <div id=\"reportrange\" class=\"pull-right\" style=\"background: #fff; cursor: pointer; padding: 5px 10px; border: 0px solid #ccc; width: 100%;\">\n" +
+    "                                            <i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i>\n" +
+    "                                        <span style=\"display: inline-block;width: calc(100% - 40px);\"><input date-range-picker id=\"daterange3\" name=\"daterange3\" class=\"form-control date-picker\" type=\"text\"\n" +
     "                                                                                                             ng-model=\"date\" options=\"opts\" required/></span> <b class=\"caret\"></b>\n" +
-    "\n" +
+    "                                        </div>\n" +
     "                                    </div>\n" +
     "                                </div>\n" +
-    "                            </div>\n" +
     "\n" +
-    "                            <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "                                <div id=\"placeholder33\" style=\"height: 260px; display: none\" class=\"demo-placeholder\"></div>\n" +
-    "                                <div style=\"width: 100%;\">\n" +
-    "                                    <highchart id=\"canvas_dahs\" config=\"chartConfig\" class=\"demo-placeholder\" style=\"width: 100%; height:270px;\"></highchart>\n" +
-    "                                </div>\n" +
-    "                            </div>\n" +
-    "                            <div class=\"clearfix\"></div>\n" +
-    "                        </div>\n" +
-    "                    </div>\n" +
-    "                </div>\n" +
-    "            </div>\n" +
-    "        </div>\n" +
-    "    </div>\n" +
-    "\n" +
-    "    <div class=\"row\">\n" +
-    "        <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "            <div class=\"panel panel-default\">\n" +
-    "                <div class=\"panel-body\">\n" +
-    "                    <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "                        <div class=\"dashboard_graph\">\n" +
-    "\n" +
-    "                            <div class=\"row x_title\">\n" +
-    "                                <div class=\"col-md-6\">\n" +
-    "                                    <h3>Visitors location <small>geo-presentation</small></h3>\n" +
-    "                                </div>\n" +
-    "                            </div>\n" +
-    "\n" +
-    "                            <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "                                <div style=\"width: 100%;\">\n" +
-    "                                    <highchart id=\"world-map-gdp\" config=\"locationConfig\" class=\"columnscol-md-12 col-sm-12 col-xs-12\" style=\"height: 400px\">\n" +
-    "\n" +
-    "                                    </highchart>\n" +
-    "                                </div>\n" +
-    "                            </div>\n" +
-    "\n" +
-    "                            <div class=\"clearfix\"></div>\n" +
-    "                        </div>\n" +
-    "                    </div>\n" +
-    "\n" +
-    "                </div>\n" +
-    "            </div>\n" +
-    "        </div>\n" +
-    "    </div>\n" +
-    "    <div class=\"row\">\n" +
-    "        <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "            <div class=\"panel panel-default\">\n" +
-    "                <div class=\"panel-body\">\n" +
-    "                    <div class=\"col-md-6 col-sm-6 col-xs-6\">\n" +
-    "                        <div class=\"dashboard_graph \">\n" +
-    "\n" +
-    "                            <div class=\"row x_title\">\n" +
-    "                                <div class=\"col-md-12 text-center\">\n" +
-    "                                    <h3>Devices</h3>\n" +
-    "                                </div>\n" +
-    "                            </div>\n" +
-    "                            <div class=\"row\">\n" +
     "                                <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "                                    <!--<div id=\"placeholder33\" style=\"height: 360px; display: none\" class=\"demo-placeholder\"></div>-->\n" +
+    "                                    <div id=\"placeholder33\" style=\"height: 260px; display: none\" class=\"demo-placeholder\"></div>\n" +
     "                                    <div style=\"width: 100%;\">\n" +
-    "                                        <highchart id=\"devices-chart\" config=\"deviceConfig\"  style=\"height:300px;\"></highchart>\n" +
+    "                                        <highchart id=\"canvas_dahs\" config=\"chartConfig\" class=\"demo-placeholder\" style=\"width: 100%; height:270px;\"></highchart>\n" +
     "                                    </div>\n" +
     "                                </div>\n" +
+    "                                <div class=\"clearfix\"></div>\n" +
     "                            </div>\n" +
-    "\n" +
-    "                            <div class=\"clearfix\"></div>\n" +
     "                        </div>\n" +
     "                    </div>\n" +
-    "                    <div class=\"col-md-6 col-sm-6 col-xs-6\">\n" +
-    "                        <div class=\"dashboard_graph \">\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
     "\n" +
-    "                            <div class=\"row x_title\">\n" +
-    "                                <div class=\"col-md-12 text-center\">\n" +
-    "                                    <h3>Platforms</h3>\n" +
-    "                                </div>\n" +
-    "                            </div>\n" +
-    "                            <div class=\"row\">\n" +
-    "                                <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
-    "                                    <!--<div id=\"placeholder33\" style=\"height: 360px; display: none\" class=\"demo-placeholder\"></div>-->\n" +
-    "                                    <div style=\"width: 100%;\">\n" +
-    "                                        <highchart id=\"platform-chart\" config=\"platformConfig\" style=\"height:300px;\"></highchart>\n" +
+    "        <div class=\"row\">\n" +
+    "            <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                <div class=\"panel panel-default\">\n" +
+    "                    <div class=\"panel-body\">\n" +
+    "                        <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                            <div class=\"dashboard_graph\">\n" +
+    "\n" +
+    "                                <div class=\"row x_title\">\n" +
+    "                                    <div class=\"col-md-6\">\n" +
+    "                                        <h3>Visitors location <small>geo-presentation</small></h3>\n" +
     "                                    </div>\n" +
     "                                </div>\n" +
+    "\n" +
+    "                                <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                                    <div style=\"width: 100%;\">\n" +
+    "                                        <highchart id=\"world-map-gdp\" config=\"locationConfig\" class=\"columnscol-md-12 col-sm-12 col-xs-12\" style=\"height: 400px\">\n" +
+    "\n" +
+    "                                        </highchart>\n" +
+    "                                    </div>\n" +
+    "                                </div>\n" +
+    "\n" +
+    "                                <div class=\"clearfix\"></div>\n" +
     "                            </div>\n" +
-    "                            <div class=\"clearfix\"></div>\n" +
+    "                        </div>\n" +
+    "\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"row\">\n" +
+    "            <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                <div class=\"panel panel-default\">\n" +
+    "                    <div class=\"panel-body\">\n" +
+    "                        <div class=\"col-md-6 col-sm-6 col-xs-6\">\n" +
+    "                            <div class=\"dashboard_graph \">\n" +
+    "\n" +
+    "                                <div class=\"row x_title\">\n" +
+    "                                    <div class=\"col-md-12 text-center\">\n" +
+    "                                        <h3>Devices</h3>\n" +
+    "                                    </div>\n" +
+    "                                </div>\n" +
+    "                                <div class=\"row\">\n" +
+    "                                    <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                                        <!--<div id=\"placeholder33\" style=\"height: 360px; display: none\" class=\"demo-placeholder\"></div>-->\n" +
+    "                                        <div style=\"width: 100%;\">\n" +
+    "                                            <highchart id=\"devices-chart\" config=\"deviceConfig\"  style=\"height:300px;\"></highchart>\n" +
+    "                                        </div>\n" +
+    "                                    </div>\n" +
+    "                                </div>\n" +
+    "\n" +
+    "                                <div class=\"clearfix\"></div>\n" +
+    "                            </div>\n" +
+    "                        </div>\n" +
+    "                        <div class=\"col-md-6 col-sm-6 col-xs-6\">\n" +
+    "                            <div class=\"dashboard_graph \">\n" +
+    "\n" +
+    "                                <div class=\"row x_title\">\n" +
+    "                                    <div class=\"col-md-12 text-center\">\n" +
+    "                                        <h3>Platforms</h3>\n" +
+    "                                    </div>\n" +
+    "                                </div>\n" +
+    "                                <div class=\"row\">\n" +
+    "                                    <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                                        <!--<div id=\"placeholder33\" style=\"height: 360px; display: none\" class=\"demo-placeholder\"></div>-->\n" +
+    "                                        <div style=\"width: 100%;\">\n" +
+    "                                            <highchart id=\"platform-chart\" config=\"platformConfig\" style=\"height:300px;\"></highchart>\n" +
+    "                                        </div>\n" +
+    "                                    </div>\n" +
+    "                                </div>\n" +
+    "                                <div class=\"clearfix\"></div>\n" +
+    "                            </div>\n" +
     "                        </div>\n" +
     "                    </div>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "        </div>\n" +
     "    </div>\n" +
+    "    <!--<div class=\"row\" ng-hide=\"$ctrl.loading\">-->\n" +
+    "        <!--<div class=\"splash-title\">-->\n" +
+    "            <!--<h1>Loading..</h1>-->\n" +
+    "            <!--<p></p>-->\n" +
+    "            <!--<img src=\"images/loading-bars.svg\" width=\"64\" height=\"64\"/></div>-->\n" +
+    "    <!--</div>-->\n" +
     "\n" +
     "</section>");
 }]);
@@ -466,7 +474,7 @@ angular.module("views/common/header-dashboard.html", []).run(["$templateCache", 
 
 angular.module("views/common/login.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/common/login.html",
-    "<div class=\"login-container\"> <div class=\"row\"> <div class=\"col-md-12\"> <div class=\"text-center m-b-md\" style=\"border: 1px solid transparent\"> <h3>LOGIN</h3> <!-- <small> This is the best app ever!</small> --> </div> <div class=\"hpanel\"> <div class=\"panel-body\"> <form name=\"loginForm\" id=\"loginForm\" novalidate ng-submit=\"login()\"> <div class=\"form-group\"> <label class=\"control-label\" for=\"username\">Username</label> <input type=\"text\" placeholder=\"name@your_domain.com\" title=\"Please enter you username\" ng-model=\"uname\" ng-required=\"true\" value=\"\" name=\"username\" id=\"username\" class=\"form-control\"> </div> <span ng-if=\"loginForm.username.$touched && loginForm.username.$error.required\" class=\"text-danger\">Name is required</span> <div class=\"form-group\"> <label class=\"control-label\" for=\"password\">Password</label> <input type=\"password\" title=\"Please enter your password\" ng-required=\"true\" ng-model=\"pswd\" name=\"password\" id=\"password\" class=\"form-control\"> </div> <span ng-if=\"loginForm.password.$touched && loginForm.password.$error.required\" class=\"text-danger\">Password is required</span> <button class=\"btn btn-success btn-block\" type=\"submit\"><span ng-show=\"!loading\">Login</span><span ng-show=\"loading\"><i class=\"fa fa-refresh fa-spin\"></i> </span></button> <span class=\"text-danger\" ng-if=\"loginError\" class=\"text-danger\">Error: {{loginError}} </span> </form> </div> </div> </div> </div> </div>");
+    "<div class=\"login-container\"> <div class=\"row\" ng-if=\"!($root.userInfo && $root.userInfo.user_id)\"> <div class=\"col-md-12\"> <div class=\"text-center m-b-md\" style=\"border: 1px solid transparent\"> <h3>LOGIN</h3> <!-- <small> This is the best app ever!</small> --> </div> <div class=\"hpanel\"> <div class=\"panel-body\"> <form name=\"loginForm\" id=\"loginForm\" novalidate ng-submit=\"login(loginForm)\"> <div class=\"form-group\"> <label class=\"control-label\" for=\"username\">Username</label> <input type=\"text\" placeholder=\"name@your_domain.com\" title=\"Please enter you username\" ng-model=\"uname\" ng-required=\"true\" value=\"\" name=\"username\" id=\"username\" class=\"form-control\"> </div> <span ng-if=\"loginForm.username.$touched && loginForm.username.$error.required\" class=\"text-danger\">Name is required</span> <div class=\"form-group\"> <label class=\"control-label\" for=\"password\">Password</label> <input type=\"password\" title=\"Please enter your password\" ng-required=\"true\" ng-model=\"pswd\" name=\"password\" id=\"password\" class=\"form-control\"> </div> <span ng-if=\"loginForm.password.$touched && loginForm.password.$error.required\" class=\"text-danger\">Password is required</span> <button class=\"btn btn-success btn-block\" type=\"submit\"><span ng-show=\"!loading\">Login</span><span ng-show=\"loading\"><i class=\"fa fa-refresh fa-spin\"></i> </span></button> <span class=\"text-danger\" ng-if=\"loginError\" class=\"text-danger\">Error: {{loginError}} </span> </form> </div> </div> </div> </div> <div class=\"row\" ng-if=\"$root.userInfo && $root.userInfo.user_id\"> <div class=\"col-md-12\" style=\"padding-top: 40px\"> <div class=\"hpanel\"> <div class=\"panel-body\"> <div> <button class=\"btn btn-success btn-block\" ng-click=\"redirectUser()\" ng-if=\"$root.userInfo.isAdmin\">Go to Admin</button> </div> <div> <button class=\"btn btn-success btn-block\" ng-click=\"redirectUser()\" ng-if=\"!$root.userInfo.isAdmin\">Go to Analytics</button> </div> </div> </div> </div> </div> </div>");
 }]);
 
 angular.module("views/common/navigation.html", []).run(["$templateCache", function($templateCache) {
@@ -481,7 +489,7 @@ angular.module("views/common/panel_tools.html", []).run(["$templateCache", funct
 
 angular.module("views/index/analytics.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/index/analytics.html",
-    "<div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\" ng-show=\"isLoaded\"> <div ng-if=\"!isAuthorized\"> <p>1.Ask for RID before showing analytics</p> <p>2.Validate rid, if authentication is required ask for password. else proceed</p> <form novalidate name=\"ridRequest\"> <div class=\"col-sm-12\"> <div class=\"row\"> <label>Reference Id: <input type=\"text\" name=\"referenceId\" ng-model=\"rid.id\" ng-required=\"true\" ng-change=\"\"></label> </div> <div class=\"row\" ng-if=\"hasAuthentication\"> <label>Password: <input type=\"password\" name=\"referencePswd\" ng-model=\"rid.password\" ng-required=\"true\"></label> </div> <div class=\"row\"> <label><input type=\"submit\" ng-click=\"validateRid(rid)\" value=\"Save\"></label> </div> <span class=\"text-danger\" ng-if=\"error\"> error: {{error}}</span> </div> </form> </div> <div ng-if=\"isAuthorized\"> <analytics-layout campaign-id=\"rid.id\"></analytics-layout> </div> </div> <div class=\"row\" ng-hide=\"isLoaded\"> <div class=\"splash-title\"> <h1>Loading..</h1> <p></p> <img src=\"images/loading-bars.svg\" width=\"64\" height=\"64\"></div> </div> </div> </div>");
+    "<div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\" ng-show=\"isLoaded\"> <div ng-if=\"!isAuthorized\"> <form novalidate name=\"ridRequest\"> <div class=\"col-sm-12\"> <div class=\"row\"> <label>Reference Id: <input type=\"text\" name=\"referenceId\" ng-model=\"rid.id\" ng-required=\"true\" ng-change=\"\"></label> </div> <div class=\"row\" ng-if=\"hasAuthentication\"> <label>Password: <input type=\"password\" name=\"referencePswd\" ng-model=\"rid.password\" ng-required=\"true\"></label> </div> <div class=\"row\"> <label><input type=\"submit\" ng-click=\"validateRid(rid)\" value=\"Verify\"></label> </div> <span class=\"text-danger\" ng-if=\"error\"> error: {{error}}</span> </div> </form> </div> <div ng-if=\"isAuthorized\"> <analytics-layout campaign-id=\"rid.id\"></analytics-layout> </div> </div> </div> </div>");
 }]);
 
 angular.module("views/index/clients.html", []).run(["$templateCache", function($templateCache) {
@@ -506,5 +514,5 @@ angular.module("views/index/index.html", []).run(["$templateCache", function($te
 
 angular.module("views/index/index_header.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/index/index_header.html",
-    "<div id=\"logo\" class=\"light-version\"> <a ng-href=\"#\"><span class=\"logo\"></span></a> </div> <nav role=\"navigation\"> <!-- <minimaliza-menu></minimaliza-menu> --> <div class=\"small-logo\"> <a ng-href=\"#\"><span class=\"logo\"></span></a> </div> <div class=\"mobile-menu\"> <button type=\"button\" class=\"navbar-toggle mobile-menu-toggle\" data-toggle=\"collapse\" data-target=\"#mobile-collapse\"> <i class=\"fa fa-chevron-down\"></i> </button> <div class=\"collapse mobile-navbar\" id=\"mobile-collapse\"> <ul class=\"nav navbar-nav\"> <li ng-class=\"{'active':active == 'home'}\"><a class=\"page-scroll\" ui-sref=\"bitraz.main.index\">Home</a></li> <li ng-class=\"{'active':active == 'features'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.features\">Features</a></li> <li ng-class=\"{'active':active == 'clients'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.clients\">Clients </a></li> <li ng-class=\"{'active':active == 'contact'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.contact\">Contact</a></li> <li ng-class=\"{'active':active == 'login'}\" ng-show=\"!($root.userInfo && $root.userInfo.user_id)\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.login\">Sign In</a></li> <li ng-class=\"{'active':active == 'logout'}\" ng-show=\"$root.userInfo && $root.userInfo.user_id\"><a class=\"page-scroll\" page-scroll ng-click=\"logout()\">Log Out</a></li> </ul> </div> </div> <div class=\"navbar-default\"> <div class=\"navbar-right\"> <ul class=\"nav navbar-nav no-borders\"> <li ng-class=\"{'active':active == 'home'}\"><a class=\"page-scroll\" ui-sref=\"bitraz.main.index\">Home</a></li> <li ng-class=\"{'active':active == 'features'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.features\">Features</a></li> <li ng-class=\"{'active':active == 'clients'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.clients\">Clients </a></li> <li ng-class=\"{'active':active == 'contact'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.contact\">Contact</a></li> <li ng-class=\"{'active':active == 'login'}\" ng-show=\"!($root.userInfo && $root.userInfo.user_id)\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.login\">Sign In</a></li> <li ng-class=\"{'active':active == 'logout'}\" ng-show=\"$root.userInfo && $root.userInfo.user_id\"><a class=\"page-scroll\" page-scroll ng-click=\"logout()\">Log Out</a></li> </ul> </div> </div> </nav>");
+    "<div id=\"logo\" class=\"light-version\"> <a ng-href=\"#\"><span class=\"logo\"></span></a> </div> <nav role=\"navigation\"> <!-- <minimaliza-menu></minimaliza-menu> --> <div class=\"small-logo\"> <a ng-href=\"#\"><span class=\"logo\"></span></a> </div> <div class=\"mobile-menu\"> <button type=\"button\" class=\"navbar-toggle mobile-menu-toggle\" data-toggle=\"collapse\" data-target=\"#mobile-collapse\"> <i class=\"fa fa-chevron-down\"></i> </button> <div class=\"collapse mobile-navbar\" id=\"mobile-collapse\"> <ul class=\"nav navbar-nav\"> <!--<li ng-class=\"{'active':active == 'home'}\"><a class=\"page-scroll\" ui-sref=\"bitraz.main.index\">Home</a></li>--> <!--<li ng-class=\"{'active':active == 'features'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.features\">Features</a></li>--> <!--<li ng-class=\"{'active':active == 'clients'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.clients\">Clients </a></li>--> <!--<li ng-class=\"{'active':active == 'contact'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.contact\">Contact</a></li>--> <!--<li ng-class=\"{'active':active == 'login'}\" ng-show=\"!($root.userInfo && $root.userInfo.user_id)\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.login\">Sign In</a></li>--> <li ng-class=\"{'active':active == 'logout'}\" ng-show=\"$root.userInfo && $root.userInfo.user_id\"><a class=\"page-scroll\" page-scroll ng-click=\"logout()\">Log Out</a></li> </ul> </div> </div> <div class=\"navbar-default\"> <div class=\"navbar-right\"> <ul class=\"nav navbar-nav no-borders\"> <!--<li ng-class=\"{'active':active == 'home'}\"><a class=\"page-scroll\" ui-sref=\"bitraz.main.index\">Home</a></li>--> <!--<li ng-class=\"{'active':active == 'features'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.features\">Features</a></li>--> <!--<li ng-class=\"{'active':active == 'clients'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.clients\">Clients </a></li>--> <!--<li ng-class=\"{'active':active == 'contact'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.contact\">Contact</a></li>--> <!--<li ng-class=\"{'active':active == 'login'}\" ng-show=\"!($root.userInfo && $root.userInfo.user_id)\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.login\">Sign In</a></li>--> <li ng-class=\"{'active':active == 'logout'}\" ng-show=\"$root.userInfo && $root.userInfo.user_id\"><a class=\"page-scroll\" page-scroll ng-click=\"logout()\">Log Out</a></li> </ul> </div> </div> </nav>");
 }]);

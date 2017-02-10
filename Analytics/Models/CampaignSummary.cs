@@ -10,8 +10,9 @@ namespace Analytics.Models
         public totalUrls totalUrls { get; set; }
         public users users { get; set; }
         public visits visits { get; set; }
-        public lastactivity lastactivity { get; set; }
-        
+       // public lastactivity lastactivity { get; set; }
+        public activities activities { get; set; }
+
 
     }
     //public class totalUrls

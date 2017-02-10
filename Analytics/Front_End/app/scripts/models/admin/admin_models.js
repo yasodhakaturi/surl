@@ -12,7 +12,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
         var getAllDefer = $q.defer();
         $http({
           method: 'GET',
-          url: appConfig.apiEndPoint + '/api/CustomerApi'
+          url: appConfig.apiEndPoint + '/Customer'
         })
           .then((response) => {
             var users = [];
@@ -46,10 +46,10 @@ angular.module('bitraz.models', ['bitraz.models.common'])
           //save
           $http({
             method: 'POST',
-            url: appConfig.apiEndPoint + '/api/CustomerApi/Create',
+            url: appConfig.apiEndPoint + '/Customer/AddClient',
             data: {UserName: this.UserName, Email: this.Email, Password: this.Password, IsActive: this.IsActive}
           }).then((userObj) => {
-            console.log('user save', userObj)
+//            console.log('user save', userObj)
             refDefer.resolve(new UserModel(userObj.data));
           }, (err) => {
             console.log('user save failed', err);
@@ -60,10 +60,10 @@ angular.module('bitraz.models', ['bitraz.models.common'])
           //update
           $http({
             method: 'PUT',
-            url: appConfig.apiEndPoint + '/api/CustomerApi/'+this.id,
+            url: appConfig.apiEndPoint + '/Customer/UpdateClient',
             data: {id: this.id, UserName: this.UserName, Email: this.Email,  IsActive: this.IsActive}
           }).then((userObj) => {
-            console.log('user update', userObj);
+//            console.log('user update', userObj);
             refDefer.resolve(new UserModel(userObj.data));
           }, (err) => {
             console.log('user update failed', err);
@@ -77,10 +77,10 @@ angular.module('bitraz.models', ['bitraz.models.common'])
         let refDefer = $q.defer();
         $http({
           method: 'PUT',
-          url: appConfig.apiEndPoint + '/api/Users/'+this.id,
+          url: appConfig.apiEndPoint + '/Customer/UpdateClient',
           data: {id: this.id, Password: this.Password}
         }).then((userObj) => {
-          console.log('user update', userObj);
+//          console.log('user update', userObj);
           refDefer.resolve(new UserModel(userObj.data));
         }, (err) => {
           console.log('user update failed', err);
@@ -90,4 +90,119 @@ angular.module('bitraz.models', ['bitraz.models.common'])
       }
     }
     return User;
-  }]);
+  }])
+
+  .factory('CampaignsCollectionModel', ['$http', '$q', 'appConfig', 'CampaignModel', 'UserModel', function($http, $q, appConfig, CampaignModel, UserModel) {
+      "use strict";
+      class Campaigns {
+        constructor(data={}) {
+          //this.UserService = UserService;
+          this.collection = [];
+          this.lastFetchedOn = null;
+        }
+
+        getAll(){
+          var getAllDefer = $q.defer();
+          $http({
+            method: 'GET',
+            url: appConfig.apiEndPoint + '/Campaign/Search'
+          })
+            .then((response) => {
+              var campaigns = [];
+              angular.forEach(response.data, function(campaign){
+                campaigns.push(new CampaignModel(campaign));
+              });
+              this.collection = campaigns;
+              getAllDefer.resolve(campaigns);
+            }, (err) => {
+              getAllDefer.reject(err);
+            });
+          return getAllDefer.promise;
+        };
+      }
+
+    return new Campaigns();
+  }])
+  .factory('CampaignModel', ['$http', '$q', 'appConfig', function($http, $q, appConfig) {
+      class Campaign {
+        constructor(data) {
+          this.Id = data.Id || null;
+          this.CampaignName = data.CampaignName;
+          this.ReferenceNumber = data.ReferenceNumber;
+          this.CreatedOn = data.CreatedDate || '';
+          this.CreatedUserId = data.CreatedUserId || '';
+          this.CreatedUserName = data.CreatedUserName || '';
+          this.CreatedUserEmail = data.CreatedUserEmail || '';
+          this.CreatedUserActiveState = data.CreatedUserActiveState || '';
+          this.HasPassword = !!data.HasPassword || false;
+          this.IsActive = data.IsActive || false;
+          this.Password = '';
+          this.EditPassword = false;
+          this.RemovePassword = false;
+        }
+
+        save(){
+          var refDefer = $q.defer();
+
+          if(!this.Id){
+            //save
+            var data = {CampaignName: this.CampaignName, IsActive: this.IsActive, CreatedUserId: this.CreatedUserId};
+            if(this.Password !=''){
+              data.Pwd = this.Password
+            }
+            $http({
+              method: 'POST',
+              url: appConfig.apiEndPoint + '/Campaign/AddCampaign',
+              data: data
+            }).then((campaignObj) => {
+//              console.log('campaign save', campaignObj)
+              var newCampaign = new Campaign(campaignObj.data);
+              refDefer.resolve(newCampaign);
+            }, (err) => {
+              console.log('sampaign save failed', err);
+              refDefer.reject(err);
+            });
+
+          }else{
+            //update
+            var data = {ReferenceNumber:this.ReferenceNumber, CampaignName: this.CampaignName, ReferenceNumber: this.ReferenceNumber,  IsActive: this.IsActive};
+            if(this.EditPassword && this.RemovePassword){
+              data.Pwd = '';
+            }else if(this.EditPassword && this.Password !=''){
+              data.Pwd = this.Password
+            }
+            $http({
+              method: 'POST',
+              url: appConfig.apiEndPoint + '/Campaign/UpdateCampaign',
+              data: data
+            }).then((campaignObj) => {
+//              console.log('campaign update', campaignObj);
+
+              //CampaignsCollectionModel.push(newCampaign);
+              refDefer.resolve(new Campaign(campaignObj.data));
+            }, (err) => {
+              console.log('campaign update failed', err);
+              refDefer.reject(err);
+            });
+          }
+          return refDefer.promise;
+        }
+
+//        resetPassword(){
+//          let refDefer = $q.defer();
+//          $http({
+//            method: 'PUT',
+//            url: appConfig.apiEndPoint + '/api/Users/'+this.id,
+//            data: {id: this.id, Password: this.Password}
+//          }).then((userObj) => {
+//            console.log('user update', userObj);
+//            refDefer.resolve(new UserModel(userObj.data));
+//          }, (err) => {
+//            console.log('user update failed', err);
+//            refDefer.reject(err);
+//          });
+//          return refDefer.promise;
+//        }
+      }
+      return Campaign;
+  }])

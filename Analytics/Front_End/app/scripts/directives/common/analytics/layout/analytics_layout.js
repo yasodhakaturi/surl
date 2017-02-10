@@ -6,6 +6,9 @@ angular.module("bitraz")
     },
     controller: ["$scope", "$rootScope", "$uibModal", "$timeout", "highchartsNG", "RidService", "$interval", function ($scope, $rootScope, $uibModal, $timeout, highchartsNG, RidService, $interval) {
       let $ctrl = this;
+
+      $rootScope.pageLoading = true;
+
       $scope.data = {
         "activity": [],
         "locations": [],
@@ -169,9 +172,9 @@ angular.module("bitraz")
           }
         },
         series: [{
-          name: 'Platforms',
+          name: 'Devices',
           colorByPoint: true,
-          data: $scope.data.platforms
+          data: $scope.data.devices
         }]
       };
 
@@ -296,6 +299,7 @@ angular.module("bitraz")
       $ctrl.$onChanges = (changes) => {
         if(changes.campaignId && !changes.campaignId.isFirstChange()){
           $ctrl.params.rid = changes.campaignId.currentValue;
+          $ctrl.firstTime = true;
           $ctrl.loadData($ctrl.params);
         }
       };
@@ -303,10 +307,10 @@ angular.module("bitraz")
       $ctrl.refreshCharts = () => {
         $scope.locationConfig.series[0].data =  $scope.data.locations;
         $scope.platformConfig.series[0].data =  $scope.data.platforms;
-        $scope.deviceConfig.series[0].data =  $scope.data.platforms;
+        $scope.deviceConfig.series[0].data =  $scope.data.devices;
         $scope.chartConfig.series[0].data =  _.map($scope.data.activity, (activity)=>{return [(new Date(activity.RequestedDate)).getTime(), activity.RequestCount];});
       };
-
+      $ctrl.firstTime = true;
       $ctrl.loadData = (params) => {
         $ctrl.dashboardConfig = {
           type:'campaign',
@@ -316,15 +320,26 @@ angular.module("bitraz")
         if(timer){
           $interval.cancel(timer);
         }
+        if($ctrl.firstTime){
+          $rootScope.pageLoading = true;
+        }
+
         RidService.getCounts(params).$promise.then((resp)=>{
           $scope.data = resp;
+
+          $rootScope.pageLoading = false;
           $ctrl.refreshCharts();
           $ctrl.reflow();
           timer = $interval(function(){
-            $ctrl.resetTime();
-          },60000);
+            if(moment(params.DateTo).isSame(moment(), 'day')){
+              $ctrl.resetTime();
+            }
+
+          },120000);
+          $ctrl.firstTime = false;
         }, (err)=>{
           console.log("failed to load summary", err);
+          $rootScope.pageLoading = false;
         });
         // $timeout($ctrl.tick, tickInterval);
       };
@@ -357,6 +372,12 @@ angular.module("bitraz")
         // $ctrl.timeLeft = timeLimit;
         $ctrl.$onInit();
       };
+
+      $ctrl.$onDestroy = () => {
+        if(timer){
+          $interval.cancel(timer);
+        }
+      }
 
     }]
   });

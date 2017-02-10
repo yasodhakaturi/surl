@@ -13,7 +13,7 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider, $urlM
     $compileProvider.debugInfoEnabled(true);
 
     // Set default state
-    $urlRouterProvider.otherwise("/index");
+    $urlRouterProvider.otherwise("/login");
     $stateProvider
         .state('bitraz', {
           abstract: true,
@@ -35,63 +35,63 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider, $urlM
           }
         })
         // Dashboard - Main page
-        .state('bitraz.main.index', {
-            url: "/index",
-
-            data: {
-                pageTitle: 'Home',
-                specialClass: 'landing-page',
-                activeMenu:'home'
-            },
-            views: {
-              "body@bitraz": {
-                templateUrl: "views/index/index.html",
-                controller: "HomeController"
-              }
-            }
-        })
-        .state('bitraz.main.features', {
-            url: "/features",
-            data: {
-                pageTitle: 'Features',
-                specialClass: 'landing-page',
-                activeMenu:'features'
-            },
-            views: {
-              "body@bitraz": {
-                templateUrl: "views/index/features.html",
-                controller: "FeatureController"
-              }
-            }
-        })
-        .state('bitraz.main.clients', {
-          url: "/clients",
-          data: {
-            pageTitle: 'Clients',
-            specialClass: 'landing-page',
-            activeMenu:'clients'
-          },
-          views: {
-            "body@bitraz": {
-              templateUrl: "views/index/clients.html",
-              controller: "ClientController"
-            }
-          }
-        })
-        .state('bitraz.main.contact', {
-          url: "/contact",
-          data: {
-            pageTitle: 'Contact',
-            specialClass: 'landing-page',
-            activeMenu:'contact'
-          },
-          views: {
-            "body@bitraz": {
-              templateUrl: "views/index/contact.html",
-              controller: "ContactController"
-            }
-          }
-        })
+//        .state('bitraz.main.index', {
+//            url: "/index",
+//
+//            data: {
+//                pageTitle: 'Home',
+//                specialClass: 'landing-page',
+//                activeMenu:'home'
+//            },
+//            views: {
+//              "body@bitraz": {
+//                templateUrl: "views/index/index.html",
+//                controller: "HomeController"
+//              }
+//            }
+//        })
+//        .state('bitraz.main.features', {
+//            url: "/features",
+//            data: {
+//                pageTitle: 'Features',
+//                specialClass: 'landing-page',
+//                activeMenu:'features'
+//            },
+//            views: {
+//              "body@bitraz": {
+//                templateUrl: "views/index/features.html",
+//                controller: "FeatureController"
+//              }
+//            }
+//        })
+//        .state('bitraz.main.clients', {
+//          url: "/clients",
+//          data: {
+//            pageTitle: 'Clients',
+//            specialClass: 'landing-page',
+//            activeMenu:'clients'
+//          },
+//          views: {
+//            "body@bitraz": {
+//              templateUrl: "views/index/clients.html",
+//              controller: "ClientController"
+//            }
+//          }
+//        })
+//        .state('bitraz.main.contact', {
+//          url: "/contact",
+//          data: {
+//            pageTitle: 'Contact',
+//            specialClass: 'landing-page',
+//            activeMenu:'contact'
+//          },
+//          views: {
+//            "body@bitraz": {
+//              templateUrl: "views/index/contact.html",
+//              controller: "ContactController"
+//            }
+//          }
+//        })
         .state('bitraz.main.login', {
           url: "/login?redirect_url",
           data: {

@@ -3,7 +3,7 @@ angular.module('bitraz.campaigns', ["ngResource"])
     return $resource(appConfig.apiEndPoint + '/Analytics/GETAllCampaigns/', {}, {
       getCampaigns: {
         method: 'get',
-        url: appConfig.apiEndPoint + '/Analytics/GETAllCampaigns',
+        url: appConfig.apiEndPoint + '/Campaign/Search',
         isArray: true
       },
 
