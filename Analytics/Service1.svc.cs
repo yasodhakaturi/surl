@@ -101,6 +101,7 @@ namespace Analytics
         {
             try
             {
+                api_key = System.Web.HttpUtility.UrlEncode(api_key);
                 Client cl_obj = (from c in dc.Clients
                                  where c.APIKey == api_key
                                  select c).SingleOrDefault();
@@ -204,8 +205,9 @@ namespace Analytics
              try
              {
                  int clientid = 0; int Uni_RID = 0;
+                 api_key = System.Web.HttpUtility.UrlEncode(api_key);
                  Client cl_obj = (from c in dc.Clients
-                                 where c.APIKey == api_key
+                                 where c.APIKey.Trim() == api_key.Trim()
                                  select c).SingleOrDefault();
                 // string ReferenceNumber = string.Format("{0}_{1:N}", cl_obj.Email, Guid.NewGuid());
                  Random randNum = new Random();
