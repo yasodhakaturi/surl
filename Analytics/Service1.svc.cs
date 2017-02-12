@@ -267,7 +267,7 @@ namespace Analytics
                             ReferenceNumber = r.ToString("D5");
                             //if (Uni_RID == 0)
                             //{
-                            if (CampaignName.Trim() != "" && Password.Trim() != "")
+                            if (CampaignName.Trim() != "" && Password.Trim() != "" && CampaignName!=null && Password!=null)
                             {
                                 //Uniqueid_RID = (from registree in dc.RIDDATAs
                                 //                where registree.CampaignName.Trim() == CampaignName.Trim() &&
@@ -277,6 +277,8 @@ namespace Analytics
                                 //if (Uniqueid_RID == 0)
                                 //{
                                 new DataInsertionBO().InsertRIDdata(CampaignName, ReferenceNumber, Password, cl_obj.PK_ClientID);
+                                refnum.ReferenceNumber = ReferenceNumber;
+
                                 //Uniqueid_RID = (from registree in dc.RIDDATAs
                                 //                where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim() &&
                                 //                registree.Pwd.Trim() == Password.Trim()
@@ -300,6 +302,8 @@ namespace Analytics
                                 //if (Uniqueid_RID == 0)
                                 //{
                                 new DataInsertionBO().InsertRIDdata(CampaignName, ReferenceNumber, "", cl_obj.PK_ClientID);
+                                refnum.ReferenceNumber = ReferenceNumber;
+
                                 //Uniqueid_RID = (from registree in dc.RIDDATAs
                                 //                where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim()
                                 //                select registree.PK_Rid).SingleOrDefault();
@@ -314,7 +318,7 @@ namespace Analytics
                             ctx.OutgoingResponse.Headers.Add("Api_key", api_key);
                             // return "ReferenceNumber :" + ReferenceNumber;
 
-                            refnum.ReferenceNumber = ReferenceNumber;
+                            //refnum.ReferenceNumber = ReferenceNumber;
                             return JsonConvert.SerializeObject(refnum);
                         }
                         else
