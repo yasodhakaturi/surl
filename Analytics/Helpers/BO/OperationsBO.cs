@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.ServiceModel.Web;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace Analytics.Helpers.BO
@@ -477,6 +478,22 @@ namespace Analytics.Helpers.BO
             {
                 ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
             }
+        }
+
+        public bool ValidateEmail(string emailstr)
+        {
+              string MatchEmailPattern = 
+			@"^(([\w-]+\.)+[\w-]+|([a-zA-Z]{1}|[\w-]{2,}))@"
+     + @"((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?
+				[0-9]{1,2}|25[0-5]|2[0-4][0-9])\."
+     + @"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?
+				[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
+     + @"([a-zA-Z0-9]+[\w-]+\.)+[a-zA-Z]{1}[a-zA-Z0-9-]{1,23})$";
+           
+        if(emailstr!="") 
+        return Regex.IsMatch(emailstr, MatchEmailPattern);
+     else 
+        return false;
         }
         //public CountsData GetCountsData(SqlDataReader myReader,string filterBy,string DateFrom,string DateTo)
         //{
