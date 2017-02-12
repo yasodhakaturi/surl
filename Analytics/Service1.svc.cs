@@ -49,8 +49,15 @@ namespace Analytics
 
             public string message { get; set; }
         }
-
-        public string GETClientid(string UserName, string Email, string Password)
+         public class ReferenceNumber1
+         {
+             public string ReferenceNumber { get; set; }
+         }
+         public class ShortUrl1
+         {
+             public string shortUrl { get; set; }
+         }
+        public string GetApiKey(string UserName, string Email, string Password)
         {
             try
             {
@@ -76,13 +83,19 @@ namespace Analytics
             }
                     Client cl_obj=new OperationsBO().CheckClientEmail(Email);
                     if(cl_obj!=null)
-                    {  cid=cl_obj.PK_ClientID;}
-                        return "APi_Key:"+cl_obj.APIKey;
+                    {  
+                        cid=cl_obj.PK_ClientID;
+                    }
+                    System.ServiceModel.Web.WebOperationContext ctx = System.ServiceModel.Web.WebOperationContext.Current;
+                    ctx.OutgoingResponse.Headers.Add("Api_key", cl_obj.APIKey);
+                    return "";
 
                     }
                     else
                     {
-                       return cid.ToString(); 
+                         error errobj = new error();
+                         errobj.message = "Please Pass Username,Password&email";
+                         return JsonConvert.SerializeObject(errobj);
                     }
                
             }
@@ -91,21 +104,24 @@ namespace Analytics
                 ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
                 error errobj = new error();
                 errobj.message = "Exception" + ex.Message;
-                return null;
+                return JsonConvert.SerializeObject(errobj);
             }
         }
 
 
 
-        public string GETUID(string referencenumber, string longurl, string mobilenumber,string api_key)
+        public string GetShortUrl(string referencenumber, string longurl, string mobilenumber)
         {
             try
             {
+                IncomingWebRequestContext woc = WebOperationContext.Current.IncomingRequest;
+                string api_key = woc.Headers["Api_key"];
+
                 Client cl_obj = (from c in dc.Clients
                                  where c.APIKey == api_key
                                  select c).SingleOrDefault();
                 string Hashid = ""; int pk_uid = 0;
-                if(cl_obj != null)
+                if(cl_obj != null&&api_key!=""&&api_key!=null)
                 { 
                 if (referencenumber.Trim() != "" && longurl.Trim() != "" && mobilenumber.Trim() != "")
                 {
@@ -157,26 +173,38 @@ namespace Analytics
                         //obj.Base64Value = base64value;
                         //dc.SaveChanges();
                         //return base64value;
-                        return "http://g0.pe/" + Hashid;
+                        System.ServiceModel.Web.WebOperationContext ctx = System.ServiceModel.Web.WebOperationContext.Current;
+                        ctx.OutgoingResponse.Headers.Add("Api_key", api_key);
+                       // return "http://g0.pe/" + Hashid;
+                        string ShortUrl = "https://g0.pe/" + Hashid;
+                        ShortUrl1 sobj = new ShortUrl1();
+                        sobj.shortUrl = ShortUrl;
+                        return JsonConvert.SerializeObject(sobj);
 
                     }
                     else
                     {
-                        //UID_UIDRID = "NULL";
-                        return "Referencenumber not valid";
+                        error errobj = new error();
+                        errobj.message = "Referencenumber not valid";
+                        return JsonConvert.SerializeObject(errobj);
+                        //return "Referencenumber not valid";
                     }
                     //return "";
                 }
                 else
                 {
-                    //UID_UIDRID = "NULL";
-                    return "Please pass all values.";
+                    error errobj = new error();
+                    errobj.message = "Please pass all values.";
+                    return JsonConvert.SerializeObject(errobj);
+                    //return "Please pass all values.";
                 }
                 }
                 else
                 {
-                    //RID_UIDRIID = "NULL";
-                    return "Please Pass valid APiKey";
+                    error errobj = new error();
+                    errobj.message = "Please Pass valid APiKey";
+                    return JsonConvert.SerializeObject(errobj);
+                    //return "Please Pass valid APiKey";
                 }
                 }
             catch (Exception ex)
@@ -198,105 +226,103 @@ namespace Analytics
             }
             return strIpAddress;
         }
-        public string GETRID(string CampaignName, string Password, string api_key)
+        public string RegisterCampaign(string CampaignName, string Password)
 
          {
              try
              {
-                 int clientid = 0; int Uni_RID = 0;
-                 Client cl_obj = (from c in dc.Clients
-                                 where c.APIKey == api_key
-                                 select c).SingleOrDefault();
-                // string ReferenceNumber = string.Format("{0}_{1:N}", cl_obj.Email, Guid.NewGuid());
-                 Random randNum = new Random();
-                 int r = randNum.Next(00000, 99999);
-                 string ReferenceNumber = r.ToString("D5");
-                  //if (CampaignName != "")
-                  //{
-                  //    Uni_RID = (from registree in dc.RIDDATAs
-                  //               where registree.CampaignName.Trim() == CampaignName.Trim()
-                  //               select registree.PK_Rid).SingleOrDefault();
-                  //}
-                 if (cl_obj != null)
-                  {
-                      //if (Uni_RID == 0)
-                      //{
-                          if (CampaignName.Trim() != "" && Password.Trim() != "")
-                      {
-                          //Uniqueid_RID = (from registree in dc.RIDDATAs
-                          //                where registree.CampaignName.Trim() == CampaignName.Trim() &&
-                          //                        registree.Pwd.Trim() == Password.Trim() && registree.FK_ClientId==clientid
-                          //                select registree.PK_Rid).SingleOrDefault();
 
-                          //if (Uniqueid_RID == 0)
-                          //{
-                          new DataInsertionBO().InsertRIDdata(CampaignName,ReferenceNumber, Password, cl_obj.PK_ClientID);
-                              //Uniqueid_RID = (from registree in dc.RIDDATAs
-                              //                where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim() &&
-                              //                registree.Pwd.Trim() == Password.Trim()
-                              //                select registree.PK_Rid).SingleOrDefault();
-                          //}
+                 int clientid = 0; int Uni_RID = 0; string ReferenceNumber = "";
+                 ReferenceNumber1 refnum = new ReferenceNumber1(); error err_obj = new error();
+                 IncomingWebRequestContext woc = WebOperationContext.Current.IncomingRequest;
+                 string api_key = woc.Headers["Api_key"];
+                 if (api_key != "" && api_key != null)
+                 {
+                     Client cl_obj = (from c in dc.Clients
+                                      where c.APIKey == api_key
+                                      select c).SingleOrDefault();
+                     // string ReferenceNumber = string.Format("{0}_{1:N}", cl_obj.Email, Guid.NewGuid());
 
-                          //if data found in uiddata table get data frim UIDRIDDATA 
-                          //RID = (from uniqueid1 in dc.UIDandRIDDatas
-                          //       where uniqueid1.TypeDiff == "2" &&
-                          //       uniqueid1.UIDorRID == Uniqueid_RID
-                          //       select uniqueid1.PK_UniqueId).SingleOrDefault();
-                         // RID = new OperationsBO().GetUniqueid(Uniqueid_RID, "2");
+                     if (cl_obj != null)
+                     {
+                         RIDDATA Campaignexistance=new OperationsBO().CheckCampaignNameExistance(cl_obj, CampaignName);
+                         if (Campaignexistance==null)
+                         {
+                             Random randNum = new Random();
+                             int r = randNum.Next(00000, 99999);
+                             ReferenceNumber = r.ToString("D5");
+                             //if (Uni_RID == 0)
+                             //{
+                             if (CampaignName.Trim() != "" && Password.Trim() != "")
+                             {
+                                 //Uniqueid_RID = (from registree in dc.RIDDATAs
+                                 //                where registree.CampaignName.Trim() == CampaignName.Trim() &&
+                                 //                        registree.Pwd.Trim() == Password.Trim() && registree.FK_ClientId==clientid
+                                 //                select registree.PK_Rid).SingleOrDefault();
+
+                                 //if (Uniqueid_RID == 0)
+                                 //{
+                                 new DataInsertionBO().InsertRIDdata(CampaignName, ReferenceNumber, Password, cl_obj.PK_ClientID);
+                                 //Uniqueid_RID = (from registree in dc.RIDDATAs
+                                 //                where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim() &&
+                                 //                registree.Pwd.Trim() == Password.Trim()
+                                 //                select registree.PK_Rid).SingleOrDefault();
+                                 //}
+
+                                 //if data found in uiddata table get data frim UIDRIDDATA 
+                                 //RID = (from uniqueid1 in dc.UIDandRIDDatas
+                                 //       where uniqueid1.TypeDiff == "2" &&
+                                 //       uniqueid1.UIDorRID == Uniqueid_RID
+                                 //       select uniqueid1.PK_UniqueId).SingleOrDefault();
+                                 // RID = new OperationsBO().GetUniqueid(Uniqueid_RID, "2");
 
 
-                      }
-                          else if (CampaignName.Trim() != "" && Password.Trim() == "")
-                      {
-                          //Uniqueid_RID = (from registree in dc.RIDDATAs
-                          //                where registree.CampaignName.Trim() == ReferenceNumber.Trim() && registree.FK_ClientId==clientid
-                          //                select registree.PK_Rid).SingleOrDefault();
-                          //if (Uniqueid_RID == 0)
-                          //{
-                          new DataInsertionBO().InsertRIDdata(CampaignName,ReferenceNumber, "", cl_obj.PK_ClientID);
-                              //Uniqueid_RID = (from registree in dc.RIDDATAs
-                              //                where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim()
-                              //                select registree.PK_Rid).SingleOrDefault();
-                          //}
-                          //if data found in uiddata table get data frim UIDRIDDATA 
-                          //RID = new OperationsBO().GetUniqueid(Uniqueid_RID, "2");
+                             }
+                             else if (CampaignName.Trim() != "" && Password.Trim() == "")
+                             {
+                                 //Uniqueid_RID = (from registree in dc.RIDDATAs
+                                 //                where registree.CampaignName.Trim() == ReferenceNumber.Trim() && registree.FK_ClientId==clientid
+                                 //                select registree.PK_Rid).SingleOrDefault();
+                                 //if (Uniqueid_RID == 0)
+                                 //{
+                                 new DataInsertionBO().InsertRIDdata(CampaignName, ReferenceNumber, "", cl_obj.PK_ClientID);
+                                 //Uniqueid_RID = (from registree in dc.RIDDATAs
+                                 //                where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim()
+                                 //                select registree.PK_Rid).SingleOrDefault();
+                                 //}
+                                 //if data found in uiddata table get data frim UIDRIDDATA 
+                                 //RID = new OperationsBO().GetUniqueid(Uniqueid_RID, "2");
 
-                      }
-                      //if (Uniqueid_RID != 0)
-                      //{
-
-                      //    RID_UIDRIID = Uniqueid_RID.ToString();
-                      //    string base64value = new ConvertionBO().LongToBase(Convert.ToInt64(RID));
-                      //    //update record with base64 value
-                      //    UIDandRIDData obj = (from u in dc.UIDandRIDDatas
-                      //                         where u.PK_UniqueId == RID
-                      //                         select u).SingleOrDefault();
-                      //    obj.Base64Value = base64value;
-                      //    dc.SaveChanges();
-                      //    return base64value;
-
-                      //}
-                      //else
-                      //{
-
-                      //    RID_UIDRIID = "NULL";
-                      //    return "ReferenceID not found";
-                      //}
-
-                          return "ReferenceNumber :"+ ReferenceNumber;
-                //  }
-                // else
-                //{
-
-                //  RID_UIDRIID = "NULL";
-                //  return "CampaignName Already exists.";
-                //}
-                  }
-                  else
-                  {
-                     // RID_UIDRIID = "NULL";
-                      return "Please Pass valid APiKey";
-                  }
+                             }
+                             
+                             
+                             System.ServiceModel.Web.WebOperationContext ctx = System.ServiceModel.Web.WebOperationContext.Current;
+                             ctx.OutgoingResponse.Headers.Add("Api_key", api_key);
+                            // return "ReferenceNumber :" + ReferenceNumber;
+                             
+                             refnum.ReferenceNumber = ReferenceNumber;
+                             return JsonConvert.SerializeObject(refnum);
+                         }
+                         else
+                         {
+                             System.ServiceModel.Web.WebOperationContext ctx = System.ServiceModel.Web.WebOperationContext.Current;
+                             ctx.OutgoingResponse.Headers.Add("Api_key", api_key);
+                             refnum.ReferenceNumber = Campaignexistance.ReferenceNumber;
+                             return JsonConvert.SerializeObject(refnum);
+                         }
+                        
+                     }
+                     else
+                     {
+                         err_obj.message = "Please Pass valid APiKey";
+                         return JsonConvert.SerializeObject(err_obj); 
+                     }
+                 }
+                 else
+                 {
+                     err_obj.message = "Please Pass Api Key.";
+                     return JsonConvert.SerializeObject(err_obj);
+                 }
              }
              catch (Exception ex)
              {

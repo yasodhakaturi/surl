@@ -340,8 +340,17 @@ namespace Analytics.Helpers.BO
                 byte[] secretKeyByteArray = new byte[32]; //256 bit
                 cryptoProvider.GetBytes(secretKeyByteArray);
                 APIKey = Convert.ToBase64String(secretKeyByteArray);
+                APIKey=APIKey.Replace("+", "") .Replace("#", "").Replace("&","").TrimEnd('=');
             }
             return APIKey;
+        }
+        public RIDDATA CheckCampaignNameExistance(Client obj,string CamapignName)
+        {
+            RIDDATA checkCampaign = new RIDDATA(); 
+             checkCampaign = dc.RIDDATAs.Where(r => r.FK_ClientId == obj.PK_ClientID && r.CampaignName == CamapignName).Select(s => s).SingleOrDefault();
+           
+       return checkCampaign;
+
         }
         public Client CheckClientEmail(string email)
         {
