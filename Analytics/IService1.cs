@@ -16,25 +16,25 @@ namespace Analytics
     {
         [OperationContract]
         [WebInvoke(Method = "GET",
-            //ResponseFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
              BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "GETClientid?UserName={UserName}&Email={Email}&Password={Password}")]
-        string GETClientid(string UserName, string Email, string Password);
+            UriTemplate = "GetApiKey?UserName={UserName}&Email={Email}&Password={Password}")]
+        string GetApiKey(string UserName, string Email, string Password);
 
         
         [OperationContract]
         [WebInvoke(Method = "GET",
-            //ResponseFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "GETRID?CampaignName={CampaignName}&Password={Password}&api_key={api_key}")]
-        string GETRID(string CampaignName, string Password, string api_key);
+            UriTemplate = "RegisterCampaign?CampaignName={CampaignName}&Password={Password}")]
+        string RegisterCampaign(string CampaignName, string Password);
 
         [OperationContract]
         [WebInvoke(Method = "GET",
-            //ResponseFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
              BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "GETUID?referencenumber={referencenumber}&longurl={longurl}&mobilenumber={mobilenumber}&api_key={api_key}")]
-        string GETUID(string referencenumber, string longurl, string mobilenumber, string api_key);
+            UriTemplate = "GetShortUrl?referencenumber={referencenumber}&longurl={longurl}&mobilenumber={mobilenumber}")]
+        string GetShortUrl(string referencenumber, string longurl, string mobilenumber);
 
 
         //[OperationContract]

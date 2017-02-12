@@ -19,45 +19,45 @@ namespace Analytics.Helpers.Utility
             return hashid;
         }
 
-        public static void GenerateUniqueIDs()
+        //public static void GenerateUniqueIDs()
         
-        {
-            int length = 5; int t=0;
-            shortenURLEntities dc = new shortenURLEntities();
-            const string alphanumericCharacters =
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-                "abcdefghijklmnopqrstuvwxyz" +
-                "0123456789";
-            try
-            {
-                //for (int r = 0; r < 1000; r++)
-                //{
-                    var characterArray = alphanumericCharacters.Distinct().ToArray();
-                    //if (characterArray.Length == 0)
-                    //    throw new ArgumentException("characterSet must not be empty", "characterSet");
+        //{
+        //    int length = 5; int t=0;
+        //    shortenURLEntities dc = new shortenURLEntities();
+        //    const string alphanumericCharacters =
+        //        "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+        //        "abcdefghijklmnopqrstuvwxyz" +
+        //        "0123456789";
+        //    try
+        //    {
+        //        //for (int r = 0; r < 1000; r++)
+        //        //{
+        //            var characterArray = alphanumericCharacters.Distinct().ToArray();
+        //            //if (characterArray.Length == 0)
+        //            //    throw new ArgumentException("characterSet must not be empty", "characterSet");
 
-                    var bytes = new byte[length * 8];
-                    new RNGCryptoServiceProvider().GetBytes(bytes);
-                    var result = new char[length];
-                    for (int i1 = 0; i1 < length; i1++)
-                    {
-                        ulong value = BitConverter.ToUInt64(bytes, i1 * 8);
-                        result[i1] = characterArray[value % (uint)characterArray.Length];
-                    }
-                    UniqueNumbers_Test UOBJ = new UniqueNumbers_Test();
-                    UOBJ.uniqueid = new string(result);
-                    dc.UniqueNumbers_Test.Add(UOBJ);
-                    dc.SaveChanges();
-                    //t = r;
-               // }
-               //int t1 = t;
-            }
-            catch(Exception ex)
-            {
-                t++;
-            }
+        //            var bytes = new byte[length * 8];
+        //            new RNGCryptoServiceProvider().GetBytes(bytes);
+        //            var result = new char[length];
+        //            for (int i1 = 0; i1 < length; i1++)
+        //            {
+        //                ulong value = BitConverter.ToUInt64(bytes, i1 * 8);
+        //                result[i1] = characterArray[value % (uint)characterArray.Length];
+        //            }
+        //            UniqueNumbers_Test UOBJ = new UniqueNumbers_Test();
+        //            UOBJ.uniqueid = new string(result);
+        //            dc.UniqueNumbers_Test.Add(UOBJ);
+        //            dc.SaveChanges();
+        //            //t = r;
+        //       // }
+        //       //int t1 = t;
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        t++;
+        //    }
 
-        }
+        //}
 
         public static string GetRandomAlphanumericString(int length)
         {
