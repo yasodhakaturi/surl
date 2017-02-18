@@ -138,7 +138,7 @@ namespace Analytics.Controllers
                         Session["userdata"] = contextData;
                         Session["id"] = Helper.CurrentUserId;
                         UserInfo user_obj = new UserInfo();
-                        if (Helper.CurrentUserRole == "Admin")
+                        if (Helper.CurrentUserRole.ToLower() == "admin")
                             obj.redirect_url = "/Admin";
                         else
                             obj.redirect_url = "/Analytics";

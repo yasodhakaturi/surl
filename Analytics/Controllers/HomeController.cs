@@ -19,9 +19,7 @@ namespace Analytics.Controllers
 
         public ActionResult Index()
         
-        
-        
-        
+       
         {
             //var rnd = new Random();
             //string unsuffled = "0123456789ABCDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmopqrstuvwxyz-.!~*'_";
@@ -31,22 +29,24 @@ namespace Analytics.Controllers
             obj = new OperationsBO().GetViewConfigDetails(url);
 
             //HttpWebRequest webRequest; HttpWebResponse WebResp; Stream response; StreamReader data;
-            // webRequest = (HttpWebRequest)WebRequest.Create("http://localhost:3000/Service1.svc/GetApiKey?UserName=testcampaign1&Email=testcampaign@gmail.com&Password=teastcampaign1");
-            // webRequest.Method = "GET";
-            // webRequest.ContentType = "application/json";
-            // WebResp = (HttpWebResponse)webRequest.GetResponse();
-            // string api_key = WebResp.Headers["Api_key"];
+            //// webRequest = (HttpWebRequest)WebRequest.Create("http://localhost:3000/Service1.svc/GetApiKey?UserName=testcampaign1&Email=testcampaign1@yahoo.co.in&Password=teastcampaign1");
+            //webRequest = (HttpWebRequest)WebRequest.Create("http://test.bitraz.com/Service1.svc/GetApiKey?UserName=testcampaign1&Email=testcampaign@gmail.com&Password=teastcampaign1");
+            //webRequest.Method = "GET";
+            //webRequest.ContentType = "application/json";
+            //WebResp = (HttpWebResponse)webRequest.GetResponse();
+            //string api_key = WebResp.Headers["Api_key"];
 
 
-            //webRequest = (HttpWebRequest)WebRequest.Create("http://localhost:3000/Service1.svc/RegisterCampaign?CampaignName=testcampaign5&Password=teastcampaign1");
+            ////webRequest = (HttpWebRequest)WebRequest.Create("http://localhost:3000/Service1.svc/RegisterCampaign?CampaignName=testcampaign5&Password=teastcampaign1");
+            //webRequest = (HttpWebRequest)WebRequest.Create("http://test.bitraz.com/Service1.svc/RegisterCampaign?CampaignName=testcampaign5&Password=teastcampaign1");
             //webRequest.Method = "GET";
             ////webRequest.Timeout = 12000;
             //webRequest.ContentType = "application/json";
             //webRequest.Headers.Add("Api_key", api_key);
-            // WebResp = (HttpWebResponse)webRequest.GetResponse();
-            // api_key = WebResp.Headers["Api_key"];
-            // response = WebResp.GetResponseStream();
-            // data = new StreamReader(response);
+            //WebResp = (HttpWebResponse)webRequest.GetResponse();
+            //api_key = WebResp.Headers["Api_key"];
+            //response = WebResp.GetResponseStream();
+            //data = new StreamReader(response);
             //string strres = data.ReadToEnd();
             //var json = JObject.Parse(strres);
             //string ReferenceNumberResult = (string)json["RegisterCampaignResult"];
@@ -55,7 +55,8 @@ namespace Analytics.Controllers
             //string ReferenceNumber = ReferenceNumberjson.ReferenceNumber;
 
 
-            //webRequest = (HttpWebRequest)WebRequest.Create("http://localhost:3000/Service1.svc/GetShortUrl?referencenumber="+ReferenceNumber+"&longurl=google.com&mobilenumber=8331877564");
+            ////webRequest = (HttpWebRequest)WebRequest.Create("http://localhost:3000/Service1.svc/GetShortUrl?referencenumber=" + ReferenceNumber + "&longurl=google.com&mobilenumber=8331877564");
+            //webRequest = (HttpWebRequest)WebRequest.Create("http://test.bitraz.com/Service1.svc/GetShortUrl?referencenumber=" + ReferenceNumber + "&longurl=google.com&mobilenumber=8331877564");
             //webRequest.Method = "GET";
             ////webRequest.Timeout = 12000;
             //webRequest.ContentType = "application/json";
@@ -63,14 +64,14 @@ namespace Analytics.Controllers
             //WebResp = (HttpWebResponse)webRequest.GetResponse();
             //api_key = WebResp.Headers["Api_key"];
             //Stream response1 = WebResp.GetResponseStream();
-            // data = new StreamReader(response1);
-            // string strres1 = data.ReadToEnd();
-            // var json1 = JObject.Parse(strres1);
- 
+            //data = new StreamReader(response1);
+            //string strres1 = data.ReadToEnd();
+            //var json1 = JObject.Parse(strres1);
+
             //string GetShortUrlResult = (string)json1["GetShortUrlResult"];
 
-            // ShortUrl ShortUrljson = JsonConvert.DeserializeObject<ShortUrl>(GetShortUrlResult);
-            // string ShortUrl = ShortUrljson.shortUrl;
+            //ShortUrl ShortUrljson = JsonConvert.DeserializeObject<ShortUrl>(GetShortUrlResult);
+            //string ShortUrl = ShortUrljson.shortUrl;
 
          
             //int t = 0;
