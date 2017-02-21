@@ -54,3 +54,7 @@ exports.list = function(query){
 
 };
 
+exports.getKey = function(query){
+  return {API_KEY: chance.integer({min: 11111111, max: 99999999})};
+};
+

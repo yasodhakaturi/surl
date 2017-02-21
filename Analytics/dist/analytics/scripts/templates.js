@@ -1,4 +1,4 @@
-angular.module('bitraz.template', ['views/analytics/analytics.html', 'views/analytics/archieves.html', 'views/analytics/campaigns.html', 'views/analytics/campaigns/add_campaign.html', 'views/analytics/campaigns/campaign_list.html', 'views/analytics/campaigns/edit_campaign.html', 'views/analytics/header.html', 'views/analytics/index.html', 'views/analytics/settings.html', 'views/analytics/users.html', 'views/common/analytics.html', 'views/common/dashboard/activities_tmpl.html', 'views/common/dashboard/dashboard_tmpl.html', 'views/common/dashboard/logged_users_tmpl.html', 'views/common/dashboard/recent_campaigns_tmpl.html', 'views/common/dashboard/total_campaigns_tmpl.html', 'views/common/dashboard/total_users_tmpl.html', 'views/common/dashboard/total_visits_tmpl.html', 'views/common/dashboard/urls_generated_tmpl.html', 'views/common/directives/analytics_layout.html', 'views/common/header-dashboard.html', 'views/common/login.html', 'views/common/navigation.html', 'views/common/panel_tools.html']);
+angular.module('bitraz.template', ['views/analytics/analytics.html', 'views/analytics/archieves.html', 'views/analytics/campaigns.html', 'views/analytics/campaigns/add_campaign.html', 'views/analytics/campaigns/campaign_list.html', 'views/analytics/campaigns/edit_campaign.html', 'views/analytics/header.html', 'views/analytics/index.html', 'views/analytics/settings.html', 'views/analytics/users.html', 'views/analytics/users/change_password.html', 'views/common/analytics.html', 'views/common/dashboard/activities_tmpl.html', 'views/common/dashboard/dashboard_tmpl.html', 'views/common/dashboard/logged_users_tmpl.html', 'views/common/dashboard/recent_campaigns_tmpl.html', 'views/common/dashboard/total_campaigns_tmpl.html', 'views/common/dashboard/total_users_tmpl.html', 'views/common/dashboard/total_visits_tmpl.html', 'views/common/dashboard/urls_generated_tmpl.html', 'views/common/directives/analytics_layout.html', 'views/common/header-dashboard.html', 'views/common/login.html', 'views/common/navigation.html', 'views/common/panel_tools.html']);
 
 angular.module("views/analytics/analytics.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/analytics/analytics.html",
@@ -166,7 +166,7 @@ angular.module("views/analytics/campaigns/edit_campaign.html", []).run(["$templa
 
 angular.module("views/analytics/header.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/analytics/header.html",
-    "<div id=\"logo\" class=\"light-version\"> <a ng-href=\"#\"><span class=\"logo\"></span></a> </div> <nav role=\"navigation\"> <!-- <minimaliza-menu></minimaliza-menu> --> <div class=\"small-logo\"> <a ng-href=\"#\"><span class=\"logo\"></span></a> </div> <div class=\"mobile-menu\" ng-if=\"$root.userInfo.user_id\"> <button type=\"button\" class=\"navbar-toggle mobile-menu-toggle\" data-toggle=\"collapse\" data-target=\"#mobile-collapse\"> <i class=\"fa fa-chevron-down\"></i> </button> <div class=\"collapse mobile-navbar\" id=\"mobile-collapse\"> <ul class=\"nav navbar-nav\"> <li ng-class=\"{'active':active == 'home'}\"><a class=\"page-scroll\" href=\"#page-top\">Home</a></li> <li ng-class=\"{'active':active == 'analytics'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.analytics\">Analytics</a></li> <li ng-class=\"{'active':active == 'campaigns'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.campaigns\">Campaigns</a></li> <!--<li ng-class=\"{'active':active == 'security'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.settings\">Security </a></li>--> <li><a class=\"page-scroll\" page-scroll ng-click=\"logout()\">Logout</a></li> </ul> </div> </div> <div class=\"navbar-right\" ng-if=\"$root.userInfo.user_id\"> <ul class=\"nav navbar-nav no-borders\"> <li uib-dropdown> <a ui-sref=\"bitraz.main.index\" uib-dropdown-toggle> <i class=\"pe-7s-home\"></i> </a> </li> <li uib-dropdown> <a uib-dropdown-toggle> <i class=\"pe-7s-graph\"></i> </a> <div uib-dropdown-menu class=\"hdropdown bigmenu animated flipInX\"> <table> <tbody> <tr> <td> <a ui-sref=\"bitraz.main.analytics\"> <i class=\"pe pe-7s-graph1 text-danger\"></i> <h5>Analytics</h5> </a>  <td> <a ui-sref=\"bitraz.main.campaigns\"> <i class=\"pe pe-7s-portfolio text-info\"></i> <h5>Campaigns</h5> </a>    </table> </div> </li> <!--<li>--> <!--<a ui-sref=\"bitraz.main.settings\">--> <!--<i class=\"pe-7s-config\"></i>--> <!--</a>--> <!--</li>--> <li> <a ng-click=\"logout()\"> <i class=\"pe-7s-power\"></i> </a> </li> </ul> </div> </nav>");
+    "<div id=\"logo\" class=\"light-version\"> <a ng-href=\"#\"><span class=\"logo\"></span></a> </div> <nav role=\"navigation\"> <!-- <minimaliza-menu></minimaliza-menu> --> <div class=\"small-logo\"> <a ng-href=\"#\"><span class=\"logo\"></span></a> </div> <div class=\"mobile-menu\" ng-if=\"$root.userInfo.user_id\"> <button type=\"button\" class=\"navbar-toggle mobile-menu-toggle\" data-toggle=\"collapse\" data-target=\"#mobile-collapse\"> <i class=\"fa fa-chevron-down\"></i> </button> <div class=\"collapse mobile-navbar\" id=\"mobile-collapse\"> <ul class=\"nav navbar-nav\"> <li ng-class=\"{'active':active == 'home'}\"><a class=\"page-scroll\" href=\"#page-top\">Home</a></li> <li ng-class=\"{'active':active == 'analytics'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.analytics\">Analytics</a></li> <li ng-class=\"{'active':active == 'campaigns'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.campaigns\">Campaigns</a></li> <!--<li ng-class=\"{'active':active == 'security'}\"><a class=\"page-scroll\" page-scroll ui-sref=\"bitraz.main.settings\">Security </a></li>--> <li><a class=\"page-scroll\" page-scroll ng-click=\"logout()\">Logout</a></li> </ul> </div> </div> <div class=\"navbar-right\" ng-if=\"$root.userInfo.user_id\"> <ul class=\"nav navbar-nav no-borders\"> <li uib-dropdown> <a ui-sref=\"bitraz.main.index\" uib-dropdown-toggle> <i class=\"pe-7s-home\"></i> </a> </li> <li uib-dropdown> <a uib-dropdown-toggle> <i class=\"pe-7s-graph\"></i> </a> <div uib-dropdown-menu class=\"hdropdown bigmenu animated flipInX\"> <table> <tbody> <tr> <td> <a ui-sref=\"bitraz.main.analytics\"> <i class=\"pe pe-7s-graph1 text-danger\"></i> <h5>Analytics</h5> </a>  <td> <a ui-sref=\"bitraz.main.campaigns\"> <i class=\"pe pe-7s-portfolio text-info\"></i> <h5>Campaigns</h5> </a>    </table> </div> </li> <li> <a ui-sref=\"bitraz.main.settings\"> <i class=\"pe-7s-config\"></i> </a> </li> <li> <a ng-click=\"logout()\"> <i class=\"pe-7s-power\"></i> </a> </li> </ul> </div> </nav>");
 }]);
 
 angular.module("views/analytics/index.html", []).run(["$templateCache", function($templateCache) {
@@ -176,12 +176,69 @@ angular.module("views/analytics/index.html", []).run(["$templateCache", function
 
 angular.module("views/analytics/settings.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/analytics/settings.html",
-    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12 text-center m-t-md\"> <h2> Welcome to biTRAZ settings </h2> <p>Special <strong>Analytic Trace Application</strong> for your mobile marketing campaigns.</p> </div> </div> </div> </div>");
+    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12 m-t-md\"> <h2> Account Settings </h2> </div> </div> <div class=\"row\"> <div class=\"col-lg-6 m-t-md\"> <h3> API Key </h3> <div class=\"row\" ng-show=\"!currentUser.apikey && !loadingkey\"> <div class=\"col-lg-4 m-t-md\"> <button class=\"btn btn-success\" ng-click=\"seeApiKey()\">Show API Key</button> </div> </div> <div class=\"row\" ng-show=\"loadingkey\"> <div class=\"col-sm-12\"> Loading.. <i class=\"fa fa-spinner fa-spin\"></i> </div> </div> <div class=\"row\" ng-show=\"currentUser.apikey && !loadingkey\"> <div class=\"col-sm-6\"> <h4 id=\"apikeymodal\"> {{currentUser.apikey}} </h4> </div> <div class=\"col-sm-6 text-left\"> <div class=\"btn btn-success btn-small right api-copy-button\" data-clipboard-action=\"copy\" data-clipboard-target=\"#apikeymodal\">Copy to Clipboard</div> </div> </div> <div class=\"row\" ng-if=\"keyError\"> <div class=\"col-sm-12\"> <div class=\"text-left error\"> {{keyError}} </div> </div> </div> </div> </div> <div class=\"row\"> <div class=\"col-lg-6 m-t-md\"> <h3> Change Password </h3> <div class=\"row\"> <div class=\"col-lg-4 m-t-md\"> <button class=\"btn btn-success\" ng-click=\"changeUserPassword()\">Click To Login Password</button> </div> </div> </div> </div> </div> </div>");
 }]);
 
 angular.module("views/analytics/users.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/analytics/users.html",
     "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12 text-center m-t-md\"> <h2> Welcome to biTRAZ users </h2> <p>Special <strong>Analytic Trace Application</strong> for your mobile marketing campaigns.</p> </div> </div> </div> </div>");
+}]);
+
+angular.module("views/analytics/users/change_password.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("views/analytics/users/change_password.html",
+    "<div id=\"edit_user\">\n" +
+    "\n" +
+    "    <div class=\"content\" animate-panel effect=\"zoomIn\">\n" +
+    "        <div class=\"modal-header\">\n" +
+    "            <h3 class=\"modal-title\" id=\"modal-title\">Change Login Password</h3>\n" +
+    "        </div>\n" +
+    "\n" +
+    "        <ng-form class=\"form-horizontal\" name=\"$ctrl.userForm\" novalidate >\n" +
+    "            <div class=\"modal-body\" id=\"modal-body\">\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label class=\"col-sm-2 control-label\">User Name</label>\n" +
+    "\n" +
+    "                    <div class=\"col-sm-10\">\n" +
+    "                        {{$ctrl.user.UserName}}\n" +
+    "                    </div>\n" +
+    "\n" +
+    "                </div>\n" +
+    "\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label class=\"col-sm-2 control-label\">Password</label>\n" +
+    "\n" +
+    "                    <div class=\"col-sm-10\">\n" +
+    "                        <input id=\"pw1\" type=\"password\" ng-required=\"true\" ng-minlength=\"8\" name=\"password\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.user.Password\" />\n" +
+    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.userForm.password.$invalid && $ctrl.userForm.password.$touched\">\n" +
+    "                            <span ng-if=\"$ctrl.userForm.password.$error.required\">Password is required</span>\n" +
+    "                            <span ng-if=\"!$ctrl.userForm.password.$error.required && $ctrl.userForm.password.$error.minlength\">Minimum 8 characters are required.</span>\n" +
+    "                        </small>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "\n" +
+    "                <div class=\"form-group\">\n" +
+    "                    <label class=\"col-sm-2 control-label\">Re-Password</label>\n" +
+    "\n" +
+    "                    <div class=\"col-sm-10\">\n" +
+    "                        <input id=\"pw2\" pw-check='pw1' type=\"password\" ng-required=\"true\" ng-minlength=\"8\" name=\"repassword\" placeholder=\"Password\" class=\"form-control\" ng-model=\"$ctrl.user.RePassword\" />\n" +
+    "                        <small  class=\"form-text text-muted text-danger\" ng-if=\"$ctrl.userForm.repassword.$invalid && $ctrl.userForm.repassword.$touched\">\n" +
+    "                            <span ng-if=\"$ctrl.userForm.repassword.$error.required\">Re Password is required</span>\n" +
+    "                            <span ng-if=\"!$ctrl.userForm.repassword.$error.required && $ctrl.userForm.repassword.$error.minlength\">Minimum 8 characters are required.</span>\n" +
+    "                            <span ng-if=\"!$ctrl.userForm.repassword.$error.required && !$ctrl.userForm.repassword.$error.minlength && $ctrl.userForm.repassword.$error.pwmatch\">Re Password Not Matched</span>\n" +
+    "                        </small>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "\n" +
+    "            </div>\n" +
+    "            <div class=\"modal-footer\">\n" +
+    "                <small class=\"text-danger\" ng-if=\"$ctrl.saveError\">Error: {{$ctrl.saveError}} </small>\n" +
+    "                <button class=\"btn btn-default\" type=\"submit\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "                <button class=\"btn btn-primary\" type=\"submit\" ng-class=\"{'disabled': !$ctrl.userForm.$valid}\" ng-disabled=\"!$ctrl.userForm.$valid\"  ng-click=\"save($ctrl.user)\">Save changes</button>\n" +
+    "            </div>\n" +
+    "        </ng-form>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "");
 }]);
 
 angular.module("views/common/analytics.html", []).run(["$templateCache", function($templateCache) {

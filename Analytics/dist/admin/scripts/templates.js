@@ -1,4 +1,4 @@
-angular.module('bitraz.template', ['views/admin/admin.html', 'views/admin/analytics.html', 'views/admin/archieves.html', 'views/admin/campaigns.html', 'views/admin/campaigns/add_campaign.html', 'views/admin/campaigns/campaign_list.html', 'views/admin/campaigns/edit_campaign.html', 'views/admin/components/clients_component_tmpl.html', 'views/admin/header.html', 'views/admin/index.html', 'views/admin/settings.html', 'views/admin/users.html', 'views/admin/users/add_user.html', 'views/admin/users/change_password.html', 'views/admin/users/edit_user.html', 'views/common/analytics.html', 'views/common/dashboard/activities_tmpl.html', 'views/common/dashboard/dashboard_tmpl.html', 'views/common/dashboard/logged_users_tmpl.html', 'views/common/dashboard/recent_campaigns_tmpl.html', 'views/common/dashboard/total_campaigns_tmpl.html', 'views/common/dashboard/total_users_tmpl.html', 'views/common/dashboard/total_visits_tmpl.html', 'views/common/dashboard/urls_generated_tmpl.html', 'views/common/directives/analytics_layout.html', 'views/common/header-dashboard.html', 'views/common/login.html', 'views/common/navigation.html', 'views/common/panel_tools.html']);
+angular.module('bitraz.template', ['views/admin/admin.html', 'views/admin/analytics.html', 'views/admin/archieves.html', 'views/admin/campaigns.html', 'views/admin/campaigns/add_campaign.html', 'views/admin/campaigns/campaign_list.html', 'views/admin/campaigns/edit_campaign.html', 'views/admin/campaigns/generate_campaign_url.html', 'views/admin/components/clients_component_tmpl.html', 'views/admin/header.html', 'views/admin/index.html', 'views/admin/settings.html', 'views/admin/users.html', 'views/admin/users/add_user.html', 'views/admin/users/change_password.html', 'views/admin/users/edit_user.html', 'views/common/analytics.html', 'views/common/dashboard/activities_tmpl.html', 'views/common/dashboard/dashboard_tmpl.html', 'views/common/dashboard/logged_users_tmpl.html', 'views/common/dashboard/recent_campaigns_tmpl.html', 'views/common/dashboard/total_campaigns_tmpl.html', 'views/common/dashboard/total_users_tmpl.html', 'views/common/dashboard/total_visits_tmpl.html', 'views/common/dashboard/urls_generated_tmpl.html', 'views/common/directives/analytics_layout.html', 'views/common/header-dashboard.html', 'views/common/login.html', 'views/common/navigation.html', 'views/common/panel_tools.html']);
 
 angular.module("views/admin/admin.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/admin/admin.html",
@@ -38,7 +38,7 @@ angular.module("views/admin/campaigns/add_campaign.html", []).run(["$templateCac
     "                        <input type=\"text\" ng-required=\"true\" name=\"name\" placeholder=\"Campaign Name\"\n" +
     "                               class=\"form-control\" ng-model=\"$ctrl.newCampaign.CampaignName\"/>\n" +
     "                        <small class=\"form-text text-muted text-danger\"\n" +
-    "                               ng-if=\"$ctrl.newCampaignForm.name.$invalid && $ctrl.newCampaignForm.username.$touched\">\n" +
+    "                               ng-if=\"$ctrl.newCampaignForm.name.$invalid && $ctrl.newCampaignForm.name.$touched\">\n" +
     "                            <span ng-if=\"$ctrl.newCampaignForm.name.$error.required\">Name is required</span>\n" +
     "                        </small>\n" +
     "                    </div>\n" +
@@ -192,6 +192,129 @@ angular.module("views/admin/campaigns/edit_campaign.html", []).run(["$templateCa
     "");
 }]);
 
+angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("views/admin/campaigns/generate_campaign_url.html",
+    "<div id=\"add_user\">\n" +
+    "\n" +
+    "    <div class=\"content\" animate-panel effect=\"zoomIn\">\n" +
+    "        <div class=\"modal-header\">\n" +
+    "            <h3 class=\"modal-title\" id=\"modal-title\">Short Url for a Campaign {{$ctrl.campaign.CampaignName}}</h3>\n" +
+    "        </div>\n" +
+    "        <ng-form class=\"form-horizontal\" name=\"$ctrl.campaignForm\" novalidate>\n" +
+    "            <div class=\"modal-body\" id=\"modal-body\">\n" +
+    "                <ul class=\"nav nav-tabs\">\n" +
+    "                    <li  ng-class=\"{'active': $ctrl.activeTab == 'list'}\"><a data-toggle=\"tab\" data-target=\"#list\" role=\"tab\" ng-click=\"$ctrl.activeTab='list'\">All Short URL's</a></li>\n" +
+    "                    <li  ng-class=\"{'active': $ctrl.activeTab == 'simple'}\"><a data-toggle=\"tab\" data-target=\"#simple\" role=\"tab\" ng-click=\"$ctrl.activeTab='simple'\">Simple </a></li>\n" +
+    "                    <li  ng-class=\"{'active': $ctrl.activeTab == 'advanced'}\"><a data-toggle=\"tab\" data-target=\"#advanced\" role=\"tab\" ng-click=\"$ctrl.activeTab='advanced'\">Advanced</a></li>\n" +
+    "                    <li  ng-class=\"{'active': $ctrl.activeTab == 'upload'}\"><a data-toggle=\"tab\" data-target=\"#upload\" role=\"tab\" ng-click=\"$ctrl.activeTab='upload'\">Upload</a></li>\n" +
+    "                </ul>\n" +
+    "\n" +
+    "                <div class=\"tab-content\">\n" +
+    "                    <div id=\"list\" class=\"tab-pane fade\" ng-class=\"{'in active': $ctrl.activeTab == 'list'}\">\n" +
+    "                        <h5>Generated list of urls in this campaign.</h5>\n" +
+    "                        <div style=\"min-height: 250px;padding-top: 20px;\">\n" +
+    "                            <p>coming soon.</p>\n" +
+    "                        </div>\n" +
+    "                    </div>\n" +
+    "                    <div id=\"simple\" class=\"tab-pane fade\"  ng-class=\"{'in active': $ctrl.activeTab == 'simple'}\">\n" +
+    "                        <h5>Generate single short url by copy & paste multiple mobile numbers.</h5>\n" +
+    "                        <div style=\"min-height: 250px;padding-top: 20px;\">\n" +
+    "                            <ng-form class=\"form-horizontal\" name=\"$ctrl.campaignForm['simple']\" novalidate>\n" +
+    "                                <div class=\"form-group\">\n" +
+    "                                    <label class=\"col-sm-3 control-label\">Long Url</label>\n" +
+    "\n" +
+    "                                    <div class=\"col-sm-9\">\n" +
+    "                                        <input type=\"url\" ng-required=\"true\" name=\"longurl\" placeholder=\"Long Url\"\n" +
+    "                                               class=\"form-control\" ng-model=\"$ctrl.campaign.generator['simple'].longurl\"/>\n" +
+    "                                        <small class=\"form-text text-muted text-danger\"\n" +
+    "                                               ng-if=\"$ctrl.campaignForm['simple'].longurl.$invalid && $ctrl.campaignForm['simple'].longurl.$touched\">\n" +
+    "                                            <span ng-if=\"$ctrl.campaignForm['simple'].longurl.$error.required\">Long Url is required</span>\n" +
+    "                                            <span ng-if=\"$ctrl.campaignForm['simple'].longurl.$error.url\">Long Url is not valid.</span>\n" +
+    "                                        </small>\n" +
+    "                                    </div>\n" +
+    "\n" +
+    "                                </div>\n" +
+    "                                <div class=\"form-group\">\n" +
+    "                                    <label class=\"col-sm-3 control-label\">Mobile Number</label>\n" +
+    "\n" +
+    "                                    <div class=\"col-sm-9\">\n" +
+    "                                <input type=\"text\" ng-required=\"true\" name=\"mobileNumber\" type=\"number\"\n" +
+    "                                       ng-minlength=\"10\" ng-maxlength=\"10\" placeholder=\"Mobile Number\"\n" +
+    "                                          class=\"form-control\" ng-model=\"$ctrl.campaign.generator['simple'].mobileNumbers\"/>\n" +
+    "                                        <small>Note: mobile number with country code only, no '+' before number.</small>\n" +
+    "                                        <small class=\"form-text text-muted text-danger block\" style=\"display: block\"\n" +
+    "                                               ng-if=\"$ctrl.campaignForm['simple'].mobileNumber.$invalid && $ctrl.campaignForm['simple'].mobileNumber.$touched\">\n" +
+    "                                            <span ng-if=\"$ctrl.campaignForm['simple'].mobileNumber.$error.required\">mobile number are required</span>\n" +
+    "                                            <span ng-if=\"(($ctrl.campaignForm['simple'].mobileNumber.$error.minlength || $ctrl.campaignForm['simple'].mobileNumber.$error.maxlength)  &&\n" +
+    "                                                $ctrl.campaignForm['simple'].mobileNumber.$dirty)\">mobile number are required</span>\n" +
+    "                                        </small>\n" +
+    "                                    </div>\n" +
+    "\n" +
+    "                                </div>\n" +
+    "                            </ng-form>\n" +
+    "                        </div>\n" +
+    "                    </div>\n" +
+    "                    <div id=\"advanced\" class=\"tab-pane fade\"  ng-class=\"{'in active': $ctrl.activeTab == 'advanced'}\">\n" +
+    "                        <h5>Generate multiple short urls by copy & paste multiple mobile numbers.</h5>\n" +
+    "                        <div style=\"min-height: 250px;padding-top: 20px;\">\n" +
+    "                            <ng-form class=\"form-horizontal\" name=\"$ctrl.campaignForm['advanced']\" novalidate>\n" +
+    "                                <div class=\"form-group\">\n" +
+    "                                    <label class=\"col-sm-3 control-label\">Long Url</label>\n" +
+    "\n" +
+    "                                    <div class=\"col-sm-9\">\n" +
+    "                                        <input type=\"url\" ng-required=\"true\" name=\"longurl\" placeholder=\"Long Url\"\n" +
+    "                                               class=\"form-control\" ng-model=\"$ctrl.campaign.generator['advanced'].longurl\"/>\n" +
+    "                                        <small class=\"form-text text-muted text-danger\"\n" +
+    "                                               ng-if=\"$ctrl.campaignForm['advanced'].longurl.$invalid && $ctrl.campaignForm['advanced'].longurl.$touched\">\n" +
+    "                                            <span ng-if=\"$ctrl.campaignForm['advanced'].longurl.$error.required\">Long Url is required</span>\n" +
+    "                                            <span ng-if=\"$ctrl.campaignForm['advanced'].longurl.$error.url\">Long Url is not valid.</span>\n" +
+    "                                        </small>\n" +
+    "                                    </div>\n" +
+    "\n" +
+    "                                </div>\n" +
+    "                                <div class=\"form-group\">\n" +
+    "                                    <label class=\"col-sm-3 control-label\">Mobile Numbers</label>\n" +
+    "\n" +
+    "                                    <div class=\"col-sm-9\">\n" +
+    "                                <textarea ng-required=\"true\" name=\"mobileNumbers\" placeholder=\"Mobile Numbers\"\n" +
+    "                                          class=\"form-control\" ng-model=\"$ctrl.campaign.generator['advanced'].mobileNumbers\"\n" +
+    "                                          rows=\"8\" cols=\"11\"/>\n" +
+    "                                        <small>Note: Mobile Numbers, one per line or comma separated</small>\n" +
+    "                                        <small class=\"form-text text-muted text-danger block\" style=\"display: block\"\n" +
+    "                                               ng-if=\"$ctrl.campaignForm['advanced'].mobileNumbers.$invalid && $ctrl.campaignForm['advanced'].mobileNumbers.$touched\">\n" +
+    "                                            <span ng-if=\"$ctrl.campaignForm['advanced'].mobileNumbers.$error.required\">mobile numbers are required</span>\n" +
+    "                                        </small>\n" +
+    "                                    </div>\n" +
+    "\n" +
+    "                                </div>\n" +
+    "                            </ng-form>\n" +
+    "                        </div>\n" +
+    "                    </div>\n" +
+    "                    <div id=\"upload\" class=\"tab-pane fade\" ng-class=\"{'in active': $ctrl.activeTab == 'upload'}\">\n" +
+    "                        <h3>Upload</h3>\n" +
+    "                        <div style=\"min-height: 250px;padding-top: 20px;\">\n" +
+    "                            <p>Generate Urls by a file upload.</p>\n" +
+    "                        </div>\n" +
+    "\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "            <div class=\"modal-footer\" ng-show=\"$ctrl.activeTab == 'upload' || $ctrl.activeTab == 'simple' || $ctrl.activeTab == 'advanced'\">\n" +
+    "                <small class=\"text-danger\" ng-if=\"$ctrl.saveError\">Error: {{$ctrl.saveError}}</small>\n" +
+    "                <button class=\"btn btn-default\" type=\"submit\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "                <button class=\"btn btn-primary\" type=\"submit\" ng-class=\"{'disabled': !$ctrl.campaignForm[$ctrl.activeTab].$valid}\"\n" +
+    "                        ng-disabled=\"!$ctrl.campaignForm[$ctrl.activeTab].$valid\" ng-click=\"generate($ctrl.campaign.generator[$ctrl.activeTab], $ctrl.activeTab)\">Generate\n" +
+    "                </button>\n" +
+    "            </div>\n" +
+    "            <div class=\"modal-footer\" ng-show=\"$ctrl.activeTab == 'list'\">\n" +
+    "                <button class=\"btn btn-default\" type=\"submit\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "            </div>\n" +
+    "        </ng-form>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "");
+}]);
+
 angular.module("views/admin/components/clients_component_tmpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/admin/components/clients_component_tmpl.html",
     "");
@@ -214,7 +337,7 @@ angular.module("views/admin/settings.html", []).run(["$templateCache", function(
 
 angular.module("views/admin/users.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/admin/users.html",
-    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12\"> <h2> Users </h2> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <ul class=\"list-inline text-right\"> <li><div class=\"btn btn-primary\" ng-click=\"addUser()\">Add User</div> </li> </ul> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <div id=\"userList\" ui-grid=\"userListOptions\" class=\"grid\"></div> </div> </div> </div> </div>");
+    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12\"> <h2> Users </h2> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <ul class=\"list-inline text-right\"> <li><div class=\"btn btn-primary\" ng-click=\"addUser()\">Add User</div> </li> </ul> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <div id=\"userList\" ui-grid=\"userListOptions\" class=\"grid\"></div> </div> </div> <div class=\"modal fade\" id=\"myApiModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myApiModalLabel\"> <div class=\"modal-dialog\" role=\"document\"> <div class=\"modal-content\"> <div class=\"modal-body\"> <div class=\"row\"> <div class=\"col-sm-12\"> <h3> API key for {{selectedRow.UserName}}({{selectedRow.Email}})</h3> </div> </div> <div class=\"row\" ng-show=\"!loadingkey\"> <div class=\"col-sm-6\"> <h4 id=\"apikeymodal\"> {{selectedRow.apikey}} </h4> </div> <div class=\"col-sm-6 text-right\"> <div class=\"btn btn-success btn-small right copy-button\" data-clipboard-action=\"copy\" data-clipboard-target=\"#apikeymodal\">Copy to Clipboard</div> </div> </div> <div class=\"row\" ng-if=\"keyError\"> <div class=\"col-sm-12\"> <div class=\"text-left error\"> {{keyError}} </div> </div> </div> <div class=\"row\" ng-show=\"loadingkey\"> <div class=\"col-sm-12\"> Loading.. <i class=\"fa fa-spinner fa-spin\"></i> </div> </div> </div> </div> </div> </div> </div> </div>");
 }]);
 
 angular.module("views/admin/users/add_user.html", []).run(["$templateCache", function($templateCache) {

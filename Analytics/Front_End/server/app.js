@@ -82,7 +82,13 @@ app.all("*", function (req, res, next) {
  } else if( /\/Campaign\/Search/.exec(p)){
     var camp = require("./mock_data/chance/campaigns");
     res.json( camp.list() );
-  }
+ }
+ else if( /\/Customer\/GetAPIKEY/.exec(p)){
+   var user = require("./mock_data/chance/user");
+   setTimeout(function(){
+     res.json( user.getKey() );
+   }, 1000)
+ }
 
   else if( /\/Customer/.exec(p)){
     var user = require("./mock_data/chance/user");

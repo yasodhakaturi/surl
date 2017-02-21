@@ -14,7 +14,7 @@
                         <input type="text" ng-required="true" name="name" placeholder="Campaign Name"
                                class="form-control" ng-model="$ctrl.newCampaign.CampaignName"/>
                         <small class="form-text text-muted text-danger"
-                               ng-if="$ctrl.newCampaignForm.name.$invalid && $ctrl.newCampaignForm.username.$touched">
+                               ng-if="$ctrl.newCampaignForm.name.$invalid && $ctrl.newCampaignForm.name.$touched">
                             <span ng-if="$ctrl.newCampaignForm.name.$error.required">Name is required</span>
                         </small>
                     </div>

@@ -75,7 +75,7 @@ function AnalyticsController($rootScope, $state, $scope, CampaignService, $locat
         }
       }else{
         if(res){
-          $scope.campaigns = res || [];
+          $scope.campaigns = res.length > 0? res : [];
 
           if(_.indexOf(_.map($scope.campaigns, 'ReferenceNumber'), $scope.selectedCampaign) < 0){
             $scope.selectedCampaign = $scope.campaigns[0].ReferenceNumber;

@@ -37,6 +37,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
         this.UserName = data.UserName;
         this.Email = data.Email;
         this.IsActive = data.IsActive || false;
+        this.key = null;
       }
  
       save(){
@@ -84,6 +85,22 @@ angular.module('bitraz.models', ['bitraz.models.common'])
           refDefer.resolve(new UserModel(userObj.data));
         }, (err) => {
           console.log('user update failed', err);
+          refDefer.reject(err);
+        });
+        return refDefer.promise;
+      }
+
+      getKey(){
+        let refDefer = $q.defer();
+        $http({
+          method: 'GET',
+          url: appConfig.apiEndPoint + '/Customer/GetAPIKEY?clientid=' + this.id,
+          data: {clientid: this.id}
+        }).then((keyObj) => {
+          this.key = keyObj.data.API_KEY;
+          refDefer.resolve({"key": this.key});
+        }, (err) => {
+          console.log('failed to load key', err);
           refDefer.reject(err);
         });
         return refDefer.promise;
@@ -188,21 +205,24 @@ angular.module('bitraz.models', ['bitraz.models.common'])
           return refDefer.promise;
         }
 
-//        resetPassword(){
-//          let refDefer = $q.defer();
-//          $http({
-//            method: 'PUT',
-//            url: appConfig.apiEndPoint + '/api/Users/'+this.id,
-//            data: {id: this.id, Password: this.Password}
-//          }).then((userObj) => {
-//            console.log('user update', userObj);
-//            refDefer.resolve(new UserModel(userObj.data));
-//          }, (err) => {
-//            console.log('user update failed', err);
-//            refDefer.reject(err);
-//          });
-//          return refDefer.promise;
-//        }
+        generate(form, type) {
+
+          var refDefer = $q.defer();
+          var data = {CampaignId: this.Id, LongUrl: form.LongUrl, MobileNumbers: form.MobileNumbers, type: type};
+
+          $http({
+            method: 'POST',
+            url: appConfig.apiEndPoint + '/Campaign/UploadData',
+            data: data
+          }).then((campaignObj) => {
+//                console.log('campaign save', campaignObj)
+            refDefer.resolve(new CampaignModel(campaignObj.data));
+          }, (err) => {
+            console.log('campaign save failed', err);
+            refDefer.reject(err);
+          });
+          return refDefer.promise;
+        }
       }
       return Campaign;
   }])

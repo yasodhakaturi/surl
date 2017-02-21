@@ -66,6 +66,11 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, CampaignsColl
                                                               '<span ng-if="!row.entity.IsActive">In Active</span>' +
                                                               '&nbsp;' +
                                                               '</div>'},
+          { name:'Genarate URl\'s', cellTemplate:'<div>' +
+          '&nbsp;&nbsp;&nbsp;' +
+          '<a ui-sref="bitraz.main.analytics({rid:row.entity.ReferenceNumber})">View</a>' +
+          '</div>'
+          },
           { name:'Actions', cellTemplate:'<div>' +
                       '<a ng-click="grid.appScope.editCampaign(row.entity)">Edit</a>' +
                       '&nbsp;&nbsp;&nbsp;' +
@@ -175,7 +180,64 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, CampaignsColl
     $scope.refreshData();
   }
 function ArchievesController($http, $scope) {}
-function SettingsController($http, $scope) {}
+function SettingsController($http, $rootScope, $scope, $uibModal, UserModel) {
+  $scope.currentUser = new UserModel({id: $rootScope.userInfo.user_id, UserName: $rootScope.userInfo.UserName, Email: $rootScope.userInfo.Email})
+  $scope.seeApiKey = function(ele){
+    $scope.keyError = null;
+    $scope.loadingkey = true;
+    $scope.currentUser.getKey().then(
+      (keyObj)=>{
+        $scope.loadingkey = false;
+        $scope.currentUser.apikey = keyObj.key || row.key;
+        var clipboard = new Clipboard('.api-copy-button');
+      }, (err)=>{
+        $scope.keyError = err.message || 'Failed to load key. try again';
+        $scope.loadingkey = false;
+        console.log('failed to get key.', err)
+      });
+  };
+
+  $scope.changeUserPassword = function(row) {
+    var instance = $uibModal.open({
+      animation: true,
+      ariaLabelledBy: 'modal-title-top',
+      ariaDescribedBy: 'modal-body-top',
+      templateUrl: 'views/analytics/users/change_password.html',
+      size: 'lg',
+      controller: function($scope, user) {
+        var $ctrl = this;
+        $scope.name = 'top';
+
+        $ctrl.user = user;
+
+        $scope.save = function () {
+          $ctrl.saveError = "";
+          if($ctrl.userForm.$valid){
+            $ctrl.user.resetPassword().then((resp)=>{
+              instance.close();
+            }, (err) => {
+              $ctrl.saveError = err && err.message || "Failed to save user.";
+            })
+          }
+
+        };
+
+        $scope.cancel = function () {
+          $ctrl.saveError = "";
+          instance.dismiss('cancel');
+        };
+
+      },
+      resolve:{
+        "user": function(){
+          return $scope.currentUser;
+        }
+      },
+      controllerAs: '$ctrl'
+    });
+  };
+
+}
 function UsersController($http, $scope) {}
 function appCtrl($http, $scope) {
 
