@@ -223,7 +223,7 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
                     }
                   }, (err) => {
                     $ctrl.generation = false;
-                    $ctrl.saveError = err && err.message || "Failed to save user.";
+                    $ctrl.saveError = err && err.message || "Failed to generate batch.";
                   });
                 }else if(type == 'upload'){
                   //todo

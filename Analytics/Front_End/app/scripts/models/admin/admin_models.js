@@ -225,7 +225,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
             }
 
           }, (err) => {
-            console.log('campaign save failed', err);
+            console.log('campaign generation failed', err);
             refDefer.reject(err);
           });
           return refDefer.promise;
@@ -246,7 +246,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
             refDefer.resolve(this.batchList);
 
           }, (err) => {
-            console.log('campaign save failed', err);
+            console.log('campaign batch list failed', err);
             refDefer.reject(err);
           });
           return refDefer.promise;
