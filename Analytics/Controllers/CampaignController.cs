@@ -459,36 +459,37 @@ namespace Analytics.Controllers
                 return Json(obj, JsonRequestBehavior.AllowGet);
             }
         }
-        public JsonResult GetBatchStatus(string BatchID)
+        public JsonResult GetBatchStatus(int BatchID)
         {
-            BatchUploadData objb = dc.BatchUploadDatas.Where(x => x.BatchName == BatchID).SingleOrDefault();
+            BatchUploadData objb = dc.BatchUploadDatas.Where(x => x.PK_Batchid == BatchID).SingleOrDefault();
             BatchStatus objs = new BatchStatus();
             if(objb!=null)
             {
                 //if (objb.Status == "Not Started" || objb.Status=="In Progress"|| objb.Status == "Insertion Completed" || objb.Status=="Completed")
                 //{
                     objs.Status = objb.Status;
-                    objs.Batchid = objb.BatchName;
+                    objs.BatchID = objb.PK_Batchid;
                 //}
                 
             }
             return Json(objs,JsonRequestBehavior.AllowGet);
         }
-        public JsonResult GetBatchIDs(string CampaignID)
+        public JsonResult GetBatchIDs(string ReferenceNumber)
         {
             List<BatchIDList> objbs = new List<BatchIDList>();
 
             if(Session["userdata"]!=null)
             {
                 int currentuserid = Helper.CurrentUserId;
-                List<BatchUploadData> objb = dc.BatchUploadDatas.Where(x => x.FK_ClientID == currentuserid && x.ReferenceNumber == CampaignID).ToList();
+                List<BatchUploadData> objb = dc.BatchUploadDatas.Where(x => x.FK_ClientID == currentuserid && x.ReferenceNumber == ReferenceNumber).ToList();
                 if(objb.Count!=0)
                 {
                     objbs = (from b in objb
                              select new BatchIDList()
-                             {   
-                                 CreatedDate=b.CreatedDate,
-                                 BatchID = b.BatchName,
+                             {
+                                 CreatedDate = b.CreatedDate.Value.ToString("yyyy-MM-ddThh:mm:ss"),
+                                 BatchID = b.PK_Batchid,
+                                 BatchName=b.BatchName,
                                  Status=b.Status
                              }).ToList();
                 }
@@ -496,10 +497,10 @@ namespace Analytics.Controllers
             }
             return Json(objbs, JsonRequestBehavior.AllowGet);
         }
-        public void GetBatchDownloadedFile(string BatchID)
+        public void GetBatchDownloadedFile(int BatchID)
         {
             string g0pe = "https:\\g0.pe"; 
-             BatchUploadData objb = dc.BatchUploadDatas.Where(x => x.BatchName == BatchID).SingleOrDefault();
+             BatchUploadData objb = dc.BatchUploadDatas.Where(x => x.PK_Batchid == BatchID).SingleOrDefault();
             if (objb != null)
             {
                 List<BatchDownload> objd = (from u in dc.UIDDATAs
@@ -507,7 +508,8 @@ namespace Analytics.Controllers
                                             select new BatchDownload()
                                             {
                                                 Mobilenumber = u.MobileNumber,
-                                                ShortUrl = g0pe + "\"" + u.UniqueNumber
+                                                //ShortUrl = g0pe + "\"" + u.UniqueNumber
+                                                ShortUrl="https://g0.pe/" + u.UniqueNumber
                                             }).ToList();
                 var grid = new System.Web.UI.WebControls.GridView();
                 string filename = objb.BatchName;
@@ -531,6 +533,7 @@ namespace Analytics.Controllers
             int clientid = 0; int rid = 0;
             exportDataModel obje = new exportDataModel();
             // MobileNumbers = "{\"MobileNumbers\":[\"8331877564\",\"9848745783\"]}";
+            //MobileNumbers = "8331877564,9848745783";
             //ReferenceNumber = "50793";
             //LongURL = "google.com";
             //type = "advanced";
@@ -542,8 +545,10 @@ namespace Analytics.Controllers
             List<string> outputdat = new List<string>();
             List<int> pkuids = new List<int>();
             string Hashid;
-            MobileNumbersList MobileNumbersList1 = ser.Deserialize<MobileNumbersList>(MobileNumbers);
-            MobileNumbersList = MobileNumbersList1.MobileNumbers;
+            //MobileNumbersList MobileNumbersList1 = ser.Deserialize<MobileNumbersList>(MobileNumbers);
+            //MobileNumbersList = MobileNumbersList1.MobileNumbers;
+            MobileNumbersList = MobileNumbers.Split(',').ToList();
+
             string formated_mobilenumbers=String.Join(",", MobileNumbersList);
 
             //clientid = 2;
@@ -554,8 +559,9 @@ namespace Analytics.Controllers
                               select registree).SingleOrDefault();
             if (type.ToLower() == "simple" && objrid != null)
             {
-                UIDDATA objc = dc.UIDDATAs.Where(u => u.MobileNumber == MobileNumbers && u.ReferenceNumber == ReferenceNumber && u.Longurl == LongURL).SingleOrDefault();
-            if(objc==null)
+                UIDDATA objc = new UIDDATA();
+                UIDDATA objc1 = dc.UIDDATAs.Where(u => u.MobileNumber == MobileNumbers && u.ReferenceNumber == ReferenceNumber && u.Longurl == LongURL).SingleOrDefault();
+            if(objc1==null)
             {
                 objc.MobileNumber = MobileNumbers;
                 objc.ReferenceNumber = ReferenceNumber;
@@ -605,7 +611,7 @@ namespace Analytics.Controllers
                 if (objo != null)
                 {
                     obje.Status = objo.BatchName + " Created.Revert Back to you once upload has done.";
-                    obje.BatchID = objo.BatchName;
+                    obje.BatchID = objo.PK_Batchid;
                     obje.CreatedDate = objo.CreatedDate;
                 }
                // return Json(obje, JsonRequestBehavior.AllowGet);

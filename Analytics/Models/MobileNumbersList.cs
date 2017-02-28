@@ -18,20 +18,21 @@ namespace Analytics.Models
         public string Status { get; set; }
         public string MobileNumber { get; set; }
         public string ShortenUrl { get; set; }
-        public string BatchID { get; set; }
+        public int BatchID { get; set; }
         public DateTime? CreatedDate { get; set; }
 
     }
     public class BatchStatus
     {
         public string Status { get; set; }
-        public string Batchid { get; set; }
+        public int BatchID { get; set; }
 
     }
     public class BatchIDList
     {
-        public string BatchID { get; set; }
-        public DateTime? CreatedDate{get;set;}
+        public int BatchID { get; set; }
+        public string BatchName { get; set; }
+        public string CreatedDate{get;set;}
         public String Status{get;set;}
     }
     public class BatchDownload
