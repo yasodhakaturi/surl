@@ -200,7 +200,7 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
           size: 'lg',
           backdrop: 'static',
           keyboard: false,
-          controller: function($scope, campaign, $interval) {
+          controller: function($scope, campaign, $interval, $timeout) {
             var $ctrl = this;
             var timer;
             $ctrl.campaign = campaign;
@@ -264,7 +264,8 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
                 '</div>'
                 }
               ],
-              data : []
+              data : [],
+              onRegisterApi: function(gridApi){ $scope.gridApi = gridApi;}
             };
 
             $scope.getStatus = (row) => {
@@ -273,6 +274,10 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
                 batch.Status = resp.Status;
               }, ()=>{});
             };
+
+            $scope.downloadFile = (row)=>{
+              row.download();
+            }
 
             $scope.batchListOptions.data = campaign.batchList || [];
 
@@ -304,9 +309,14 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
             if(campaign && campaign.getBatchIds){
               campaign.getBatchIds().then((resp)=>{
                 campaign.batchList = resp;
+                $timeout(()=>{$scope.gridApi && $scope.gridApi.core.refresh();},1000)
               });
             }
-
+            $scope.$watch(function(){return $ctrl.activeTab;}, function(nv){
+              if(nv == 'list'){
+                $timeout(()=>{$scope.gridApi && $scope.gridApi.core.refresh();},1000)
+              }
+            })
 
           },
           resolve: {

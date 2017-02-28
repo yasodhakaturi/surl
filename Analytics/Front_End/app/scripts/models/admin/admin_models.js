@@ -254,7 +254,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
       }
       return Campaign;
   }])
-  .factory('BatchModel', ['$http', '$q', 'appConfig', function($http, $q, appConfig){
+  .factory('BatchModel', ['$http', '$q', 'appConfig', '$window', function($http, $q, appConfig, $window){
     class Batch {
       constructor(data) {
         this.BatchID = data.BatchID;

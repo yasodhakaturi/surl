@@ -203,10 +203,10 @@ angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$te
     "        <ng-form class=\"form-horizontal\" name=\"$ctrl.campaignForm\" novalidate>\n" +
     "            <div class=\"modal-body\" id=\"modal-body\">\n" +
     "                <ul class=\"nav nav-tabs\">\n" +
-    "                    <li  ng-class=\"{'active': $ctrl.activeTab == 'list'}\"><a data-toggle=\"tab\" data-target=\"#list\" role=\"tab\" ng-click=\"$ctrl.activeTab='list'\">All Short URL's</a></li>\n" +
     "                    <li  ng-class=\"{'active': $ctrl.activeTab == 'simple'}\"><a data-toggle=\"tab\" data-target=\"#simple\" role=\"tab\" ng-click=\"$ctrl.activeTab='simple'\">Simple </a></li>\n" +
     "                    <li  ng-class=\"{'active': $ctrl.activeTab == 'advanced'}\"><a data-toggle=\"tab\" data-target=\"#advanced\" role=\"tab\" ng-click=\"$ctrl.activeTab='advanced'\">Advanced</a></li>\n" +
     "                    <li  ng-class=\"{'active': $ctrl.activeTab == 'upload'}\"><a data-toggle=\"tab\" data-target=\"#upload\" role=\"tab\" ng-click=\"$ctrl.activeTab='upload'\">Upload</a></li>\n" +
+    "                    <li  ng-class=\"{'active': $ctrl.activeTab == 'list'}\"><a data-toggle=\"tab\" data-target=\"#list\" role=\"tab\" ng-click=\"$ctrl.activeTab='list'\">Download</a></li>\n" +
     "                </ul>\n" +
     "\n" +
     "                <div class=\"tab-content\">\n" +
@@ -314,7 +314,7 @@ angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$te
     "                                    </div>\n" +
     "\n" +
     "                                    <div class=\"col-sm-3 text-right\">\n" +
-    "                                        <div class=\"btn btn-success btn-small right\" ng-if=\"$ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status == 'Completed'\">Download</div>\n" +
+    "                                        <div class=\"btn btn-success btn-small right\" ng-if=\"$ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status == 'Completed'\" ng-click=\"$ctrl.campaignForm['advanced'].Batch.download()\">Download</div>\n" +
     "                                    </div>\n" +
     "\n" +
     "                                </div>\n" +
