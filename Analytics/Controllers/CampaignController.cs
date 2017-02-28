@@ -478,11 +478,19 @@ namespace Analytics.Controllers
         public JsonResult GetBatchIDs(string ReferenceNumber)
         {
             List<BatchIDList> objbs = new List<BatchIDList>();
+            List<BatchUploadData> objb = new List<BatchUploadData>();
 
             if(Session["userdata"]!=null)
             {
                 int currentuserid = Helper.CurrentUserId;
-                List<BatchUploadData> objb = dc.BatchUploadDatas.Where(x => x.FK_ClientID == currentuserid && x.ReferenceNumber == ReferenceNumber).ToList();
+                string role = Helper.CurrentUserRole;
+                if(role.ToLower()=="admin")
+                {
+                    objb = dc.BatchUploadDatas.Where(x => x.ReferenceNumber == ReferenceNumber).ToList();
+
+                }
+                else 
+                objb = dc.BatchUploadDatas.Where(x => x.FK_ClientID == currentuserid && x.ReferenceNumber == ReferenceNumber).ToList();
                 if(objb.Count!=0)
                 {
                     objbs = (from b in objb
