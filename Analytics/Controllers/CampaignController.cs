@@ -578,7 +578,8 @@ namespace Analytics.Controllers
                         Hashid = Helper.GetHashID(objuid.PK_Uid);
                         new OperationsBO().UpdateHashid(objuid.PK_Uid, Hashid);
                         obje.MobileNumber = MobileNumbers;
-                        obje.ShortenUrl = "https://g0.pe/" + Hashid;
+                        //obje.ShortenUrl = "https://g0.pe/" + Hashid;
+                        obje.ShortenUrl = "https:\\"+Request.Url.Authority +"\\"+ Hashid;
                         obje.CreatedDate = objuid.CreatedDate;
                         obje.Status = "Successfully Uploaded.";
                         //return Json(obje, JsonRequestBehavior.AllowGet);
