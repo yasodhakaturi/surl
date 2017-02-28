@@ -183,7 +183,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
 
           }else{
             //update
-            var data = {ReferenceNumber:this.ReferenceNumber, CampaignName: this.CampaignName, ReferenceNumber: this.ReferenceNumber,  IsActive: this.IsActive};
+            var data = {CampaignName: this.CampaignName, ReferenceNumber: this.ReferenceNumber,  IsActive: this.IsActive};
             if(this.EditPassword && this.RemovePassword){
               data.Pwd = '';
             }else if(this.EditPassword && this.Password !=''){
@@ -209,7 +209,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
         generate(form, type) {
 
           var refDefer = $q.defer();
-          var data = {CampaignId: this.Id, LongUrl: form.LongUrl, MobileNumbers: form.MobileNumbersList, type:type};
+          var data = {ReferenceNumber:this.ReferenceNumber, CampaignID: this.Id, LongUrl: form.LongUrl, MobileNumbers: form.MobileNumbersList, type:type};
 
           $http({
             method: 'POST',
@@ -237,7 +237,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
           $http({
             method: 'GET',
             url: appConfig.apiEndPoint + '/Campaign/GetBatchIDs',
-            params: {CampaignID: this.Id}
+            params: {ReferenceNumber: this.ReferenceNumber}
           }).then((resp) => {
             this.batchList = [];
             angular.forEach(resp.data, (batch)=>{
@@ -258,6 +258,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
     class Batch {
       constructor(data) {
         this.BatchID = data.BatchID;
+        this.BatchName = data.BatchName;
         this.CreatedDate = data.CreatedDate || '';
         this.Status = data.Status || '';
       }
@@ -280,7 +281,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
 
       download(){
         if(this.Status == 'Completed'){
-          $window.open(appConfig.apiEndPoint + '/Campaign/Download?BatchID='+this.BatchID);
+          $window.open(appConfig.apiEndPoint + '/Campaign/GetBatchDownloadedFile?BatchID='+this.BatchID);
         }
 
       }

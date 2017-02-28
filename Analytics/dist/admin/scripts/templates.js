@@ -1,26 +1,26 @@
 angular.module('bitraz.template', ['views/admin/admin.html', 'views/admin/analytics.html', 'views/admin/archieves.html', 'views/admin/campaigns.html', 'views/admin/campaigns/add_campaign.html', 'views/admin/campaigns/campaign_list.html', 'views/admin/campaigns/edit_campaign.html', 'views/admin/campaigns/generate_campaign_url.html', 'views/admin/components/clients_component_tmpl.html', 'views/admin/header.html', 'views/admin/index.html', 'views/admin/settings.html', 'views/admin/users.html', 'views/admin/users/add_user.html', 'views/admin/users/change_password.html', 'views/admin/users/edit_user.html', 'views/common/analytics.html', 'views/common/dashboard/activities_tmpl.html', 'views/common/dashboard/dashboard_tmpl.html', 'views/common/dashboard/logged_users_tmpl.html', 'views/common/dashboard/recent_campaigns_tmpl.html', 'views/common/dashboard/total_campaigns_tmpl.html', 'views/common/dashboard/total_users_tmpl.html', 'views/common/dashboard/total_visits_tmpl.html', 'views/common/dashboard/urls_generated_tmpl.html', 'views/common/directives/analytics_layout.html', 'views/common/header-dashboard.html', 'views/common/login.html', 'views/common/navigation.html', 'views/common/panel_tools.html']);
 
-angular.module("views/admin/admin.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/admin/admin.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/admin/admin.html",
     "<!-- Header --> <div id=\"header\" ng-include=\"'views/common/header-dashboard.html'\"></div> <!-- Navigation --> <!-- <aside id=\"menu\" ng-include=\"'views/common/navigation.html'\"></aside> --> <!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12 text-center m-t-md\"> <h2> Welcome to biTRAZ Admin. </h2> <p>Special <strong>Analytic Trace Application</strong> for your mobile marketing campaigns.</p> </div> </div> </div> </div>");
 }]);
 
-angular.module("views/admin/analytics.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/admin/analytics.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/admin/analytics.html",
     "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\" ng-show=\"!$root.pageLoading\"> <div class=\"row\"> <div class=\"col-lg-12 text-right\"> <span> Choose a Campaign</span> <select name=\"selectedCampaign\" ng-model=\"selectedCampaign\"> <option value=\"{{campaign.rid}}\" ng-repeat=\"campaign in campaigns\"> {{campaign.title || \"Campaign (\" + campaign.rid + \")\"}} : {{campaign.createdOn | date: 'MM/dd/yyyy'}} - {{campaign.endDate | date: 'MM/dd/yyyy' || 'Till Date'}} </select> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> <analytics-layout campaign-id=\"selectedCampaign\" data-range=\"selectedCampaign\"></analytics-layout> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> </div> </div> </div> </div>");
 }]);
 
-angular.module("views/admin/archieves.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/admin/archieves.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/admin/archieves.html",
     "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12 text-center m-t-md\"> <h2> Welcome to biTRAZ admin archieves </h2> <p>Special <strong>Analytic Trace Application</strong> for your mobile marketing campaigns.</p> </div> </div> </div> </div>");
 }]);
 
-angular.module("views/admin/campaigns.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/admin/campaigns.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/admin/campaigns.html",
     "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\" ng-show=\"!$rootScope.pageLoading\"> <div class=\"row\"> <div class=\"col-lg-12\"> <h2> Campaigns </h2> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <ul class=\"list-inline text-right\"> <li><div class=\"btn btn-primary\" ng-click=\"addCampaign()\">Add Campaign</div> </li> </ul> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <div id=\"campaignList\" ui-grid=\"campaignListOptions\" class=\"grid\"></div> </div> </div> </div> </div>");
 }]);
 
-angular.module("views/admin/campaigns/add_campaign.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/admin/campaigns/add_campaign.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/admin/campaigns/add_campaign.html",
     "<div id=\"add_user\">\n" +
     "\n" +
@@ -104,12 +104,12 @@ angular.module("views/admin/campaigns/add_campaign.html", []).run(["$templateCac
     "");
 }]);
 
-angular.module("views/admin/campaigns/campaign_list.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/admin/campaigns/campaign_list.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/admin/campaigns/campaign_list.html",
     "");
 }]);
 
-angular.module("views/admin/campaigns/edit_campaign.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/admin/campaigns/edit_campaign.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/admin/campaigns/edit_campaign.html",
     "<div id=\"add_user\">\n" +
     "\n" +
@@ -192,7 +192,7 @@ angular.module("views/admin/campaigns/edit_campaign.html", []).run(["$templateCa
     "");
 }]);
 
-angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/admin/campaigns/generate_campaign_url.html",
     "<div id=\"add_user\">\n" +
     "\n" +
@@ -346,32 +346,32 @@ angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$te
     "");
 }]);
 
-angular.module("views/admin/components/clients_component_tmpl.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/admin/components/clients_component_tmpl.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/admin/components/clients_component_tmpl.html",
     "");
 }]);
 
-angular.module("views/admin/header.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/admin/header.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/admin/header.html",
     "<div id=\"logo\" class=\"light-version\"> <a ng-href=\"#\"><span class=\"logo\"></span></a> </div> <nav role=\"navigation\"> <!-- <minimaliza-menu></minimaliza-menu> --> <div class=\"small-logo\"> <a ng-href=\"#\"><span class=\"logo\"></span></a> </div> <div class=\"mobile-menu\" ng-if=\"$root.userInfo.user_id\"> <button type=\"button\" class=\"navbar-toggle mobile-menu-toggle\" data-toggle=\"collapse\" data-target=\"#mobile-collapse\"> <i class=\"fa fa-chevron-down\"></i> </button> <div class=\"collapse mobile-navbar\" id=\"mobile-collapse\"> <ul class=\"nav navbar-nav\"> <li ng-class=\"{'active':active == 'home'}\"><a class=\"page-scroll\" href=\"#page-top\">Home</a></li> <li ng-class=\"{'active':active == 'analytics'}\"><a class=\"page-scroll\" page-scroll href=\"#analytics\">Analytics</a></li> <li ng-class=\"{'active':active == 'security'}\"><a class=\"page-scroll\" page-scroll href=\"#security\">Security </a></li> <li><a class=\"page-scroll\" page-scroll ng-click=\"logout()\">Logout</a></li> </ul> </div> </div> <div class=\"navbar-right\" ng-if=\"$root.userInfo.user_id\"> <ul class=\"nav navbar-nav no-borders\"> <li uib-dropdown> <a ui-sref=\"bitraz.main.index\" uib-dropdown-toggle> <i class=\"pe-7s-home\"></i> </a> </li> <li uib-dropdown> <a uib-dropdown-toggle> <i class=\"pe-7s-graph\"></i> </a> <div uib-dropdown-menu class=\"hdropdown bigmenu animated flipInX\"> <table> <tbody> <tr> <td> <a ui-sref=\"bitraz.main.analytics\"> <i class=\"pe pe-7s-graph1 text-danger\"></i> <h5>Analytics</h5> </a>  <td> <a ui-sref=\"bitraz.main.campaigns\"> <i class=\"pe pe-7s-portfolio text-info\"></i> <h5>Campaigns</h5> </a>   <tr> <td> <a ui-sref=\"bitraz.main.users\"> <i class=\"pe pe-7s-users text-success\"></i> <h5>Users</h5> </a>  <td> <a ui-sref=\"bitraz.main.archieves\"> <i class=\"pe pe-7s-box1 text-success\"></i> <h5>Archieve</h5> </a>    </table> </div> </li> <li> <a ui-sref=\"bitraz.main.settings\"> <i class=\"pe-7s-config\"></i> </a> </li> <li> <a ng-click=\"logout()\"> <i class=\"pe-7s-power\"></i> </a> </li> </ul> </div> </nav>");
 }]);
 
-angular.module("views/admin/index.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/admin/index.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/admin/index.html",
     "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12\"> <h2> Summary </h2> </div> </div> <dashboard-layout config=\"dashboardConfig\"></dashboard-layout> </div> </div>");
 }]);
 
-angular.module("views/admin/settings.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/admin/settings.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/admin/settings.html",
     "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12 text-center m-t-md\"> <h2> Welcome to biTRAZ admin settings </h2> <p>Special <strong>Analytic Trace Application</strong> for your mobile marketing campaigns.</p> </div> </div> <div class=\"row\"> <div class=\"col-sm-12\"> <ul> <li>change password</li> <li>list admin users and roles, add/edit user</li> </ul> </div> </div> </div> </div>");
 }]);
 
-angular.module("views/admin/users.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/admin/users.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/admin/users.html",
     "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12\"> <h2> Users </h2> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <ul class=\"list-inline text-right\"> <li><div class=\"btn btn-primary\" ng-click=\"addUser()\">Add User</div> </li> </ul> </div> </div> <div class=\"row\"> <div class=\"col-lg-8 col-md-10 col-sm-12\"> <div id=\"userList\" ui-grid=\"userListOptions\" class=\"grid\"></div> </div> </div> <div class=\"modal fade\" id=\"myApiModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myApiModalLabel\"> <div class=\"modal-dialog\" role=\"document\"> <div class=\"modal-content\"> <div class=\"modal-body\"> <div class=\"row\"> <div class=\"col-sm-12\"> <h3> API key for {{selectedRow.UserName}}({{selectedRow.Email}})</h3> </div> </div> <div class=\"row\" ng-show=\"!loadingkey\"> <div class=\"col-sm-6\"> <h4 id=\"apikeymodal\"> {{selectedRow.apikey}} </h4> </div> <div class=\"col-sm-6 text-right\"> <div class=\"btn btn-success btn-small right copy-button\" data-clipboard-action=\"copy\" data-clipboard-target=\"#apikeymodal\">Copy to Clipboard</div> </div> </div> <div class=\"row\" ng-if=\"keyError\"> <div class=\"col-sm-12\"> <div class=\"text-left error\"> {{keyError}} </div> </div> </div> <div class=\"row\" ng-show=\"loadingkey\"> <div class=\"col-sm-12\"> Loading.. <i class=\"fa fa-spinner fa-spin\"></i> </div> </div> </div> </div> </div> </div> </div> </div>");
 }]);
 
-angular.module("views/admin/users/add_user.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/admin/users/add_user.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/admin/users/add_user.html",
     "<div id=\"add_user\">\n" +
     "\n" +
@@ -449,7 +449,7 @@ angular.module("views/admin/users/add_user.html", []).run(["$templateCache", fun
     "");
 }]);
 
-angular.module("views/admin/users/change_password.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/admin/users/change_password.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/admin/users/change_password.html",
     "<div id=\"edit_user\">\n" +
     "\n" +
@@ -520,7 +520,7 @@ angular.module("views/admin/users/change_password.html", []).run(["$templateCach
     "");
 }]);
 
-angular.module("views/admin/users/edit_user.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/admin/users/edit_user.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/admin/users/edit_user.html",
     "<div id=\"edit_user\">\n" +
     "\n" +
@@ -574,12 +574,12 @@ angular.module("views/admin/users/edit_user.html", []).run(["$templateCache", fu
     "");
 }]);
 
-angular.module("views/common/analytics.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/common/analytics.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/common/analytics.html",
     "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\" ng-if=\"isLoaded\"> <div class=\"row\"> <div class=\"col-lg-12 text-right\"> <span> Choose a Campaign</span> <select name=\"selectedCampaign\" ng-model=\"selectedCampaign\" ng-change=\"campaignChange(selectedCampaign)\"> <option value=\"{{campaign.ReferenceNumber}}\" ng-repeat=\"campaign in campaigns\" ng-selected=\"campaign.ReferenceNumber == selectedCampaign\"> {{campaign.CampaignName || \"Campaign (\" + campaign.ReferenceNumber + \")\"}} : {{campaign.CreatedDate | date: 'MM.dd.yyyy'}} </select> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> <analytics-layout campaign-id=\"selectedCampaign\"></analytics-layout> </div> </div> <div class=\"row\"> <div class=\"col-lg-12\"> </div> </div> </div> </div>");
 }]);
 
-angular.module("views/common/dashboard/activities_tmpl.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/common/dashboard/activities_tmpl.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/common/dashboard/activities_tmpl.html",
     "<div class=\"hpanel\">\n" +
     "    <div class=\"panel-heading\" ng-if=\"$ctrl.header\">\n" +
@@ -623,7 +623,7 @@ angular.module("views/common/dashboard/activities_tmpl.html", []).run(["$templat
     "</div>");
 }]);
 
-angular.module("views/common/dashboard/dashboard_tmpl.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/common/dashboard/dashboard_tmpl.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/common/dashboard/dashboard_tmpl.html",
     "<div class=\"dashboard-container\" ng-if=\"$ctrl.config && $ctrl.config.type == 'all'\">\n" +
     "    <div class=\"row\">\n" +
@@ -679,7 +679,7 @@ angular.module("views/common/dashboard/dashboard_tmpl.html", []).run(["$template
     "</div>");
 }]);
 
-angular.module("views/common/dashboard/logged_users_tmpl.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/common/dashboard/logged_users_tmpl.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/common/dashboard/logged_users_tmpl.html",
     "<div class=\"hpanel\">\n" +
     "    <div class=\"panel-heading\">\n" +
@@ -722,7 +722,7 @@ angular.module("views/common/dashboard/logged_users_tmpl.html", []).run(["$templ
     "</div>");
 }]);
 
-angular.module("views/common/dashboard/recent_campaigns_tmpl.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/common/dashboard/recent_campaigns_tmpl.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/common/dashboard/recent_campaigns_tmpl.html",
     "<div class=\"hpanel\">\n" +
     "    <div class=\"panel-heading\">\n" +
@@ -764,7 +764,7 @@ angular.module("views/common/dashboard/recent_campaigns_tmpl.html", []).run(["$t
     "</div>");
 }]);
 
-angular.module("views/common/dashboard/total_campaigns_tmpl.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/common/dashboard/total_campaigns_tmpl.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/common/dashboard/total_campaigns_tmpl.html",
     "<div class=\"hpanel stats\">\n" +
     "    <div class=\"panel-body h-200\">\n" +
@@ -795,7 +795,7 @@ angular.module("views/common/dashboard/total_campaigns_tmpl.html", []).run(["$te
     "</div>");
 }]);
 
-angular.module("views/common/dashboard/total_users_tmpl.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/common/dashboard/total_users_tmpl.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/common/dashboard/total_users_tmpl.html",
     "<div class=\"hpanel stats\">\n" +
     "    <div class=\"panel-body h-200\">\n" +
@@ -843,7 +843,7 @@ angular.module("views/common/dashboard/total_users_tmpl.html", []).run(["$templa
     "</div>");
 }]);
 
-angular.module("views/common/dashboard/total_visits_tmpl.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/common/dashboard/total_visits_tmpl.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/common/dashboard/total_visits_tmpl.html",
     "<div class=\"hpanel stats\">\n" +
     "    <div class=\"panel-body h-200\">\n" +
@@ -887,7 +887,7 @@ angular.module("views/common/dashboard/total_visits_tmpl.html", []).run(["$templ
     "</div>");
 }]);
 
-angular.module("views/common/dashboard/urls_generated_tmpl.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/common/dashboard/urls_generated_tmpl.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/common/dashboard/urls_generated_tmpl.html",
     "<div class=\"hpanel\">\n" +
     "    <div class=\"panel-body text-center h-200\">\n" +
@@ -904,7 +904,7 @@ angular.module("views/common/dashboard/urls_generated_tmpl.html", []).run(["$tem
     "</div>");
 }]);
 
-angular.module("views/common/directives/analytics_layout.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/common/directives/analytics_layout.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/common/directives/analytics_layout.html",
     "<section class=\"anlaytics-layout-container \" style=\"padding-top:0px;\">\n" +
     "    <div ng-show=\"!$ctrl.loading\">\n" +
@@ -1041,22 +1041,22 @@ angular.module("views/common/directives/analytics_layout.html", []).run(["$templ
     "</section>");
 }]);
 
-angular.module("views/common/header-dashboard.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/common/header-dashboard.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/common/header-dashboard.html",
     "<div id=\"logo\" class=\"light-version\"> <span> bi <span class=\"part2\">TRAZ</span> </span> </div> <nav role=\"navigation\"> <!-- <minimaliza-menu></minimaliza-menu> --> <div class=\"small-logo\"> <span class=\"text-primary\">bi <span class=\"part2\">TRAZ</span></span> </div> <div class=\"mobile-menu\"> <button type=\"button\" class=\"navbar-toggle mobile-menu-toggle\" data-toggle=\"collapse\" data-target=\"#mobile-collapse\"> <i class=\"fa fa-chevron-down\"></i> </button> <div class=\"collapse mobile-navbar\" id=\"mobile-collapse\"> <ul class=\"nav navbar-nav\"> <li> <a href=\"#\">Login</a> </li> </ul> </div> </div> <div class=\"navbar-right\"> <ul class=\"nav navbar-nav no-borders\"> <li> <a> <i class=\"pe-7s-upload pe-rotate-90\"></i> </a> </li> </ul> </div> </nav>");
 }]);
 
-angular.module("views/common/login.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/common/login.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/common/login.html",
     "<div class=\"login-container\"> <div class=\"row\" ng-if=\"!($root.userInfo && $root.userInfo.user_id)\"> <div class=\"col-md-12\"> <div class=\"text-center m-b-md\" style=\"border: 1px solid transparent\"> <h3>LOGIN</h3> <!-- <small> This is the best app ever!</small> --> </div> <div class=\"hpanel\"> <div class=\"panel-body\"> <form name=\"loginForm\" id=\"loginForm\" novalidate ng-submit=\"login(loginForm)\"> <div class=\"form-group\"> <label class=\"control-label\" for=\"username\">Username</label> <input type=\"text\" placeholder=\"name@your_domain.com\" title=\"Please enter you username\" ng-model=\"uname\" ng-required=\"true\" value=\"\" name=\"username\" id=\"username\" class=\"form-control\"> </div> <span ng-if=\"loginForm.username.$touched && loginForm.username.$error.required\" class=\"text-danger\">Name is required</span> <div class=\"form-group\"> <label class=\"control-label\" for=\"password\">Password</label> <input type=\"password\" title=\"Please enter your password\" ng-required=\"true\" ng-model=\"pswd\" name=\"password\" id=\"password\" class=\"form-control\"> </div> <span ng-if=\"loginForm.password.$touched && loginForm.password.$error.required\" class=\"text-danger\">Password is required</span> <button class=\"btn btn-success btn-block\" type=\"submit\"><span ng-show=\"!loading\">Login</span><span ng-show=\"loading\"><i class=\"fa fa-refresh fa-spin\"></i> </span></button> <span class=\"text-danger\" ng-if=\"loginError\" class=\"text-danger\">Error: {{loginError}} </span> </form> </div> </div> </div> </div> <div class=\"row\" ng-if=\"$root.userInfo && $root.userInfo.user_id\"> <div class=\"col-md-12\" style=\"padding-top: 40px\"> <div class=\"hpanel\"> <div class=\"panel-body\"> <div> <button class=\"btn btn-success btn-block\" ng-click=\"redirectUser()\" ng-if=\"$root.userInfo.isAdmin\">Go to Admin</button> </div> <div> <button class=\"btn btn-success btn-block\" ng-click=\"redirectUser()\" ng-if=\"!$root.userInfo.isAdmin\">Go to Analytics</button> </div> </div> </div> </div> </div> </div>");
 }]);
 
-angular.module("views/common/navigation.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/common/navigation.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/common/navigation.html",
     "<div id=\"navigation\"> <div class=\"profile-picture\"> <div class=\"stats-label text-color\"> <span class=\"font-extra-bold font-uppercase\">Username</span> <div class=\"dropdown\" uib-dropdown> <a uib-dropdown-toggle href=\"#\"> <small class=\"text-muted\">Founder of App <b class=\"caret\"></b></small> </a> <ul uib-dropdown-menu class=\"animated flipInX m-t-xs\"> <li><a>Item</a></li> </ul> </div> </div> </div> <ul side-navigation class=\"nav metismenu\" id=\"side-menu\"> <li ui-sref-active=\"active\"> <a ui-sref=\"dashboard\"> <span class=\"nav-label\">Dashboard</span></a> </li> </ul> </div>");
 }]);
 
-angular.module("views/common/panel_tools.html", []).run(["$templateCache", function($templateCache) {
+angular.module("views/common/panel_tools.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/common/panel_tools.html",
     "<!-- This is template for panel tools --><!-- It contains collapse function (showhide) and close function (closebox) --><!-- All function is handled from directive panelTools in directives.js file --> <div class=\"panel-tools\"> <a ng-click=\"showhide()\"><i class=\"fa fa-chevron-up\"></i></a> <a ng-click=\"closebox()\"><i class=\"fa fa-times\"></i></a> </div>");
 }]);

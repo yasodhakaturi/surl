@@ -254,6 +254,7 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
             $scope.batchListOptions = {
               enableSorting: true,
               columnDefs: [
+                { name:'Batch Name', field: 'BatchName' },
                 { name:'Requested On', field: 'CreatedDate' },
                 { name:'Status', field: 'Status'},
                 { name:'Actions', cellTemplate:'<div>' +
