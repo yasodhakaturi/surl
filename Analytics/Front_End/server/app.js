@@ -84,8 +84,10 @@ app.all("*", function (req, res, next) {
     res.json( camp.list() );
  }else if( /\/Campaign\/GetBatchStatus/.exec(p)){
     var camp = require("./mock_data/chance/campaigns");
-    console.log(req.query)
-    res.json( camp.batchStatus(req.query) );
+    setTimeout(()=>{
+      res.json( camp.batchStatus(req.query) );
+    }, 2000);
+
  }else if( /\/Campaign\/GetBatchIDs/.exec(p)){
     var camp = require("./mock_data/chance/campaigns");
     res.json( camp.batchList(req.query) );

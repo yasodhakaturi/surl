@@ -261,18 +261,22 @@ angular.module('bitraz.models', ['bitraz.models.common'])
         this.BatchName = data.BatchName;
         this.CreatedDate = data.CreatedDate || '';
         this.Status = data.Status || '';
+        this.loading = false;
       }
 
       getStatus(){
         let refDefer = $q.defer();
+        this.loading = true;
         $http({
           method: 'GET',
           url: appConfig.apiEndPoint + '/Campaign/GetBatchStatus',
           params: {BatchID: this.BatchID}
         }).then((keyObj) => {
+          this.loading = false;
           this.Status = keyObj.data.Status;
           refDefer.resolve({"Status": this.Status});
         }, (err) => {
+          this.loading = false;
           console.log('failed to load Status', err);
           refDefer.reject(err);
         });

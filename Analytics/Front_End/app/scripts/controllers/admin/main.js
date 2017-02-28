@@ -258,13 +258,20 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
                 { name:'Requested On', field: 'CreatedDate' },
                 { name:'Status', field: 'Status'},
                 { name:'Actions', cellTemplate:'<div>' +
-                '<a ng-click="grid.appScope.downloadFile(row.entity)" ng-if="row.entity.Status == \'Completed\'">Download</a>' +
+                '<a ng-click="grid.appScope.downloadFile(row.entity)" ng-if="row.entity.Status == \'Completed\'" class="btn btn-success btn-xs">Download</a>' +
                 '&nbsp;&nbsp;&nbsp;' +
-                '<a ng-click="grid.appScope.getStatus(row.entity)" ng-if="row.entity.Status != \'Completed\'">Refresh</a>' +
+                '<a ng-click="grid.appScope.getStatus(row.entity)" ng-if="row.entity.Status != \'Completed\'"><i class="fa fa-refresh" ng-class="{\'fa-spin\': row.entity.loading}"></i></a>' +
                 '</div>'
                 }
               ],
               data : []
+            };
+
+            $scope.getStatus = (row) => {
+              var batch = _.filter(campaign.batchList, function(batch){ return batch.BatchID == row.BatchID;});
+              batch[0].getStatus().then((resp)=>{
+                batch.Status = resp.Status;
+              }, ()=>{});
             };
 
             $scope.batchListOptions.data = campaign.batchList || [];
@@ -286,11 +293,11 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
                   });
                 })
               }
-            }, 10000);
+            }, 30000);
 
             $scope.$on('$destroy', function(){
               if(timer){
-                timer.cancel();
+                $interval.cancel(timer)
               }
             });
 
