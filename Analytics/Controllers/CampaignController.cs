@@ -4,6 +4,7 @@ using Analytics.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -579,7 +580,7 @@ namespace Analytics.Controllers
                         new OperationsBO().UpdateHashid(objuid.PK_Uid, Hashid);
                         obje.MobileNumber = MobileNumbers;
                         //obje.ShortenUrl = "https://g0.pe/" + Hashid;
-                        obje.ShortenUrl = "https:\\"+Request.Url.Authority +"\\"+ Hashid;
+                        obje.ShortenUrl = ConfigurationManager.AppSettings["ShortenurlHost"].ToString() + Hashid;
                         obje.CreatedDate = objuid.CreatedDate;
                         obje.Status = "Successfully Uploaded.";
                         //return Json(obje, JsonRequestBehavior.AllowGet);
