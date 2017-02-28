@@ -82,6 +82,23 @@ app.all("*", function (req, res, next) {
  } else if( /\/Campaign\/Search/.exec(p)){
     var camp = require("./mock_data/chance/campaigns");
     res.json( camp.list() );
+ }else if( /\/Campaign\/GetBatchStatus/.exec(p)){
+    var camp = require("./mock_data/chance/campaigns");
+    console.log(req.query)
+    res.json( camp.batchStatus(req.query) );
+ }else if( /\/Campaign\/GetBatchIDs/.exec(p)){
+    var camp = require("./mock_data/chance/campaigns");
+    res.json( camp.batchList(req.query) );
+ } else if( /\/Campaign\/UploadData/.exec(p)){
+
+   console.log(req.body.type)
+    var camp = require("./mock_data/chance/campaigns");
+   if(req.body.type == "simple"){
+     res.json( camp.uploadSimple(req.body) );
+   }else if(req.body.type == "advanced"){
+     res.json( camp.uploadAdvanced(req.body) );
+   }
+
  }
  else if( /\/Customer\/GetAPIKEY/.exec(p)){
    var user = require("./mock_data/chance/user");

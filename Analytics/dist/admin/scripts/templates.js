@@ -211,9 +211,13 @@ angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$te
     "\n" +
     "                <div class=\"tab-content\">\n" +
     "                    <div id=\"list\" class=\"tab-pane fade\" ng-class=\"{'in active': $ctrl.activeTab == 'list'}\">\n" +
-    "                        <h5>Generated list of urls in this campaign.</h5>\n" +
+    "                        <h5>Requested list of bulk urls for this campaign.</h5>\n" +
     "                        <div style=\"min-height: 250px;padding-top: 20px;\">\n" +
-    "                            <p>coming soon.</p>\n" +
+    "                            <div class=\"row\">\n" +
+    "                                <div class=\"col-lg-8 col-md-10 col-sm-12\">\n" +
+    "                                    <div id=\"{{'batchList-'+$ctrl.campaign.Id}}\" ui-grid=\"batchListOptions\" class=\"grid\"></div>\n" +
+    "                                </div>\n" +
+    "                            </div>\n" +
     "                        </div>\n" +
     "                    </div>\n" +
     "                    <div id=\"simple\" class=\"tab-pane fade\"  ng-class=\"{'in active': $ctrl.activeTab == 'simple'}\">\n" +
@@ -251,6 +255,18 @@ angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$te
     "                                    </div>\n" +
     "\n" +
     "                                </div>\n" +
+    "                                <div class=\"form-group\" ng-show=\"$ctrl.campaignForm['simple'].ShortenUrl\">\n" +
+    "                                    <div class=\"col-sm-9 text-center\">\n" +
+    "                                        <h4 id=\"shortUrlmodal\">\n" +
+    "                                            {{$ctrl.campaignForm['simple'].ShortenUrl}}\n" +
+    "                                        </h4>\n" +
+    "                                    </div>\n" +
+    "\n" +
+    "                                    <div class=\"col-sm-3 text-right\">\n" +
+    "                                        <div class=\"btn btn-success btn-small right url-copy-button\"  data-clipboard-action=\"copy\" data-clipboard-target=\"#shortUrlmodal\">Copy to Clipboard</div>\n" +
+    "                                    </div>\n" +
+    "\n" +
+    "                                </div>\n" +
     "                            </ng-form>\n" +
     "                        </div>\n" +
     "                    </div>\n" +
@@ -284,6 +300,21 @@ angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$te
     "                                               ng-if=\"$ctrl.campaignForm['advanced'].mobileNumbers.$invalid && $ctrl.campaignForm['advanced'].mobileNumbers.$touched\">\n" +
     "                                            <span ng-if=\"$ctrl.campaignForm['advanced'].mobileNumbers.$error.required\">mobile numbers are required</span>\n" +
     "                                        </small>\n" +
+    "                                    </div>\n" +
+    "\n" +
+    "                                </div>\n" +
+    "                                <div class=\"form-group\" ng-show=\"$ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.BatchID\">\n" +
+    "                                    <div class=\"col-sm-9 text-center\">\n" +
+    "                                        <h4 ng-if=\"$ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status != 'Completed'\">\n" +
+    "                                            We're Processing Your Request. <span><i class=\"fa fa-spinner fa-spin\"></i> </span>\n" +
+    "                                        </h4>\n" +
+    "                                        <h4 ng-if=\"$ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status == 'Completed'\">\n" +
+    "                                            Successfully Processed.\n" +
+    "                                        </h4>\n" +
+    "                                    </div>\n" +
+    "\n" +
+    "                                    <div class=\"col-sm-3 text-right\">\n" +
+    "                                        <div class=\"btn btn-success btn-small right\" ng-if=\"$ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status == 'Completed'\">Download</div>\n" +
     "                                    </div>\n" +
     "\n" +
     "                                </div>\n" +

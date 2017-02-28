@@ -140,7 +140,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
 
     return new Campaigns();
   }])
-  .factory('CampaignModel', ['$http', '$q', 'appConfig', function($http, $q, appConfig) {
+  .factory('CampaignModel', ['$http', '$q', 'appConfig', 'BatchModel', function($http, $q, appConfig, BatchModel) {
       class Campaign {
         constructor(data) {
           this.Id = data.Id || null;
@@ -156,6 +156,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
           this.Password = '';
           this.EditPassword = false;
           this.RemovePassword = false;
+          this.batchList = [];
         }
 
         save(){
@@ -208,15 +209,42 @@ angular.module('bitraz.models', ['bitraz.models.common'])
         generate(form, type) {
 
           var refDefer = $q.defer();
-          var data = {CampaignId: this.Id, LongUrl: form.LongUrl, MobileNumbers: form.MobileNumbers, type: type};
+          var data = {CampaignId: this.Id, LongUrl: form.LongUrl, MobileNumbers: form.MobileNumbersList, type:type};
 
           $http({
             method: 'POST',
             url: appConfig.apiEndPoint + '/Campaign/UploadData',
             data: data
           }).then((campaignObj) => {
-//                console.log('campaign save', campaignObj)
-            refDefer.resolve(new CampaignModel(campaignObj.data));
+            if(campaignObj.data.ShortenUrl){
+              refDefer.resolve(campaignObj.data);
+            }else if(campaignObj.data.BatchID){
+              var batch = new BatchModel(campaignObj.data);
+              this.batchList.push(batch);
+              refDefer.resolve(batch);
+            }
+
+          }, (err) => {
+            console.log('campaign save failed', err);
+            refDefer.reject(err);
+          });
+          return refDefer.promise;
+        }
+
+        getBatchIds(){
+          var refDefer = $q.defer();
+
+          $http({
+            method: 'GET',
+            url: appConfig.apiEndPoint + '/Campaign/GetBatchIDs',
+            params: {CampaignID: this.Id}
+          }).then((resp) => {
+            this.batchList = [];
+            angular.forEach(resp.data, (batch)=>{
+              this.batchList.push(new BatchModel(batch));
+            });
+            refDefer.resolve(this.batchList);
+
           }, (err) => {
             console.log('campaign save failed', err);
             refDefer.reject(err);
@@ -225,4 +253,37 @@ angular.module('bitraz.models', ['bitraz.models.common'])
         }
       }
       return Campaign;
+  }])
+  .factory('BatchModel', ['$http', '$q', 'appConfig', function($http, $q, appConfig){
+    class Batch {
+      constructor(data) {
+        this.BatchID = data.BatchID;
+        this.CreatedDate = data.CreatedDate || '';
+        this.Status = data.Status || '';
+      }
+
+      getStatus(){
+        let refDefer = $q.defer();
+        $http({
+          method: 'GET',
+          url: appConfig.apiEndPoint + '/Campaign/GetBatchStatus',
+          params: {BatchID: this.BatchID}
+        }).then((keyObj) => {
+          this.Status = keyObj.data.Status;
+          refDefer.resolve({"Status": this.Status});
+        }, (err) => {
+          console.log('failed to load Status', err);
+          refDefer.reject(err);
+        });
+        return refDefer.promise;
+      }
+
+      download(){
+        if(this.Status == 'Completed'){
+          $window.open(appConfig.apiEndPoint + '/Campaign/Download?BatchID='+this.BatchID);
+        }
+
+      }
+    }
+    return Batch;
   }])

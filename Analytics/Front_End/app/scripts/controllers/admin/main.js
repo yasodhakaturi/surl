@@ -200,28 +200,33 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
           size: 'lg',
           backdrop: 'static',
           keyboard: false,
-          controller: function($scope, campaign) {
+          controller: function($scope, campaign, $interval) {
             var $ctrl = this;
+            var timer;
             $ctrl.campaign = campaign;
             $ctrl.campaign.generator = {"simple": {}, "advanced":{}, "upload":{}};
             $ctrl.activeTab = 'simple';
             $ctrl.campaignForm = {"simple": {}, "advanced":{}, "upload":{}};
             $ctrl.generation = false;
             $scope.generate = function (form ,type) {
-              console.log(form, type);
               $ctrl.saveError = "";
               if($ctrl.campaignForm[type].$valid){
                 if(type == 'simple' || type == 'advanced'){
                   $ctrl.generation = true;
                   $ctrl.campaign.generate({LongUrl: form.longurl, MobileNumbers: $scope.sanitizeMobileNumbers(form.mobileNumbers, type)}, type).then((resp)=>{
-                    console.log(resp);
                     $ctrl.generation = false;
+                    if(resp.ShortenUrl){
+                      $ctrl.campaignForm[type].ShortenUrl = resp.ShortenUrl;
+                      var clipboard = new Clipboard('.url-copy-button');
+                    }else if(resp.BatchID){
+                      $ctrl.campaignForm[type].Batch = resp;
+                    }
                   }, (err) => {
                     $ctrl.generation = false;
                     $ctrl.saveError = err && err.message || "Failed to save user.";
                   });
                 }else if(type == 'upload'){
-
+                  //todo
                 }
               }
 
@@ -229,9 +234,9 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
 
             $scope.sanitizeMobileNumbers = (mobileNumbers, type) => {
               if(type == 'advanced'){
-                return mobileNumbers.replace(/\r\n|\n/g,",").replace(/\s/g, '').split(',').filter(function(n){ return n != undefined && n != '' });
+                return (mobileNumbers.replace(/\r\n|\n/g,",").replace(/\s/g, '').split(',').filter(function(n){ return n != undefined && n != '' })).join(',');
               }else if(type == 'simple'){
-                return [mobileNumbers];
+                return mobileNumbers;
               }
 
             };
@@ -245,6 +250,55 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
               $ctrl.saveError = "";
               instance.dismiss('cancel');
             };
+
+            $scope.batchListOptions = {
+              enableSorting: true,
+              columnDefs: [
+                { name:'Requested On', field: 'CreatedDate' },
+                { name:'Status', field: 'Status'},
+                { name:'Actions', cellTemplate:'<div>' +
+                '<a ng-click="grid.appScope.downloadFile(row.entity)" ng-if="row.entity.Status == \'Completed\'">Download</a>' +
+                '&nbsp;&nbsp;&nbsp;' +
+                '<a ng-click="grid.appScope.getStatus(row.entity)" ng-if="row.entity.Status != \'Completed\'">Refresh</a>' +
+                '</div>'
+                }
+              ],
+              data : []
+            };
+
+            $scope.batchListOptions.data = campaign.batchList || [];
+
+            $scope.$watch(function(){
+              return campaign.batchList;
+            }, function(nv, ov){
+              if(nv && nv.length > 0){
+                $scope.batchListOptions.data = campaign.batchList;
+              }
+            });
+
+            timer = $interval(function() {
+              var pendingStatusBatches = _.filter(campaign.batchList, function(batch){ return batch.Status != 'Completed';})
+              if(pendingStatusBatches.length > 0){
+                angular.forEach(pendingStatusBatches, (batch)=>{
+                  batch.getStatus().then((resp)=>{
+                    batch.Status = resp.Status;
+                  });
+                })
+              }
+            }, 10000);
+
+            $scope.$on('$destroy', function(){
+              if(timer){
+                timer.cancel();
+              }
+            });
+
+            if(campaign && campaign.getBatchIds){
+              campaign.getBatchIds().then((resp)=>{
+                campaign.batchList = resp;
+              });
+            }
+
 
           },
           resolve: {
