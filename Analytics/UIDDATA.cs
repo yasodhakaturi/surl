@@ -29,6 +29,8 @@ namespace Analytics
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> FK_ClientID { get; set; }
         public string UniqueNumber { get; set; }
+        public Nullable<int> CreatedBy { get; set; }
+        public Nullable<int> FK_Batchid { get; set; }
     
         public virtual RIDDATA RIDDATA { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

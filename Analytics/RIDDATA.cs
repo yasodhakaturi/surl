@@ -30,6 +30,7 @@ namespace Analytics
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
         public string CampaignName { get; set; }
+        public Nullable<int> CreatedBy { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SHORTURLDATA> SHORTURLDATAs { get; set; }

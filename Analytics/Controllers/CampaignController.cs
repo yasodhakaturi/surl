@@ -4,10 +4,14 @@ using Analytics.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
+using System.Web.UI;
 
 namespace Analytics.Controllers
 {
@@ -217,6 +221,8 @@ namespace Analytics.Controllers
                 int r = randNum.Next(00000, 99999);
                 string ReferenceNumber = r.ToString("D5");
                 int cid;
+                cid = Helper.CurrentUserId;
+
                 if (CreatedUserId != null&&CreatedUserId!="")
                     cid = Convert.ToInt32(CreatedUserId);
                 
@@ -230,21 +236,24 @@ namespace Analytics.Controllers
                 // RIDDATA objc = dc.RIDDATAs.Where(x => x.ReferenceNumber== ReferenceNumber).SingleOrDefault();
                 //int FK_ClientId = (int)jObject["ClientId"];
                 //bool isClientExists = new OperationsBO().CheckClientId(FK_ClientId);
-                if (Session["id"] != null)
+                RIDDATA objr = dc.RIDDATAs.Where(r1 => r1.FK_ClientId == cid && r1.CampaignName == CampaignName).SingleOrDefault();
+                if (Session["id"] != null && objr == null && CampaignName != "" && CampaignName != null)
                 {
-                    if (Session["id"] != null && CampaignName != "" && CampaignName != null)
-                    {
-                        cid = Helper.CurrentUserId;
+                    //if (Session["id"] != null && CampaignName != "" && CampaignName != null)
+                    //{
 
-                        //add campaign details
-                        obj.CampaignName = CampaignName;
-                        obj.ReferenceNumber = ReferenceNumber;
-                        obj.Pwd = Pwd;
-                        obj.IsActive = IsActive;
-                        obj.CreatedDate = DateTime.UtcNow;
-                        obj.FK_ClientId = cid;
-                        dc.RIDDATAs.Add(obj);
-                        dc.SaveChanges();
+                        
+                            //add campaign details
+                            obj.CampaignName = CampaignName;
+                            obj.ReferenceNumber = ReferenceNumber;
+                            obj.Pwd = Pwd;
+                            obj.IsActive = IsActive;
+                            obj.CreatedDate = DateTime.UtcNow;
+                            obj.CreatedBy = Helper.CurrentUserId;
+                            obj.FK_ClientId = cid;
+                            dc.RIDDATAs.Add(obj);
+                            dc.SaveChanges();
+                        
                         obj_search = (from c in dc.RIDDATAs
                                       join c1 in dc.Clients on c.FK_ClientId equals c1.PK_ClientID
                                       where c.ReferenceNumber == ReferenceNumber
@@ -281,21 +290,26 @@ namespace Analytics.Controllers
                         //              }).SingleOrDefault();
                         // new OperationsBO().InsertUIDRIDData(ReferenceNumber);
                        // return Json(obj_search, JsonRequestBehavior.AllowGet);
-                    }
+                    //}
                     return Json(obj_search, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
                     Error obj_err = new Error();
-
-                    if (Session["id"] != null)
+                if(objr!=null)
+                {
+                    Errormessage errmesobj = new Errormessage();
+                    errmesobj.message = "CampaignName already Exists for this Client.";
+                    obj_err.error = errmesobj;
+                  }
+                else if (Session["id"] == null)
                     {
                         Errormessage errmesobj = new Errormessage();
                         errmesobj.message = "Session Expired.";
                         obj_err.error = errmesobj;
                         //return Json(obj_err, JsonRequestBehavior.AllowGet);
                     }
-                    if (CampaignName != "" && CampaignName != null)
+                    else if (CampaignName == "" || CampaignName == null)
                     {
                         Errormessage errmesobj = new Errormessage();
                         errmesobj.message = "CampaignName is should not be empty.";
@@ -444,6 +458,285 @@ namespace Analytics.Controllers
                 ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
                 return Json(obj, JsonRequestBehavior.AllowGet);
             }
+        }
+        public JsonResult GetBatchStatus(string BatchID)
+        {
+            BatchUploadData objb = dc.BatchUploadDatas.Where(x => x.BatchName == BatchID).SingleOrDefault();
+            BatchStatus objs = new BatchStatus();
+            if(objb!=null)
+            {
+                //if (objb.Status == "Not Started" || objb.Status=="In Progress"|| objb.Status == "Insertion Completed" || objb.Status=="Completed")
+                //{
+                    objs.Status = objb.Status;
+                    objs.Batchid = objb.BatchName;
+                //}
+                
+            }
+            return Json(objs,JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetBatchIDs(string CampaignID)
+        {
+            List<BatchIDList> objbs = new List<BatchIDList>();
+
+            if(Session["userdata"]!=null)
+            {
+                int currentuserid = Helper.CurrentUserId;
+                List<BatchUploadData> objb = dc.BatchUploadDatas.Where(x => x.FK_ClientID == currentuserid && x.ReferenceNumber == CampaignID).ToList();
+                if(objb.Count!=0)
+                {
+                    objbs = (from b in objb
+                             select new BatchIDList()
+                             {   
+                                 CreatedDate=b.CreatedDate,
+                                 BatchID = b.BatchName,
+                                 Status=b.Status
+                             }).ToList();
+                }
+                return Json(objbs, JsonRequestBehavior.AllowGet);
+            }
+            return Json(objbs, JsonRequestBehavior.AllowGet);
+        }
+        public void GetBatchDownloadedFile(string BatchID)
+        {
+            string g0pe = "https:\\g0.pe"; 
+             BatchUploadData objb = dc.BatchUploadDatas.Where(x => x.BatchName == BatchID).SingleOrDefault();
+            if (objb != null)
+            {
+                List<BatchDownload> objd = (from u in dc.UIDDATAs
+                                            where u.FK_Batchid == objb.PK_Batchid
+                                            select new BatchDownload()
+                                            {
+                                                Mobilenumber = u.MobileNumber,
+                                                ShortUrl = g0pe + "\"" + u.UniqueNumber
+                                            }).ToList();
+                var grid = new System.Web.UI.WebControls.GridView();
+                string filename = objb.BatchName;
+                grid.DataSource = objd;
+                grid.DataBind();
+                Response.ClearContent();
+                Response.AddHeader("content-disposition", "attachment; filename="+filename +".xls");
+                Response.ContentType = "application/excel";
+                StringWriter sw = new StringWriter();
+                HtmlTextWriter htw = new HtmlTextWriter(sw);
+                grid.RenderControl(htw);
+                Response.Write(sw.ToString());
+                Response.End();
+            }
+
+        }
+               
+        [System.Web.Http.HttpPost]
+       public JsonResult UploadData(string MobileNumbers, string LongURL, string ReferenceNumber, string type)
+        {
+            int clientid = 0; int rid = 0;
+            exportDataModel obje = new exportDataModel();
+            // MobileNumbers = "{\"MobileNumbers\":[\"8331877564\",\"9848745783\"]}";
+            //ReferenceNumber = "50793";
+            //LongURL = "google.com";
+            //type = "advanced";
+            JavaScriptSerializer ser = new JavaScriptSerializer();
+            List<string> MobileNumbersList = new List<string>();
+            List<string> MobileNumbersFiltered_List = new List<string>();
+
+            List<string> shorturls = new List<string>();
+            List<string> outputdat = new List<string>();
+            List<int> pkuids = new List<int>();
+            string Hashid;
+            MobileNumbersList MobileNumbersList1 = ser.Deserialize<MobileNumbersList>(MobileNumbers);
+            MobileNumbersList = MobileNumbersList1.MobileNumbers;
+            string formated_mobilenumbers=String.Join(",", MobileNumbersList);
+
+            //clientid = 2;
+            //rid = 41;
+
+            RIDDATA objrid = (from registree in dc.RIDDATAs
+                              where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim()
+                              select registree).SingleOrDefault();
+            if (type.ToLower() == "simple" && objrid != null)
+            {
+                UIDDATA objc = dc.UIDDATAs.Where(u => u.MobileNumber == MobileNumbers && u.ReferenceNumber == ReferenceNumber && u.Longurl == LongURL).SingleOrDefault();
+            if(objc==null)
+            {
+                objc.MobileNumber = MobileNumbers;
+                objc.ReferenceNumber = ReferenceNumber;
+                objc.Longurl = LongURL;
+                objc.FK_ClientID = objrid.FK_ClientId;
+                objc.FK_RID = objrid.PK_Rid;
+                objc.CreatedDate = DateTime.UtcNow;
+                objc.CreatedBy = Helper.CurrentUserId;
+                dc.UIDDATAs.Add(objc);
+                dc.SaveChanges();
+                UIDDATA objuid = dc.UIDDATAs.Where(u => u.MobileNumber == MobileNumbers && u.ReferenceNumber == ReferenceNumber && u.Longurl == LongURL).SingleOrDefault();
+                Hashid = Helper.GetHashID(objuid.PK_Uid);
+                new OperationsBO().UpdateHashid(objuid.PK_Uid, Hashid);
+                obje.MobileNumber = MobileNumbers;
+                obje.ShortenUrl = "https://g0.pe/" + Hashid;
+                obje.CreatedDate = objuid.CreatedDate;
+                obje.Status = "Successfully Uploaded.";
+                //return Json(obje, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                obje.MobileNumber = MobileNumbers;
+                obje.ShortenUrl = "cannt be generated.";
+                obje.Status = "MobileNumber and LongUrl already added for this campaign.";
+                //return Json(obje, JsonRequestBehavior.AllowGet);
+
+            }
+
+            }
+            else if (type.ToLower() == "advanced" && objrid != null )
+            {
+                string batchname=objrid.CampaignName + "_" + DateTime.UtcNow;
+                BatchUploadData objb = new BatchUploadData();
+                objb.ReferenceNumber = ReferenceNumber;
+                objb.MobileNumber = formated_mobilenumbers;
+                objb.Longurl = LongURL;
+                objb.FK_ClientID = objrid.FK_ClientId;
+                objb.FK_RID = objrid.PK_Rid;
+                objb.CreatedDate = DateTime.UtcNow;
+                objb.CreatedBy = Helper.CurrentUserId.ToString();
+                objb.Status = "Not Started";
+                objb.BatchName = batchname;
+                dc.BatchUploadDatas.Add(objb);
+                dc.SaveChanges();
+                BatchUploadData objo = dc.BatchUploadDatas.Where(x => x.BatchName == batchname).SingleOrDefault();
+                if (objo != null)
+                {
+                    obje.Status = objo.BatchName + " Created.Revert Back to you once upload has done.";
+                    obje.BatchID = objo.BatchName;
+                    obje.CreatedDate = objo.CreatedDate;
+                }
+               // return Json(obje, JsonRequestBehavior.AllowGet);
+                //clientid = objrid.FK_ClientId;
+                //rid = objrid.PK_Rid;
+                //List<string> mobilenumberdata = dc.UIDDATAs.AsNoTracking().Where(x => MobileNumbersList.Contains(x.MobileNumber) && x.ReferenceNumber == ReferenceNumber && x.FK_RID == rid && x.FK_ClientID == clientid && x.Longurl == LongURL).Select(r => r.MobileNumber).ToList();
+                //if (mobilenumberdata.Count != 0)
+                //{
+                //    MobileNumbersFiltered_List = MobileNumbersList.Except(mobilenumberdata).ToList();
+                //}
+                //else
+                //{ MobileNumbersFiltered_List = MobileNumbersList; }
+                //if (MobileNumbersFiltered_List.Count > 0)
+                //{
+                //    foreach (string m in MobileNumbersFiltered_List)
+                //    {
+                //        new DataInsertionBO().InsertUIDdata(rid, clientid, ReferenceNumber, LongURL, m);
+                //    }
+
+                //    pkuids = dc.UIDDATAs.AsNoTracking().Where(x => MobileNumbersFiltered_List.Contains(x.MobileNumber) && x.ReferenceNumber == ReferenceNumber && x.FK_RID == rid && x.FK_ClientID == clientid && x.Longurl == LongURL).Select(r => r.PK_Uid).ToList();
+                //    foreach (int uid in pkuids)
+                //    {
+                //        Hashid = "";
+                //        Hashid = Helper.GetHashID(uid);
+                //        new OperationsBO().UpdateHashid(uid, Hashid);
+                //        // shorturls.Add("https://g0.pe/" + Hashid);
+                //    }
+                //}
+                //List<exportDataModel> exportdata = dc.UIDDATAs.AsNoTracking().Where(x => MobileNumbersList.Contains(x.MobileNumber) && x.ReferenceNumber == ReferenceNumber && x.FK_RID == rid && x.FK_ClientID == clientid && x.Longurl == LongURL).Select(r => new exportDataModel() { MobileNumber = r.MobileNumber, ShortenUrl = r.UniqueNumber }).ToList();
+                //exportdata = exportdata.Select(x => { x.ShortenUrl = "https://g0.pe/" + x.ShortenUrl; return x; }).ToList();
+                ////DataTable dt = new DataTable();
+                ////dt.Columns.Add("Mobilenumber");
+                ////dt.Columns.Add("ShortUrl");
+                ////foreach (exportDataModel e in exportdata)
+                ////{
+                ////    dt.Rows.Add(e.MobileNumber, "https://g0.pe/" + e.ShortenUrl);
+                ////}
+
+                //var grid = new System.Web.UI.WebControls.GridView();
+
+                //grid.DataSource = exportdata;
+                //grid.DataBind();
+                //Response.ClearContent();
+                //Response.AddHeader("content-disposition", "attachment; filename=ShortURLSList.xls");
+                //Response.ContentType = "application/excel";
+                //StringWriter sw = new StringWriter();
+                //HtmlTextWriter htw = new HtmlTextWriter(sw);
+                //grid.RenderControl(htw);
+                //Response.Write(sw.ToString());
+                //Response.End();
+
+            }
+            return Json(obje, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        public void UploadData1(string[] MobileNumbers,string LongURL,string ReferenceNumber,string type)
+         {
+            int clientid = 0; int rid = 0;
+            var mobilenumbers = "{\"MobileNumbers\":[\"8331877564\",\"9848745783\"]}";
+            ReferenceNumber = "50793";
+            LongURL = "google.com";
+            JavaScriptSerializer ser = new JavaScriptSerializer();
+            List<string> MobileNumbersList = new List<string>();
+            List<string> MobileNumbersFiltered_List = new List<string>();
+
+            List<string> shorturls = new List<string>();
+            List<string> outputdat = new List<string>();
+            List<int> pkuids = new List<int>();
+            string Hashid;
+            MobileNumbersList MobileNumbersList1 = ser.Deserialize<MobileNumbersList>(mobilenumbers);
+            MobileNumbersList = MobileNumbersList1.MobileNumbers;
+            //clientid = 2;
+            //rid = 41;
+           
+            RIDDATA objrid = (from registree in dc.RIDDATAs
+                              where registree.ReferenceNumber.Trim() == ReferenceNumber.Trim()
+                              select registree).SingleOrDefault();
+            if (objrid != null)
+            {
+                clientid = objrid.FK_ClientId;
+                rid = objrid.PK_Rid;
+                List<string> mobilenumberdata = dc.UIDDATAs.AsNoTracking().Where(x => MobileNumbersList.Contains(x.MobileNumber) && x.ReferenceNumber == ReferenceNumber && x.FK_RID == rid && x.FK_ClientID == clientid && x.Longurl == LongURL).Select(r=>r.MobileNumber).ToList();
+                if (mobilenumberdata.Count != 0)
+                {
+                    MobileNumbersFiltered_List = MobileNumbersList.Except(mobilenumberdata).ToList();
+                }
+                else
+                { MobileNumbersFiltered_List = MobileNumbersList; }
+                if (MobileNumbersFiltered_List.Count > 0)
+                {
+                    foreach (string m in MobileNumbersFiltered_List)
+                    {
+                        new DataInsertionBO().InsertUIDdata(rid, clientid, ReferenceNumber, LongURL, m);
+                    }
+
+                    pkuids = dc.UIDDATAs.AsNoTracking().Where(x => MobileNumbersFiltered_List.Contains(x.MobileNumber) && x.ReferenceNumber == ReferenceNumber && x.FK_RID == rid && x.FK_ClientID == clientid && x.Longurl == LongURL).Select(r => r.PK_Uid).ToList();
+                    foreach (int uid in pkuids)
+                    {
+                        Hashid = "";
+                        Hashid = Helper.GetHashID(uid);
+                        new OperationsBO().UpdateHashid(uid, Hashid);
+                        // shorturls.Add("https://g0.pe/" + Hashid);
+                    }
+                }
+                List<exportDataModel> exportdata = dc.UIDDATAs.AsNoTracking().Where(x => MobileNumbersList.Contains(x.MobileNumber) && x.ReferenceNumber == ReferenceNumber && x.FK_RID == rid && x.FK_ClientID == clientid && x.Longurl == LongURL).Select(r=>new exportDataModel(){MobileNumber=r.MobileNumber,ShortenUrl=r.UniqueNumber}).ToList();
+                exportdata = exportdata.Select(x => { x.ShortenUrl = "https://g0.pe/" + x.ShortenUrl; return x; }).ToList();
+                //DataTable dt = new DataTable();
+                //dt.Columns.Add("Mobilenumber");
+                //dt.Columns.Add("ShortUrl");
+                //foreach (exportDataModel e in exportdata)
+                //{
+                //    dt.Rows.Add(e.MobileNumber, "https://g0.pe/" + e.ShortenUrl);
+                //}
+
+                var grid = new System.Web.UI.WebControls.GridView();
+
+                grid.DataSource = exportdata;
+                grid.DataBind();
+                Response.ClearContent();
+                Response.AddHeader("content-disposition", "attachment; filename=ShortURLSList.xls");
+                Response.ContentType = "application/excel";
+                StringWriter sw = new StringWriter();
+                HtmlTextWriter htw = new HtmlTextWriter(sw);
+                grid.RenderControl(htw);
+                Response.Write(sw.ToString());
+                Response.End();
+
+            }
+
         }
 
     }

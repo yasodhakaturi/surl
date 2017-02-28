@@ -24,7 +24,6 @@ namespace Analytics
         public string CountryCode { get; set; }
         public string Req_url { get; set; }
         public string Hostname { get; set; }
-        public string DeviceType { get; set; }
         public string UserAgent { get; set; }
         public string IsMobileDevice { get; set; }
         public string Region { get; set; }
@@ -32,6 +31,18 @@ namespace Analytics
         public Nullable<int> FK_RID { get; set; }
         public Nullable<int> FK_ClientID { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<long> ip_num { get; set; }
+        public string PostalCode { get; set; }
+        public string City_Latitude { get; set; }
+        public string City_Longitude { get; set; }
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }
+        public string MetroCode { get; set; }
+        public string DeviceName { get; set; }
+        public string DeviceBrand { get; set; }
+        public string OS_Name { get; set; }
+        public string OS_Version { get; set; }
+        public Nullable<int> FK_City_Master_id { get; set; }
     
         public virtual RIDDATA RIDDATA { get; set; }
         public virtual SHORTURLDATA SHORTURLDATA1 { get; set; }

@@ -58,6 +58,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.WebSockets, Version=0.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WebSockets.0.2.3.1\lib\net45\Microsoft.WebSockets.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
       <Private>True</Private>
@@ -228,6 +232,10 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\WebApiconfig.cs" />
+    <Compile Include="BatchUploadData.cs">
+      <DependentUpon>AnalyticsModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Client.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
@@ -274,6 +282,7 @@
     <Compile Include="Models\DeviceWiseData.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LoginUserInfo.cs" />
+    <Compile Include="Models\MobileNumbersList.cs" />
     <Compile Include="Models\Summary.cs" />
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Models\UserViewModel.cs" />
@@ -319,6 +328,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\APIKey.xml" />
+    <Content Include="chat.html" />
     <Content Include="Content\angular-block-ui.css" />
     <Content Include="Content\angular-block-ui.min.css" />
     <Content Include="Content\bootstrap.css" />

@@ -15,6 +15,22 @@ namespace Analytics.Controllers
     {
         shortenURLEntities dc = new shortenURLEntities();
 
+        public JsonResult GetAPIKEY(int? clientid)
+        {
+            string API_KEY = "";
+            Client_API_KEY obj = new Client_API_KEY();
+            if(clientid!=0&&clientid!=null)
+            {
+                API_KEY = dc.Clients.Where(c => c.PK_ClientID == clientid).Select(a=>a.APIKey).SingleOrDefault();
+            }
+            else if(Helper.CurrentUserId!=0)
+            {
+                API_KEY = dc.Clients.Where(c => c.PK_ClientID == Helper.CurrentUserId).Select(a => a.APIKey).SingleOrDefault();
+
+            }
+            obj.API_KEY = API_KEY;
+            return Json(obj,JsonRequestBehavior.AllowGet);
+        }
         // GET: Customer
         public JsonResult Index(string id)
         {

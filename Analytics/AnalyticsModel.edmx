@@ -5,6 +5,21 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="shortenURLModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BatchUploadData">
+          <Key>
+            <PropertyRef Name="PK_Batchid" />
+          </Key>
+          <Property Name="PK_Batchid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ReferenceNumber" Type="nvarchar(max)" />
+          <Property Name="Longurl" Type="nvarchar(max)" />
+          <Property Name="MobileNumber" Type="nvarchar(max)" />
+          <Property Name="BatchName" Type="nvarchar(max)" />
+          <Property Name="FK_RID" Type="int" />
+          <Property Name="FK_ClientID" Type="int" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="Client">
           <Key>
             <PropertyRef Name="PK_ClientID" />
@@ -53,6 +68,7 @@
           <Property Name="EndDate" Type="datetime" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="FK_ClientId" Type="int" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" />
         </EntityType>
         <EntityType Name="SHORTURLDATA">
           <Key>
@@ -61,21 +77,32 @@
           <Property Name="PK_Shorturl" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Ipv4" Type="nvarchar(max)" />
           <Property Name="Ipv6" Type="nvarchar(max)" />
+          <Property Name="ip_num" Type="bigint" />
           <Property Name="Browser" Type="nvarchar" MaxLength="50" />
           <Property Name="Browser_version" Type="nvarchar" MaxLength="50" />
           <Property Name="City" Type="nvarchar" MaxLength="50" />
           <Property Name="Region" Type="nvarchar" MaxLength="50" />
           <Property Name="Country" Type="nvarchar" MaxLength="50" />
           <Property Name="CountryCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="PostalCode" Type="nvarchar(max)" />
+          <Property Name="City_Latitude" Type="nvarchar(max)" />
+          <Property Name="City_Longitude" Type="nvarchar(max)" />
+          <Property Name="Latitude" Type="nvarchar(max)" />
+          <Property Name="Longitude" Type="nvarchar(max)" />
+          <Property Name="MetroCode" Type="nvarchar(max)" />
           <Property Name="Req_url" Type="nvarchar(max)" />
           <Property Name="UserAgent" Type="nvarchar(max)" />
           <Property Name="Hostname" Type="nvarchar" MaxLength="50" />
-          <Property Name="DeviceType" Type="nvarchar(max)" />
+          <Property Name="DeviceName" Type="nvarchar(max)" />
+          <Property Name="DeviceBrand" Type="nvarchar(max)" />
+          <Property Name="OS_Name" Type="nvarchar(max)" />
+          <Property Name="OS_Version" Type="nvarchar(max)" />
           <Property Name="IsMobileDevice" Type="nvarchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="FK_Uid" Type="int" />
           <Property Name="FK_RID" Type="int" />
           <Property Name="FK_ClientID" Type="int" />
+          <Property Name="FK_City_Master_id" Type="int" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -99,7 +126,9 @@
           <Property Name="MobileNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="UpdatedDate" Type="datetime" />
-          <Property Name="UniqueNumber" Type="nvarchar" MaxLength="450" />
+          <Property Name="UniqueNumber" Type="nvarchar(max)" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="FK_Batchid" Type="int" />
         </EntityType>
         <EntityType Name="UniqueNumbers_Test">
           <Key>
@@ -168,7 +197,43 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UIDDATA_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="0..1" />
+          <End Role="UIDDATA" Type="Self.UIDDATA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="PK_ClientID" />
+            </Principal>
+            <Dependent Role="UIDDATA">
+              <PropertyRef Name="FK_ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UIDDATA_RIDDATA">
+          <End Role="RIDDATA" Type="Self.RIDDATA" Multiplicity="0..1" />
+          <End Role="UIDDATA" Type="Self.UIDDATA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RIDDATA">
+              <PropertyRef Name="PK_Rid" />
+            </Principal>
+            <Dependent Role="UIDDATA">
+              <PropertyRef Name="FK_RID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UIDDATA_UIDDATA">
+          <End Role="UIDDATA" Type="Self.UIDDATA" Multiplicity="1" />
+          <End Role="UIDDATA1" Type="Self.UIDDATA" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="UIDDATA">
+              <PropertyRef Name="PK_Uid" />
+            </Principal>
+            <Dependent Role="UIDDATA1">
+              <PropertyRef Name="PK_Uid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UIDDATA_UIDDATA1">
           <End Role="UIDDATA" Type="Self.UIDDATA" Multiplicity="1" />
           <End Role="UIDDATA1" Type="Self.UIDDATA" Multiplicity="0..1" />
           <ReferentialConstraint>
@@ -196,14 +261,12 @@
           <Parameter Name="ipv6" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="browser" Type="nvarchar" Mode="In" />
           <Parameter Name="browser_version" Type="nvarchar" Mode="In" />
-          <Parameter Name="city" Type="nvarchar" Mode="In" />
-          <Parameter Name="Region" Type="nvarchar" Mode="In" />
-          <Parameter Name="country" Type="nvarchar" Mode="In" />
-          <Parameter Name="countrycode" Type="nvarchar" Mode="In" />
+          <Parameter Name="latitude" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="longitude" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="ipnum" Type="nvarchar" Mode="In" />
           <Parameter Name="req_url" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="useragent" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="hostname" Type="nvarchar" Mode="In" />
-          <Parameter Name="DeviceType" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="IsMobiledevice" Type="nvarchar" Mode="In" />
           <Parameter Name="fk_uid" Type="int" Mode="In" />
           <Parameter Name="fk_rid" Type="int" Mode="In" />
@@ -215,7 +278,6 @@
           <Parameter Name="referencenumber" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="longurl" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="mobilenumber" Type="nvarchar" Mode="In" />
-          <Parameter Name="Uniqueid" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
@@ -258,6 +320,7 @@
           <Parameter Name="rid" Type="int" Mode="In" />
         </Function>
         <EntityContainer Name="shortenURLModelStoreContainer">
+          <EntitySet Name="BatchUploadData" EntityType="Self.BatchUploadData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ErrorLog" EntityType="Self.ErrorLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LoginHistory" EntityType="Self.LoginHistory" Schema="dbo" store:Type="Tables" />
@@ -286,7 +349,19 @@
             <End Role="UIDDATA" EntitySet="UIDDATA" />
             <End Role="SHORTURLDATA" EntitySet="SHORTURLDATA" />
           </AssociationSet>
+          <AssociationSet Name="FK_UIDDATA_Client" Association="Self.FK_UIDDATA_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="UIDDATA" EntitySet="UIDDATA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UIDDATA_RIDDATA" Association="Self.FK_UIDDATA_RIDDATA">
+            <End Role="RIDDATA" EntitySet="RIDDATA" />
+            <End Role="UIDDATA" EntitySet="UIDDATA" />
+          </AssociationSet>
           <AssociationSet Name="FK_UIDDATA_UIDDATA" Association="Self.FK_UIDDATA_UIDDATA">
+            <End Role="UIDDATA" EntitySet="UIDDATA" />
+            <End Role="UIDDATA1" EntitySet="UIDDATA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UIDDATA_UIDDATA1" Association="Self.FK_UIDDATA_UIDDATA1">
             <End Role="UIDDATA" EntitySet="UIDDATA" />
             <End Role="UIDDATA1" EntitySet="UIDDATA" />
           </AssociationSet>
@@ -311,6 +386,7 @@
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="EndDate" Type="DateTime" Precision="3" />
           <Property Name="CampaignName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" />
         </EntityType>
         <EntityType Name="SHORTURLDATA">
           <Key>
@@ -326,7 +402,6 @@
           <Property Name="CountryCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Req_url" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Hostname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="DeviceType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="UserAgent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsMobileDevice" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Region" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -339,6 +414,18 @@
           <Property Name="FK_ClientID" Type="Int32" />
           <NavigationProperty Name="Client" Relationship="shortenURLModel.FK_SHORTURLDATA_Client" FromRole="SHORTURLDATA" ToRole="Client" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="ip_num" Type="Int64" />
+          <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="City_Latitude" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="City_Longitude" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Latitude" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Longitude" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MetroCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DeviceName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DeviceBrand" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OS_Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OS_Version" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FK_City_Master_id" Type="Int32" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -367,7 +454,9 @@
           <NavigationProperty Name="Client" Relationship="shortenURLModel.FK_UIDDATA_Client" FromRole="UIDDATA" ToRole="Client" />
           <NavigationProperty Name="UIDDATA1" Relationship="shortenURLModel.FK_UIDDATA_UIDDATA" FromRole="UIDDATA" ToRole="UIDDATA1" />
           <NavigationProperty Name="UIDDATA2" Relationship="shortenURLModel.FK_UIDDATA_UIDDATA" FromRole="UIDDATA1" ToRole="UIDDATA" />
-          <Property Name="UniqueNumber" Type="String" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="UniqueNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="FK_Batchid" Type="Int32" />
         </EntityType>
         <EntityContainer Name="shortenURLEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="RIDDATAs" EntityType="Self.RIDDATA" />
@@ -389,14 +478,12 @@
             <Parameter Name="ipv6" Mode="In" Type="String" />
             <Parameter Name="browser" Mode="In" Type="String" />
             <Parameter Name="browser_version" Mode="In" Type="String" />
-            <Parameter Name="city" Mode="In" Type="String" />
-            <Parameter Name="Region" Mode="In" Type="String" />
-            <Parameter Name="country" Mode="In" Type="String" />
-            <Parameter Name="countrycode" Mode="In" Type="String" />
+            <Parameter Name="latitude" Mode="In" Type="String" />
+            <Parameter Name="longitude" Mode="In" Type="String" />
+            <Parameter Name="ipnum" Mode="In" Type="String" />
             <Parameter Name="req_url" Mode="In" Type="String" />
             <Parameter Name="useragent" Mode="In" Type="String" />
             <Parameter Name="hostname" Mode="In" Type="String" />
-            <Parameter Name="DeviceType" Mode="In" Type="String" />
             <Parameter Name="IsMobiledevice" Mode="In" Type="String" />
             <Parameter Name="fk_uid" Mode="In" Type="Int32" />
             <Parameter Name="fk_rid" Mode="In" Type="Int32" />
@@ -408,7 +495,6 @@
             <Parameter Name="referencenumber" Mode="In" Type="String" />
             <Parameter Name="longurl" Mode="In" Type="String" />
             <Parameter Name="mobilenumber" Mode="In" Type="String" />
-            <Parameter Name="Uniqueid" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_alterdiagram">
             <Parameter Name="diagramname" Mode="In" Type="String" />
@@ -486,6 +572,7 @@
             <End Role="UIDDATA1" EntitySet="UIDDATAs" />
           </AssociationSet>
           <EntitySet Name="UniqueNumbers_Test" EntityType="shortenURLModel.UniqueNumbers_Test" />
+          <EntitySet Name="BatchUploadDatas" EntityType="shortenURLModel.BatchUploadData" />
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -647,6 +734,21 @@
           <Property Name="PK_uid_test" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="uniqueid" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
         </EntityType>
+        <EntityType Name="BatchUploadData">
+          <Key>
+            <PropertyRef Name="PK_Batchid" />
+          </Key>
+          <Property Name="PK_Batchid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ReferenceNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Longurl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MobileNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FK_RID" Type="Int32" />
+          <Property Name="FK_ClientID" Type="Int32" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="BatchName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -656,6 +758,7 @@
           <EntitySetMapping Name="RIDDATAs">
             <EntityTypeMapping TypeName="shortenURLModel.RIDDATA">
               <MappingFragment StoreEntitySet="RIDDATA">
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CampaignName" ColumnName="CampaignName" />
                 <ScalarProperty Name="EndDate" ColumnName="EndDate" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
@@ -671,6 +774,18 @@
           <EntitySetMapping Name="SHORTURLDATAs">
             <EntityTypeMapping TypeName="shortenURLModel.SHORTURLDATA">
               <MappingFragment StoreEntitySet="SHORTURLDATA">
+                <ScalarProperty Name="FK_City_Master_id" ColumnName="FK_City_Master_id" />
+                <ScalarProperty Name="OS_Version" ColumnName="OS_Version" />
+                <ScalarProperty Name="OS_Name" ColumnName="OS_Name" />
+                <ScalarProperty Name="DeviceBrand" ColumnName="DeviceBrand" />
+                <ScalarProperty Name="DeviceName" ColumnName="DeviceName" />
+                <ScalarProperty Name="MetroCode" ColumnName="MetroCode" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="City_Longitude" ColumnName="City_Longitude" />
+                <ScalarProperty Name="City_Latitude" ColumnName="City_Latitude" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="ip_num" ColumnName="ip_num" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="FK_ClientID" ColumnName="FK_ClientID" />
                 <ScalarProperty Name="FK_RID" ColumnName="FK_RID" />
@@ -688,7 +803,6 @@
                 <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
                 <ScalarProperty Name="Req_url" ColumnName="Req_url" />
                 <ScalarProperty Name="Hostname" ColumnName="Hostname" />
-                <ScalarProperty Name="DeviceType" ColumnName="DeviceType" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -706,6 +820,8 @@
           <EntitySetMapping Name="UIDDATAs">
             <EntityTypeMapping TypeName="shortenURLModel.UIDDATA">
               <MappingFragment StoreEntitySet="UIDDATA">
+                <ScalarProperty Name="FK_Batchid" ColumnName="FK_Batchid" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="UniqueNumber" ColumnName="UniqueNumber" />
                 <ScalarProperty Name="FK_ClientID" ColumnName="FK_ClientID" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
@@ -805,6 +921,22 @@
               <MappingFragment StoreEntitySet="UniqueNumbers_Test">
                 <ScalarProperty Name="uniqueid" ColumnName="uniqueid" />
                 <ScalarProperty Name="PK_uid_test" ColumnName="PK_uid_test" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BatchUploadDatas">
+            <EntityTypeMapping TypeName="shortenURLModel.BatchUploadData">
+              <MappingFragment StoreEntitySet="BatchUploadData">
+                <ScalarProperty Name="BatchName" ColumnName="BatchName" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="FK_ClientID" ColumnName="FK_ClientID" />
+                <ScalarProperty Name="FK_RID" ColumnName="FK_RID" />
+                <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
+                <ScalarProperty Name="Longurl" ColumnName="Longurl" />
+                <ScalarProperty Name="ReferenceNumber" ColumnName="ReferenceNumber" />
+                <ScalarProperty Name="PK_Batchid" ColumnName="PK_Batchid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

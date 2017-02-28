@@ -24,4 +24,8 @@ namespace Analytics.Models
         public bool? IsActive { get; set; }
         // public List<ClientView> ClientsList { get; set; }
     }
+    public class Client_API_KEY
+    {
+        public string API_KEY { get; set; }
+    }
 }
