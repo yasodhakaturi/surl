@@ -504,12 +504,13 @@ namespace Analytics.Controllers
              BatchUploadData objb = dc.BatchUploadDatas.Where(x => x.PK_Batchid == BatchID).SingleOrDefault();
             if (objb != null)
             {
+                string host = ConfigurationManager.AppSettings["ShortenurlHost"].ToString();
                 List<BatchDownload> objd = (from u in dc.UIDDATAs
                                             where u.FK_Batchid == objb.PK_Batchid
                                             select new BatchDownload()
                                             {
                                                 Mobilenumber = u.MobileNumber,
-                                                ShortUrl=ConfigurationManager.AppSettings["ShortenurlHost"].ToString()+u.UniqueNumber
+                                                ShortUrl=host+u.UniqueNumber
                                                 //ShortUrl="https://g0.pe/" + u.UniqueNumber
                                             }).ToList();
                 var grid = new System.Web.UI.WebControls.GridView();
