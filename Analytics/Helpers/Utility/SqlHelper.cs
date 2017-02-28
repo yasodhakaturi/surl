@@ -303,6 +303,7 @@ public class SqlHelper
         // Create a command and prepare it for execution
         SqlCommand cmd = new SqlCommand();
         bool mustCloseConnection = false;
+        cmd.CommandTimeout = 60;
         PrepareCommand(cmd, connection, (SqlTransaction)null, commandType, commandText, commandParameters, out mustCloseConnection);
 
         // Finally, execute the command
