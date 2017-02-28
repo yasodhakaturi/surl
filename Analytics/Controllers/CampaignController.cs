@@ -500,7 +500,7 @@ namespace Analytics.Controllers
         }
         public void GetBatchDownloadedFile(int BatchID)
         {
-            string g0pe = "https:\\g0.pe"; 
+            
              BatchUploadData objb = dc.BatchUploadDatas.Where(x => x.PK_Batchid == BatchID).SingleOrDefault();
             if (objb != null)
             {
@@ -509,8 +509,8 @@ namespace Analytics.Controllers
                                             select new BatchDownload()
                                             {
                                                 Mobilenumber = u.MobileNumber,
-                                                //ShortUrl = g0pe + "\"" + u.UniqueNumber
-                                                ShortUrl="https://g0.pe/" + u.UniqueNumber
+                                                ShortUrl=ConfigurationManager.AppSettings["ShortenurlHost"].ToString()+u.UniqueNumber
+                                                //ShortUrl="https://g0.pe/" + u.UniqueNumber
                                             }).ToList();
                 var grid = new System.Web.UI.WebControls.GridView();
                 string filename = objb.BatchName;
