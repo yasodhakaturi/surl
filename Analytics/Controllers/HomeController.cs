@@ -149,281 +149,35 @@ namespace Analytics.Controllers
         {
             return View();
         }
-        //public string Validate(string uname,string password, string chkRemember)
-        //{
-        //    try
-        //    {
-        //        int loginCount=0;int checkCount=0;string contextData="";
-        //        string previouspage = (string)Session["id"];
-        //        if (Convert.ToBoolean(chkRemember) == true)
-        //        {
-        //            HttpCookie Logincookie = Request.Cookies["AnalyticsLogin"];
-        //            if (Logincookie != null)
-        //            {
-        //                byte[] hash = Helper.GetHashKey("yasodha.bitra@gmail.com" + "Analytics");
-        //                string credentials = Helper.DecryptQueryString(hash, Logincookie.Value);
-        //                string[] cred = credentials.Split('~');
-        //                uname = cred[0];
-        //                password = cred[1];
+     
 
-        //            }
-        //        }
-        //        if (uname != null && password != null)
-        //        {
-        //            //string type = (string)TempData["mb"];
-        //            string credentials = uname + "~" + password + "~" + chkRemember;
-        //            AuthenticateBO objAuthenticateBO = new AuthenticateBO();
-        //            if (objAuthenticateBO.GetAuthenticateUser(uname, password, out loginCount, out checkCount, out contextData))
-        //            {
-        //               // contextData = contextData + "^" + Helper.UrlRef;
-        //                byte[] hash = Helper.GetHashKey("yasodha.bitra@gmail.com" + "Analytics");
-
-        //                Session["userdata"] = contextData;
-        //                Session["id"] = Helper.CurrentUserId;
-        //                // if (Convert.ToBoolean(chkRemember) == true)
-        //                //{
-        //                    HttpCookie cookie = new HttpCookie("AnalyticsLogin");
-        //                    string cookievalue = Helper.Encrypt(hash, credentials);
-        //                    cookie.Value = cookievalue;
-        //                    cookie.Expires = DateTime.Now.AddYears(2);
-        //                    Response.Cookies.Add(cookie);
-        //                //}
-        //            }
-        //        }
-        //        if (previouspage == null)
-        //        {
-        //            if (Helper.CurrentUserRole == "Admin")
-        //            return "Success~/../Admin/Admin";
-        //            else
-        //            return "Success~/../Analytics/Analytics";
-        //        }
-        //        else
-        //            return "Success~/../Analytics/Analytics/" + Session["id"];
-        //    }
-        //        catch (Exception ex)
-        //    {
-
-        //        ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
-        //        return new HttpStatusCodeResult(400, ex.Message).ToString();
-        //    }
-        //}
-
-            //try
-            //{
-
-            //    if (password != null)
-            //    {
-            //        string rid_param = "";
-            //        if (Request.UrlReferrer.LocalPath != "")
-            //        {
-            //            //rid_param = Request.Params["rid"];
-            //            rid_param = Request.UrlReferrer.LocalPath;
-            //            if (rid_param.Contains("/"))
-            //                rid_param = rid_param.Replace("/", "");
-            //            if (rid_param.Contains(@"\"))
-            //                rid_param = rid_param.Replace(@"\", "");
-            //            rid_param = rid_param.Trim();
-            //            long decodedvalue = new ConvertionBO().BaseToLong(rid_param);
-            //            int rid_shorturl = Convert.ToInt32(decodedvalue);
-            //            int? rid_value = 0;
-            //            PWDDataBO obj = new OperationsBO().GetUIDRIDDATA(rid_shorturl);
-            //            if (obj != null && obj.typediff == "2")
-            //            {
-            //                rid_value = obj.UIDorRID;
-            //                int? clientid = dc.RIDDATAs.Where(x => x.PK_Rid == rid_value).Select(y => y.FK_ClientId).SingleOrDefault();
-            //                Client clientobj = dc.Clients.Where(x => x.PK_ClientID == clientid).SingleOrDefault();
-            //                string userdata = clientobj.PK_ClientID + "^" + clientobj.UserName + "^" + clientobj.Role;
-            //                Session["rid"] = rid_value;
-            //                if (rid_value != 0)
-            //                    if (new OperationsBO().CheckPassword_RIDDATA(rid_value, password))
-            //                    {
-            //                        if (Convert.ToBoolean(chkRemember) == true)
-            //                        {
-            //                            byte[] hash = Helper.GetHashKey("superadmin@moozup.com" + "Moozup");
-            //                            string credentials = rid_value + "~" + password + "~" + chkRemember;
-            //                            HttpCookie cookie = new HttpCookie("AnalyticsLogin");
-            //                            string cookievalue = Helper.Encrypt(hash, credentials);
-            //                            cookie.Value = cookievalue;
-            //                            cookie.Expires = DateTime.Now.AddYears(1);
-            //                            Response.Cookies.Add(cookie);
-            //                        }
-            //                        //return "Success~/../Analytics/Index?rid=" + rid_shorturl;
-            //                        return "Success~/../Analytics/Analytics?rid=" + rid_shorturl;
-
-            //                    }
-            //            }
-            //            //else if (obj != null && obj.TypeDiff == "1")
-            //            //{
-            //            //    //call monitize service here
-            //            //    new OperationsBO().Monitize(rid_param);
-            //            //}
-            //            else
-            //            {
-            //                return "Failed~Wrong Password";
-            //            }
-
-            //        }
-            //        return "Failed~Invalid password";
-
-            //    }
-            //    else
-            //    {
-            //        return "Failed~Invalid password";
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-
-            //    ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
-            //    return new HttpStatusCodeResult(400, ex.Message).ToString();
-            //}
-
-        //}
-
-        //public ActionResult LoginRid()
-        
-        //{
-        //    try
-        //    {
-        //        string rid_param = ""; int rid_shorturl = 0; int rid_cookie = 0;
-        //        //if (Convert.ToBoolean(chkRemember) == true)
-        //        //{
-        //        HttpCookie Logincookie = Request.Cookies["AnalyticsLogin"];
-                    
-        //        //if (Logincookie != null)
-        //        //    {
-        //        //        byte[] hash = Helper.GetHashKey("yasodha.bitra@gmail.com" + "Analytics");
-        //        //        string credentials = Helper.DecryptQueryString(hash, Logincookie.Value);
-        //        //        string[] cred = credentials.Split('~');
-        //        //         rid_param = cred[0];
-        //        //        string password = cred[1];
-        //        //        rid_cookie = Convert.ToInt32(rid_param);
-
-        //        //    }
-        //        //}
-        //            //if (rid_param == "" && rid_shorturl == 0)
-        //            //{
-        //                if (Request.UrlReferrer != null)
-        //                    rid_param = Request.UrlReferrer.LocalPath;
-        //                else
-        //                    rid_param = Request.Path;
-        //                if (rid_param.Contains("/"))
-        //                    rid_param = rid_param.Replace("/", "");
-        //                if (rid_param.Contains(@"\"))
-        //                    rid_param = rid_param.Replace(@"\", "");
-        //                rid_param = rid_param.Trim();
-        //                long decodedvalue = new ConvertionBO().BaseToLong(rid_param);
-        //                rid_shorturl = Convert.ToInt32(decodedvalue);
-        //                //string base64 = new ConvertionBO().LongToBase(Convert.ToInt32(rid_param));
-        //            //}
-        //    PWDDataBO obj = new OperationsBO().GetUIDRIDDATA(rid_shorturl);
-        //    if (obj != null && obj.typediff == "2" && obj.pwd != "" && obj.pwd != null)
-        //    {
-        //        if (Logincookie == null)
-        //            return View();
-        //        else
-        //        {
-        //            if (rid_shorturl == rid_cookie)
-        //                Response.Redirect("~/Analytics?rid=" + rid_param);
-        //            else
-        //                return View();
-        //        }
-
-        //    }
-        //    else if (obj != null && obj.typediff == "2" && (obj.pwd == "" || obj.pwd == null))
-        //    {
-        //        //Response.Redirect("~/Analytics/Index?rid=" + rid_shorturl); 
-        //        Response.Redirect("~/Analytics?rid=" + rid_param); 
-
-        //    }
-        //    else if (obj != null && obj.typediff == "1")
-        //    {
-        //        //call monitize service here
-        //        new OperationsBO().Monitize(rid_param);
-        //    }
-        //    return View();
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
-        //        return View();
-        //        //return new HttpStatusCodeResult(400, ex.Message).ToString();
-        //    }
-        //}
-
-        //public string ValidateRid(string password, string chkRemember)
-        //{
-        //    try
-        //    {
-                
-        //        if (password != null)
-        //        {
-        //            string rid_param = "";
-        //            if (Request.UrlReferrer.LocalPath != "")
-        //            {
-        //                //rid_param = Request.Params["rid"];
-        //                rid_param = Request.UrlReferrer.LocalPath;
-        //                if (rid_param.Contains("/"))
-        //                    rid_param = rid_param.Replace("/", "");
-        //                if (rid_param.Contains(@"\"))
-        //                    rid_param = rid_param.Replace(@"\", "");
-        //                rid_param = rid_param.Trim();
-        //                long decodedvalue = new ConvertionBO().BaseToLong(rid_param);
-        //                int rid_shorturl = Convert.ToInt32(decodedvalue);
-        //                int? rid_value = 0;
-        //                PWDDataBO obj = new OperationsBO().GetUIDRIDDATA(rid_shorturl);
-        //                if (obj != null && obj.typediff == "2")
-        //                {
-        //                    rid_value = obj.UIDorRID;
-        //                    int? clientid = dc.RIDDATAs.Where(x => x.PK_Rid == rid_value).Select(y => y.FK_ClientId).SingleOrDefault();
-        //                    Client clientobj = dc.Clients.Where(x => x.PK_ClientID == clientid).SingleOrDefault();
-        //                    string userdata = clientobj.PK_ClientID + "^" + clientobj.UserName + "^" + clientobj.Role;
-        //                    Session["rid"] = rid_value;
-        //                    if (rid_value != 0)
-        //                        if (new OperationsBO().CheckPassword_RIDDATA(rid_value, password))
-        //                        {
-        //                            if (Convert.ToBoolean(chkRemember) == true)
-        //                            {
-        //                                byte[] hash = Helper.GetHashKey("superadmin@moozup.com" + "Moozup");
-        //                                string credentials = rid_value + "~" + password+"~"+chkRemember;
-        //                                HttpCookie cookie = new HttpCookie("AnalyticsLogin");
-        //                                string cookievalue = Helper.Encrypt(hash, credentials);
-        //                                cookie.Value = cookievalue;
-        //                                cookie.Expires = DateTime.Now.AddYears(1);
-        //                                Response.Cookies.Add(cookie);
-        //                            }
-        //                            //return "Success~/../Analytics/Index?rid=" + rid_shorturl;
-        //                            return "Success~/../Analytics/Analytics?rid=" + rid_shorturl;
-
-        //                        }
-        //                }
-        //                //else if (obj != null && obj.TypeDiff == "1")
-        //                //{
-        //                //    //call monitize service here
-        //                //    new OperationsBO().Monitize(rid_param);
-        //                //}
-        //                else
-        //                {
-        //                    return "Failed~Wrong Password";
-        //                }
-
-        //            }
-        //            return "Failed~Invalid password";
-
-        //        }
-        //        else
-        //        {
-        //            return "Failed~Invalid password";
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
-        //        return new HttpStatusCodeResult(400, ex.Message).ToString();
-        //    }
-
-        //}
+//        USE [shortenURL]
+//GO
+///****** Object:  UserDefinedFunction [dbo].[Split]    Script Date: 2/28/2017 2:07:04 PM ******/
+//SET ANSI_NULLS ON
+//GO
+//SET QUOTED_IDENTIFIER ON
+//GO
+//ALTER FUNCTION [dbo].[Split]
+//(
+//    @String NVARCHAR(4000),
+//    @Delimiter NCHAR(1)
+//)
+//RETURNS TABLE
+//AS
+//RETURN
+//(
+//    WITH Split(stpos,endpos)
+//    AS(
+//        SELECT 0 AS stpos, CHARINDEX(@Delimiter,@String) AS endpos
+//        UNION ALL
+//        SELECT endpos+1, CHARINDEX(@Delimiter,@String,endpos+1)
+//            FROM Split
+//            WHERE endpos > 0
+//    )
+//    SELECT 'Id' = ROW_NUMBER() OVER (ORDER BY (SELECT 1)),
+//        'Data' = SUBSTRING(@String,stpos,COALESCE(NULLIF(endpos,0),LEN(@String)+1)-stpos)
+//    FROM Split
+//)
     }
 }
