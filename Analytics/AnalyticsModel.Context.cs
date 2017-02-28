@@ -34,7 +34,6 @@ namespace Analytics
         public virtual DbSet<ErrorLog> ErrorLogs { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<LoginHistory> LoginHistories { get; set; }
-        public virtual DbSet<UniqueNumbers_Test> UniqueNumbers_Test { get; set; }
         public virtual DbSet<BatchUploadData> BatchUploadDatas { get; set; }
     
         public virtual int InsertintoUIDRID(string typediff, Nullable<int> uidorrid)

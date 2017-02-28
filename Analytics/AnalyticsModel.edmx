@@ -130,13 +130,6 @@
           <Property Name="CreatedBy" Type="int" />
           <Property Name="FK_Batchid" Type="int" />
         </EntityType>
-        <EntityType Name="UniqueNumbers_Test">
-          <Key>
-            <PropertyRef Name="uniqueid" />
-          </Key>
-          <Property Name="PK_uid_test" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="uniqueid" Type="nchar" MaxLength="10" Nullable="false" />
-        </EntityType>
         <Association Name="FK_RIDDATA_Client">
           <End Role="Client" Type="Self.Client" Multiplicity="1" />
           <End Role="RIDDATA" Type="Self.RIDDATA" Multiplicity="*" />
@@ -328,7 +321,6 @@
           <EntitySet Name="SHORTURLDATA" EntityType="Self.SHORTURLDATA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UIDDATA" EntityType="Self.UIDDATA" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UniqueNumbers_Test" EntityType="Self.UniqueNumbers_Test" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_RIDDATA_Client" Association="Self.FK_RIDDATA_Client">
             <End Role="Client" EntitySet="Client" />
             <End Role="RIDDATA" EntitySet="RIDDATA" />
@@ -571,7 +563,6 @@
             <End Role="UIDDATA" EntitySet="UIDDATAs" />
             <End Role="UIDDATA1" EntitySet="UIDDATAs" />
           </AssociationSet>
-          <EntitySet Name="UniqueNumbers_Test" EntityType="shortenURLModel.UniqueNumbers_Test" />
           <EntitySet Name="BatchUploadDatas" EntityType="shortenURLModel.BatchUploadData" />
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
@@ -727,13 +718,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="UniqueNumbers_Test">
-          <Key>
-            <PropertyRef Name="uniqueid" />
-          </Key>
-          <Property Name="PK_uid_test" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="uniqueid" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
-        </EntityType>
         <EntityType Name="BatchUploadData">
           <Key>
             <PropertyRef Name="PK_Batchid" />
@@ -913,14 +897,6 @@
                 <ScalarProperty Name="Role" ColumnName="Role" />
                 <ScalarProperty Name="FKPersonId" ColumnName="FKPersonId" />
                 <ScalarProperty Name="PKLoginHistoryId" ColumnName="PKLoginHistoryId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="UniqueNumbers_Test">
-            <EntityTypeMapping TypeName="shortenURLModel.UniqueNumbers_Test">
-              <MappingFragment StoreEntitySet="UniqueNumbers_Test">
-                <ScalarProperty Name="uniqueid" ColumnName="uniqueid" />
-                <ScalarProperty Name="PK_uid_test" ColumnName="PK_uid_test" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
