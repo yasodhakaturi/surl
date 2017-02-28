@@ -18,11 +18,16 @@ namespace Analytics
         public string ReferenceNumber { get; set; }
         public string Longurl { get; set; }
         public string MobileNumber { get; set; }
+        public string BatchName { get; set; }
         public Nullable<int> FK_RID { get; set; }
         public Nullable<int> FK_ClientID { get; set; }
         public string CreatedBy { get; set; }
         public string Status { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
-        public string BatchName { get; set; }
+    
+        public virtual BatchUploadData BatchUploadData1 { get; set; }
+        public virtual BatchUploadData BatchUploadData2 { get; set; }
+        public virtual Client Client { get; set; }
+        public virtual RIDDATA RIDDATA { get; set; }
     }
 }

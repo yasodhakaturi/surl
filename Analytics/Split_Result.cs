@@ -11,9 +11,9 @@ namespace Analytics
 {
     using System;
     
-    public partial class spGetALLCOUNTS1_Result
+    public partial class Split_Result
     {
-        public Nullable<System.DateTime> RequestedDate { get; set; }
-        public Nullable<int> RequestCount { get; set; }
+        public Nullable<long> Id { get; set; }
+        public string Data { get; set; }
     }
 }

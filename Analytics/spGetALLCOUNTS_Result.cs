@@ -13,7 +13,7 @@ namespace Analytics
     
     public partial class spGetALLCOUNTS_Result
     {
-        public Nullable<int> year { get; set; }
-        public Nullable<int> count { get; set; }
+        public Nullable<int> Year { get; set; }
+        public Nullable<int> YearsCount { get; set; }
     }
 }

@@ -302,20 +302,11 @@
     <Compile Include="spGetALLCOUNTS_Result.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="sp_helpdiagramdefinition_Result.cs">
-      <DependentUpon>AnalyticsModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="sp_helpdiagrams_Result.cs">
+    <Compile Include="Split_Result.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
-    <Compile Include="sysdiagram.cs">
-      <DependentUpon>AnalyticsModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="UIDDATA.cs">
-      <DependentUpon>AnalyticsModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="UniqueNumbers_Test.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
     <Compile Include="WebForm1.aspx.cs">
@@ -327,6 +318,16 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AnalyticsModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AnalyticsModel.edmx</DependentUpon>
+      <LastGenOutput>AnalyticsModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="AnalyticsModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AnalyticsModel.edmx</DependentUpon>
+      <LastGenOutput>AnalyticsModel.cs</LastGenOutput>
+    </Content>
     <Content Include="App_Data\APIKey.xml" />
     <Content Include="chat.html" />
     <Content Include="Content\angular-block-ui.css" />
@@ -1176,23 +1177,6 @@
     <Content Include="Scripts\r.js" />
     <Content Include="Scripts\require.js" />
     <Content Include="WebForm1.aspx" />
-    <EntityDeploy Include="AnalyticsModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>AnalyticsModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="AnalyticsModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>AnalyticsModel.edmx</DependentUpon>
-      <LastGenOutput>AnalyticsModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="AnalyticsModel.edmx.diagram">
-      <DependentUpon>AnalyticsModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="AnalyticsModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>AnalyticsModel.edmx</DependentUpon>
-      <LastGenOutput>AnalyticsModel.cs</LastGenOutput>
-    </Content>
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular-touch.min.js.map" />
     <Content Include="Scripts\angular-sanitize.min.js.map" />
@@ -1254,6 +1238,13 @@
     <Content Include="dist\index\styles\ui-grid.eot" />
     <Content Include="dist\index\styles\ui-grid.ttf" />
     <Content Include="dist\index\styles\ui-grid.woff" />
+    <EntityDeploy Include="AnalyticsModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>AnalyticsModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="AnalyticsModel.edmx.diagram">
+      <DependentUpon>AnalyticsModel.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
