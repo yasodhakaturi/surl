@@ -209,7 +209,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
         generate(form, type) {
 
           var refDefer = $q.defer();
-          var data = {ReferenceNumber:this.ReferenceNumber, CampaignID: this.Id, LongUrl: form.LongUrl, MobileNumbers: form.MobileNumbersList, type:type};
+          var data = {ReferenceNumber:this.ReferenceNumber, CampaignID: this.Id, LongUrl: form.LongUrl, MobileNumbers: form.MobileNumbers, type:type};
 
           $http({
             method: 'POST',
