@@ -146,7 +146,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
 //                console.log('campaign save', campaignObj)
               refDefer.resolve(new CampaignModel(campaignObj.data));
             }, (err) => {
-              console.log('campaign save failed', err);
+              console.log('campaign generation failed', err);
               refDefer.reject(err);
             });
 
