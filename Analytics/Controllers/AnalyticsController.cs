@@ -28,7 +28,7 @@ namespace Analytics.Controllers
 
             return View(obj);
         }
-        public JsonResult GETSummary(string rid)
+        public JsonResult GETSummary(int cid,string rid)
         {
 
             DashBoardSummary obj = new DashBoardSummary();
@@ -39,25 +39,44 @@ namespace Analytics.Controllers
                 {
                     if (Session["id"] != null && rid == null)
                     {
-                        int c_id = (int)Session["id"];
+                        //int c_id = (int)Session["id"];
 
                         //if (cid != "" && cid != null)
                         //{
-                        Client obj_client = dc.Clients.Where(x => x.PK_ClientID == c_id).Select(y => y).SingleOrDefault();
-                        if (obj_client != null)
+                        string role = Helper.CurrentUserRole;
+                        SqlDataReader myReader;
+                        if (role.ToLower() != "admin")
+                        {
+                            Client obj_client = dc.Clients.Where(x => x.PK_ClientID == cid).Select(y => y).SingleOrDefault();
+                            if (obj_client != null)
+                            {
+                                string connStr = ConfigurationManager.ConnectionStrings["shortenURLConnectionString"].ConnectionString;
+
+                                // create and open a connection object
+                                lSQLConn = new SqlConnection(connStr);
+                                lSQLConn.Open();
+                                lSQLCmd.CommandType = CommandType.StoredProcedure;
+                                lSQLCmd.CommandTimeout = 600;
+                                lSQLCmd.CommandText = "spGetDashBoardSummary";
+                                lSQLCmd.Parameters.Add(new SqlParameter("@FkClientId", cid));
+                                lSQLCmd.Connection = lSQLConn;
+                                //myReader = lSQLCmd.ExecuteReader();
+                            }
+                        }
+                        else
                         {
                             string connStr = ConfigurationManager.ConnectionStrings["shortenURLConnectionString"].ConnectionString;
 
                             // create and open a connection object
                             lSQLConn = new SqlConnection(connStr);
-                            SqlDataReader myReader;
                             lSQLConn.Open();
                             lSQLCmd.CommandType = CommandType.StoredProcedure;
+                            lSQLCmd.CommandTimeout = 600;
                             lSQLCmd.CommandText = "spGetDashBoardSummary";
-                            lSQLCmd.Parameters.Add(new SqlParameter("@FkClientId", c_id));
+                            lSQLCmd.Parameters.Add(new SqlParameter("@FkClientId", "0"));
                             lSQLCmd.Connection = lSQLConn;
-                            myReader = lSQLCmd.ExecuteReader();
-
+                        }
+                        myReader = lSQLCmd.ExecuteReader();
 
                             totalUrls totalUrls = ((IObjectContextAdapter)dc)
                               .ObjectContext
@@ -129,7 +148,7 @@ namespace Analytics.Controllers
                             obj_act.last7days = last7days;
                             obj_act.month = month;
                             obj.activities = obj_act;
-                        }
+                        
                         return Json(obj, JsonRequestBehavior.AllowGet);
                         //}
                         //else
@@ -141,13 +160,19 @@ namespace Analytics.Controllers
                     {
                         //if (cid != "" && cid != null)
                         //{
-                        int c_id = (int)Session["id"];
+                        //int c_id = (int)Session["id"];
 
                         CampaignSummary objc = new CampaignSummary();
-                        Client obj_client = dc.Clients.Where(x => x.PK_ClientID == c_id).Select(y => y).SingleOrDefault();
-                        RIDDATA objr = dc.RIDDATAs.Where(x => x.ReferenceNumber == rid).Select(y => y).SingleOrDefault();
+                        string role = Helper.CurrentUserRole;
+                        //Client obj_client = dc.Clients.Where(x => x.PK_ClientID == cid).Select(y => y).SingleOrDefault();
+                        RIDDATA objr=new RIDDATA();
+                        if(role.ToLower()=="admin")
+                         objr = dc.RIDDATAs.Where(x => x.ReferenceNumber == rid).Select(y => y).SingleOrDefault();
+                        else
+                         objr = dc.RIDDATAs.Where(x => x.ReferenceNumber == rid && x.FK_ClientId == cid).Select(y => y).SingleOrDefault();
 
-                        if (obj_client != null)
+
+                        if (objr != null)
                         {
                             string connStr = ConfigurationManager.ConnectionStrings["shortenURLConnectionString"].ConnectionString;
 
@@ -156,6 +181,7 @@ namespace Analytics.Controllers
                             SqlDataReader myReader;
                             lSQLConn.Open();
                             lSQLCmd.CommandType = CommandType.StoredProcedure;
+                            lSQLCmd.CommandTimeout = 600;
                             lSQLCmd.CommandText = "spGetCampaignSummary";
                             lSQLCmd.Parameters.Add(new SqlParameter("@rid", objr.PK_Rid));
                             lSQLCmd.Connection = lSQLConn;
