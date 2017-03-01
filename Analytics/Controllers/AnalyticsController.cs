@@ -389,6 +389,7 @@ namespace Analytics.Controllers
                         lSQLConn.Open();
                         lSQLCmd.CommandType = CommandType.StoredProcedure;
                         lSQLCmd.CommandText = "spGetALLCOUNTS1";
+                        lSQLCmd.CommandTimeout = 600;
                         //lSQLCmd.Parameters.Add(new SqlParameter("@Fk_Uniqueid", Uniqueid_SHORTURLDATA));
                         lSQLCmd.Parameters.Add(new SqlParameter("@rid", obj.PK_Rid));
                         lSQLCmd.Parameters.Add(new SqlParameter("@DateFrom", DateFrom));
