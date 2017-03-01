@@ -83,23 +83,46 @@ namespace Analytics.Controllers
                 {
                     if (referencenumber != null && isactivestr == "" && Session["id"] != null)
                     {
-                        obj_search = (from c in dc.RIDDATAs
-                                      join c1 in dc.Clients on c.FK_ClientId equals c1.PK_ClientID
-                                      where c.ReferenceNumber.Contains(referencenumber.ToString()) && c.CampaignName.ToString() != null && c.CampaignName.ToString() != ""
-                                      select new CampaignView1()
-                                      {
-                                          Id = c.PK_Rid,
-                                          ReferenceNumber = c.ReferenceNumber,
-                                          CampaignName = c.CampaignName,
-                                          HasPassword = (c.Pwd != null && c.Pwd != string.Empty) ? true : false,
-                                          //pwd = r.Pwd,
-                                          IsActive = c.IsActive,
-                                          CreatedDateStr = c.CreatedDate,
-                                          CreatedUserId = c1.PK_ClientID,
-                                          CreatedUserEmail = c1.Email,
-                                          CreatedUserName = c1.UserName,
-                                          CreatedUserActiveState = c1.IsActive
-                                      }).ToList();
+                        if (Helper.CurrentUserRole.ToLower() == "admin")
+                        {
+                            obj_search = (from c in dc.RIDDATAs
+                                          join c1 in dc.Clients on c.FK_ClientId equals c1.PK_ClientID
+                                          where c.ReferenceNumber.Contains(referencenumber.ToString()) && c.CampaignName.ToString() != null && c.CampaignName.ToString() != ""
+                                          select new CampaignView1()
+                                          {
+                                              Id = c.PK_Rid,
+                                              ReferenceNumber = c.ReferenceNumber,
+                                              CampaignName = c.CampaignName,
+                                              HasPassword = (c.Pwd != null && c.Pwd != string.Empty) ? true : false,
+                                              //pwd = r.Pwd,
+                                              IsActive = c.IsActive,
+                                              CreatedDateStr = c.CreatedDate,
+                                              CreatedUserId = c1.PK_ClientID,
+                                              CreatedUserEmail = c1.Email,
+                                              CreatedUserName = c1.UserName,
+                                              CreatedUserActiveState = c1.IsActive
+                                          }).ToList();
+                        }
+                        else
+                        {
+                            obj_search = (from c in dc.RIDDATAs
+                                          join c1 in dc.Clients on c.FK_ClientId equals c1.PK_ClientID
+                                          where c.ReferenceNumber.Contains(referencenumber.ToString()) && c.CampaignName.ToString() != null && c.CampaignName.ToString() != "" && c.FK_ClientId==Helper.CurrentUserId
+                                          select new CampaignView1()
+                                          {
+                                              Id = c.PK_Rid,
+                                              ReferenceNumber = c.ReferenceNumber,
+                                              CampaignName = c.CampaignName,
+                                              HasPassword = (c.Pwd != null && c.Pwd != string.Empty) ? true : false,
+                                              //pwd = r.Pwd,
+                                              IsActive = c.IsActive,
+                                              CreatedDateStr = c.CreatedDate,
+                                              CreatedUserId = c1.PK_ClientID,
+                                              CreatedUserEmail = c1.Email,
+                                              CreatedUserName = c1.UserName,
+                                              CreatedUserActiveState = c1.IsActive
+                                          }).ToList();
+                        }
                         obj_search = (from x in obj_search
                                       select new CampaignView1()
                                       {
@@ -120,23 +143,46 @@ namespace Analytics.Controllers
 
                     else if (isactivestr != "" && referencenumber == null && Session["id"] != null)
                     {
-                        obj_search = (from c in dc.RIDDATAs
-                                      join c1 in dc.Clients on c.FK_ClientId equals c1.PK_ClientID
-                                      where c.IsActive == isactive && c.CampaignName.ToString() != null && c.CampaignName.ToString() != ""
-                                      select new CampaignView1()
-                                      {
-                                          Id = c.PK_Rid,
-                                          ReferenceNumber = c.ReferenceNumber,
-                                          CampaignName = c.CampaignName,
-                                          HasPassword = (c.Pwd != null && c.Pwd != string.Empty) ? true : false,
-                                          //pwd = r.Pwd,
-                                          IsActive = c.IsActive,
-                                          CreatedDateStr = c.CreatedDate,
-                                          CreatedUserId = c1.PK_ClientID,
-                                          CreatedUserEmail = c1.Email,
-                                          CreatedUserName = c1.UserName,
-                                          CreatedUserActiveState = c1.IsActive
-                                      }).ToList();
+                        if (Helper.CurrentUserRole.ToLower() == "admin")
+                        {
+                            obj_search = (from c in dc.RIDDATAs
+                                          join c1 in dc.Clients on c.FK_ClientId equals c1.PK_ClientID
+                                          where c.IsActive == isactive && c.CampaignName.ToString() != null && c.CampaignName.ToString() != ""
+                                          select new CampaignView1()
+                                          {
+                                              Id = c.PK_Rid,
+                                              ReferenceNumber = c.ReferenceNumber,
+                                              CampaignName = c.CampaignName,
+                                              HasPassword = (c.Pwd != null && c.Pwd != string.Empty) ? true : false,
+                                              //pwd = r.Pwd,
+                                              IsActive = c.IsActive,
+                                              CreatedDateStr = c.CreatedDate,
+                                              CreatedUserId = c1.PK_ClientID,
+                                              CreatedUserEmail = c1.Email,
+                                              CreatedUserName = c1.UserName,
+                                              CreatedUserActiveState = c1.IsActive
+                                          }).ToList();
+                        }
+                        else
+                        {
+                            obj_search = (from c in dc.RIDDATAs
+                                          join c1 in dc.Clients on c.FK_ClientId equals c1.PK_ClientID
+                                          where c.IsActive == isactive && c.CampaignName.ToString() != null && c.CampaignName.ToString() != "" && c.FK_ClientId==Helper.CurrentUserId
+                                          select new CampaignView1()
+                                          {
+                                              Id = c.PK_Rid,
+                                              ReferenceNumber = c.ReferenceNumber,
+                                              CampaignName = c.CampaignName,
+                                              HasPassword = (c.Pwd != null && c.Pwd != string.Empty) ? true : false,
+                                              //pwd = r.Pwd,
+                                              IsActive = c.IsActive,
+                                              CreatedDateStr = c.CreatedDate,
+                                              CreatedUserId = c1.PK_ClientID,
+                                              CreatedUserEmail = c1.Email,
+                                              CreatedUserName = c1.UserName,
+                                              CreatedUserActiveState = c1.IsActive
+                                          }).ToList();
+                        }
                         obj_search = (from x in obj_search
                                       select new CampaignView1()
                                       {
@@ -156,24 +202,48 @@ namespace Analytics.Controllers
                     }
                     else if (isactivestr == "" && referencenumber == null && Session["id"] != null)
                     {
-                        obj_search = (from c in dc.RIDDATAs
-                                      join c1 in dc.Clients on c.FK_ClientId equals c1.PK_ClientID
-                                      where c.CampaignName.ToString() != null && c.CampaignName.ToString() != ""
-                                      select new CampaignView1()
-                                      {
-                                          Id = c.PK_Rid,
-                                          ReferenceNumber = c.ReferenceNumber,
-                                          CampaignName = c.CampaignName,
-                                          HasPassword = (c.Pwd != null && c.Pwd != string.Empty) ? true : false,
-                                          //pwd = r.Pwd,
-                                          IsActive = c.IsActive,
-                                          CreatedDateStr = c.CreatedDate,
-                                          //CreatedDate = c.CreatedDate.Value.ToString("yyyy-MM-ddThh:mm:ss"),
-                                          CreatedUserId = c1.PK_ClientID,
-                                          CreatedUserEmail = c1.Email,
-                                          CreatedUserName = c1.UserName,
-                                          CreatedUserActiveState = c1.IsActive
-                                      }).ToList();
+                        if (Helper.CurrentUserRole.ToLower() == "admin")
+                        {
+                            obj_search = (from c in dc.RIDDATAs
+                                          join c1 in dc.Clients on c.FK_ClientId equals c1.PK_ClientID
+                                          where c.CampaignName.ToString() != null && c.CampaignName.ToString() != ""
+                                          select new CampaignView1()
+                                          {
+                                              Id = c.PK_Rid,
+                                              ReferenceNumber = c.ReferenceNumber,
+                                              CampaignName = c.CampaignName,
+                                              HasPassword = (c.Pwd != null && c.Pwd != string.Empty) ? true : false,
+                                              //pwd = r.Pwd,
+                                              IsActive = c.IsActive,
+                                              CreatedDateStr = c.CreatedDate,
+                                              //CreatedDate = c.CreatedDate.Value.ToString("yyyy-MM-ddThh:mm:ss"),
+                                              CreatedUserId = c1.PK_ClientID,
+                                              CreatedUserEmail = c1.Email,
+                                              CreatedUserName = c1.UserName,
+                                              CreatedUserActiveState = c1.IsActive
+                                          }).ToList();
+                        }
+                        else
+                        {
+                            obj_search = (from c in dc.RIDDATAs
+                                          join c1 in dc.Clients on c.FK_ClientId equals c1.PK_ClientID
+                                          where c.CampaignName.ToString() != null && c.CampaignName.ToString() != "" && c.FK_ClientId==Helper.CurrentUserId
+                                          select new CampaignView1()
+                                          {
+                                              Id = c.PK_Rid,
+                                              ReferenceNumber = c.ReferenceNumber,
+                                              CampaignName = c.CampaignName,
+                                              HasPassword = (c.Pwd != null && c.Pwd != string.Empty) ? true : false,
+                                              //pwd = r.Pwd,
+                                              IsActive = c.IsActive,
+                                              CreatedDateStr = c.CreatedDate,
+                                              //CreatedDate = c.CreatedDate.Value.ToString("yyyy-MM-ddThh:mm:ss"),
+                                              CreatedUserId = c1.PK_ClientID,
+                                              CreatedUserEmail = c1.Email,
+                                              CreatedUserName = c1.UserName,
+                                              CreatedUserActiveState = c1.IsActive
+                                          }).ToList();
+                        }
                         obj_search = (from x in obj_search
                                       select new CampaignView1()
                                    {
