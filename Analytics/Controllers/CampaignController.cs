@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -19,6 +20,7 @@ namespace Analytics.Controllers
     public class CampaignController : Controller
     {
         shortenURLEntities dc = new shortenURLEntities();
+
         // GET: Campaign
         public JsonResult Index(string id)
         {
@@ -536,10 +538,22 @@ namespace Analytics.Controllers
             }
 
         }
-               
-        [System.Web.Http.HttpPost]
-       public JsonResult UploadData(string MobileNumbers, string LongURL, string ReferenceNumber, string type)
+        protected override JsonResult Json(object data, string contentType, System.Text.Encoding contentEncoding, JsonRequestBehavior behavior)
         {
+            return new JsonResult()
+            {
+                Data = data,
+                ContentType = contentType,
+                ContentEncoding = contentEncoding,
+                JsonRequestBehavior = behavior,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        [System.Web.Http.HttpPost]
+         public JsonResult UploadData(string[] MobileNumbers, string LongURL, string ReferenceNumber, string type)
+       {
+               //<add key="aspnet:MaxJsonDeserializerMembers" value="15000000" />
             try
             {
                 int clientid = 0; int rid = 0;
@@ -549,7 +563,7 @@ namespace Analytics.Controllers
                 //ReferenceNumber = "50793";
                 //LongURL = "google.com";
                 //type = "advanced";
-                JavaScriptSerializer ser = new JavaScriptSerializer();
+                
                 List<string> MobileNumbersList = new List<string>();
                 List<string> MobileNumbersFiltered_List = new List<string>();
 
@@ -559,9 +573,9 @@ namespace Analytics.Controllers
                 string Hashid;
                 //MobileNumbersList MobileNumbersList1 = ser.Deserialize<MobileNumbersList>(MobileNumbers);
                 //MobileNumbersList = MobileNumbersList1.MobileNumbers;
-                MobileNumbersList = MobileNumbers.Split(',').ToList();
+                //MobileNumbersList = MobileNumbers.Split(',').ToList();
 
-                string formated_mobilenumbers = String.Join(",", MobileNumbersList);
+                string formated_mobilenumbers = String.Join(",", MobileNumbers);
 
                 //clientid = 2;
                 //rid = 41;
@@ -571,11 +585,12 @@ namespace Analytics.Controllers
                                   select registree).SingleOrDefault();
                 if (type.ToLower() == "simple" && objrid != null)
                 {
+                    string mobilenumber = MobileNumbers[0];
                     UIDDATA objc = new UIDDATA();
-                    UIDDATA objc1 = dc.UIDDATAs.Where(u => u.MobileNumber == MobileNumbers && u.ReferenceNumber == ReferenceNumber && u.Longurl == LongURL).SingleOrDefault();
+                    UIDDATA objc1 = dc.UIDDATAs.Where(u => u.MobileNumber == mobilenumber && u.ReferenceNumber == ReferenceNumber && u.Longurl == LongURL).SingleOrDefault();
                     if (objc1 == null)
                     {
-                        objc.MobileNumber = MobileNumbers;
+                        objc.MobileNumber = mobilenumber;
                         objc.ReferenceNumber = ReferenceNumber;
                         objc.Longurl = LongURL;
                         objc.FK_ClientID = objrid.FK_ClientId;
@@ -584,10 +599,10 @@ namespace Analytics.Controllers
                         objc.CreatedBy = Helper.CurrentUserId;
                         dc.UIDDATAs.Add(objc);
                         dc.SaveChanges();
-                        UIDDATA objuid = dc.UIDDATAs.Where(u => u.MobileNumber == MobileNumbers && u.ReferenceNumber == ReferenceNumber && u.Longurl == LongURL).SingleOrDefault();
+                        UIDDATA objuid = dc.UIDDATAs.Where(u => u.MobileNumber == mobilenumber && u.ReferenceNumber == ReferenceNumber && u.Longurl == LongURL).SingleOrDefault();
                         Hashid = Helper.GetHashID(objuid.PK_Uid);
                         new OperationsBO().UpdateHashid(objuid.PK_Uid, Hashid);
-                        obje.MobileNumber = MobileNumbers;
+                        obje.MobileNumber = mobilenumber;
                         //obje.ShortenUrl = "https://g0.pe/" + Hashid;
                         obje.ShortenUrl = ConfigurationManager.AppSettings["ShortenurlHost"].ToString() + Hashid;
                         obje.CreatedDate = objuid.CreatedDate;
@@ -597,7 +612,7 @@ namespace Analytics.Controllers
                     }
                     else
                     {
-                        obje.MobileNumber = MobileNumbers;
+                        obje.MobileNumber = mobilenumber;
                         obje.ShortenUrl = "cannt be generated.";
                         obje.Status = "MobileNumber and LongUrl already added for this campaign.";
                         //return Json(obje, JsonRequestBehavior.AllowGet);
@@ -608,18 +623,21 @@ namespace Analytics.Controllers
                 else if (type.ToLower() == "advanced" && objrid != null)
                 {
                     string batchname = objrid.CampaignName + "_" + DateTime.UtcNow;
-                    BatchUploadData objb = new BatchUploadData();
-                    objb.ReferenceNumber = ReferenceNumber;
-                    objb.MobileNumber = formated_mobilenumbers;
-                    objb.Longurl = LongURL;
-                    objb.FK_ClientID = objrid.FK_ClientId;
-                    objb.FK_RID = objrid.PK_Rid;
-                    objb.CreatedDate = DateTime.UtcNow;
-                    objb.CreatedBy = Helper.CurrentUserId.ToString();
-                    objb.Status = "Not Started";
-                    objb.BatchName = batchname;
-                    dc.BatchUploadDatas.Add(objb);
-                    dc.SaveChanges();
+                    
+                        BatchUploadData objb = new BatchUploadData();
+                        objb.ReferenceNumber = ReferenceNumber;
+                        objb.MobileNumber = formated_mobilenumbers;
+                        objb.Longurl = LongURL;
+                        objb.FK_ClientID = objrid.FK_ClientId;
+                        objb.FK_RID = objrid.PK_Rid;
+                        objb.CreatedDate = DateTime.UtcNow;
+                        objb.CreatedBy = Helper.CurrentUserId.ToString();
+                        objb.Status = "Not Started";
+                        objb.BatchName = batchname;
+                        dc.BatchUploadDatas.Add(objb);
+                        dc.SaveChanges();
+                    
+                   
                     BatchUploadData objo = dc.BatchUploadDatas.Where(x => x.BatchName == batchname).SingleOrDefault();
                     if (objo != null)
                     {
@@ -679,6 +697,7 @@ namespace Analytics.Controllers
                 }
                 return Json(obje, JsonRequestBehavior.AllowGet);
             }
+               
             catch (Exception ex)
             {
                 ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
