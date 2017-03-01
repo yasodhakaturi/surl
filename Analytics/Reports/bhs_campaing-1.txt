@@ -6,3 +6,54 @@ PK_Shorturl	Ipv4	Ipv6	ip_num	Browser	Browser_version	City	Region	Country	Country
 150	5.31.179.94	172.31.14.147	85963614	Chrome	56.0	Dubai	03	United Arab Emirates	AE		25.2639	55.3081	25.2733541	55.3713503	,	https://g0.pe/Mdjvd	Mozilla/5.0 (Linux; Android 6.0.1; SM-N920C Build/MMB29K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Mobile Safari/537.36	172.31.14.147	SM-N920C	Samsung	Android	6	True	2017-03-01 12:28:53.193	7	7	9	72175
 151	83.110.201.99	172.31.21.236	1399769443	Chrome	56.0	Dubai	03	United Arab Emirates	AE		25.2639	55.3081	25.2727943	55.3714351	,	https://g0.pe/Mdjvd	Mozilla/5.0 (Linux; Android 6.0.1; SM-N920C Build/MMB29K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Mobile Safari/537.36	172.31.21.236	SM-N920C	Samsung	Android	6	True	2017-03-01 12:29:20.280	7	7	9	1270612
 160	2.49.213.82	172.31.14.147	36820306	Chrome	56.0	Deira	03	United Arab Emirates	AE		25.2731	55.3064	25.2953963	55.4401957	,	https://g0.pe/Mdjvd	Mozilla/5.0 (Linux; Android 6.0.1; SM-N920C Build/MMB29K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Mobile Safari/537.36	172.31.14.147	SM-N920C	Samsung	Android	6	True	2017-03-01 13:52:29.570	7	7	9	33879
+
+
+
+
+
+ipv4--in freegeoip--nvarchar(100)
+Pwd--in riddata--nvarchar(100)
+ipv4,ipv6--in shorturldata--nvarchar(450)
+referencenumber,longurl,uniquenumber--in uiddata--nvarchar(450)
+
+
+CREATE INDEX FK_ClientIDIndex ON BatchUploadData (FK_ClientID ASC);
+CREATE INDEX FK_RIDIndex ON BatchUploadData (FK_RID ASC);
+CREATE INDEX StatusIndex ON BatchUploadData (Status ASC);
+
+CREATE INDEX UserNameIndex ON Client (UserName);
+CREATE INDEX PasswordIndex ON Client (Password);
+CREATE INDEX RoleIndex ON Client (Role);
+
+CREATE INDEX Ipv4Index ON freeGeoipData (Ipv4);
+CREATE INDEX ip_numIndex ON freeGeoipData (ip_num);
+
+CREATE INDEX locIdIndex ON Locations_Data (locId);
+CREATE INDEX locIdIndex ON Master_Location (locId);
+
+CREATE INDEX ReferenceNumberIndex ON RIDDATA (ReferenceNumber);
+CREATE INDEX PwdIndex ON RIDDATA (Pwd);
+CREATE INDEX FK_ClientIdIndex ON RIDDATA (FK_ClientId);
+
+CREATE INDEX Ipv4Index ON SHORTURLDATA (Ipv4);
+CREATE INDEX ip_numIndex ON SHORTURLDATA (ip_num);
+CREATE INDEX FK_UidIndex ON SHORTURLDATA (FK_Uid);
+CREATE INDEX FK_RIDIndex ON SHORTURLDATA (FK_RID);
+CREATE INDEX FK_ClientIDIndex ON SHORTURLDATA (FK_ClientID);
+
+CREATE INDEX FK_RIDIndex ON UIDDATA (FK_RID);
+CREATE INDEX FK_ClientIDIndex ON UIDDATA (FK_ClientID);
+CREATE INDEX ReferenceNumberIndex ON UIDDATA (ReferenceNumber);
+CREATE INDEX LongurlIndex ON UIDDATA (Longurl);
+CREATE INDEX MobileNumberIndex ON UIDDATA (MobileNumber);
+CREATE INDEX UniqueNumberIndex ON UIDDATA (UniqueNumber);
+CREATE INDEX FK_BatchidIndex ON UIDDATA (FK_Batchid);
+
+
+
+
+
+
+
+
+

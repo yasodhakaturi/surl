@@ -36,5 +36,9 @@ namespace Analytics
         public virtual RIDDATA RIDDATA { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SHORTURLDATA> SHORTURLDATAs { get; set; }
+        public virtual UIDDATA UIDDATA1 { get; set; }
+        public virtual UIDDATA UIDDATA2 { get; set; }
+        public virtual UIDDATA UIDDATA11 { get; set; }
+        public virtual UIDDATA UIDDATA3 { get; set; }
     }
 }

@@ -248,6 +248,9 @@
     <Compile Include="ErrorLog.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="fnSplitStringAsTable_Result.cs">
+      <DependentUpon>AnalyticsModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -302,10 +305,25 @@
     <Compile Include="spGetALLCOUNTS_Result.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Split1_Result.cs">
+      <DependentUpon>AnalyticsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Split_cte_Result.cs">
+      <DependentUpon>AnalyticsModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Split_Result.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>AnalyticsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_helpdiagrams_Result.cs">
+      <DependentUpon>AnalyticsModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="sysdiagram.cs">
+      <DependentUpon>AnalyticsModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="UIDDATA.cs">
       <DependentUpon>AnalyticsModel.tt</DependentUpon>
     </Compile>
@@ -1176,6 +1194,8 @@
     <Content Include="Scripts\i18n\angular-locale_zu.js" />
     <Content Include="Scripts\r.js" />
     <Content Include="Scripts\require.js" />
+    <Content Include="splitmaxlimitfunction.txt" />
+    <Content Include="trigger.txt" />
     <Content Include="WebForm1.aspx" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular-touch.min.js.map" />

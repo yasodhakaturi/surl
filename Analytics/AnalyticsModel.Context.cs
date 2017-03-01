@@ -20,9 +20,6 @@ namespace Analytics
         public shortenURLEntities()
             : base("name=shortenURLEntities")
         {
-            var adapter = (IObjectContextAdapter)this;
-            var objectContext = adapter.ObjectContext;
-            objectContext.CommandTimeout = 4 * 60;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -36,7 +33,22 @@ namespace Analytics
         public virtual DbSet<LoginHistory> LoginHistories { get; set; }
         public virtual DbSet<RIDDATA> RIDDATAs { get; set; }
         public virtual DbSet<SHORTURLDATA> SHORTURLDATAs { get; set; }
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<UIDDATA> UIDDATAs { get; set; }
+    
+        [DbFunction("shortenURLEntities", "fnSplitStringAsTable")]
+        public virtual IQueryable<fnSplitStringAsTable_Result> fnSplitStringAsTable(string inputString, string delimiter)
+        {
+            var inputStringParameter = inputString != null ?
+                new ObjectParameter("inputString", inputString) :
+                new ObjectParameter("inputString", typeof(string));
+    
+            var delimiterParameter = delimiter != null ?
+                new ObjectParameter("delimiter", delimiter) :
+                new ObjectParameter("delimiter", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<fnSplitStringAsTable_Result>("[shortenURLEntities].[fnSplitStringAsTable](@inputString, @delimiter)", inputStringParameter, delimiterParameter);
+        }
     
         [DbFunction("shortenURLEntities", "Split")]
         public virtual IQueryable<Split_Result> Split(string @string, string delimiter)
@@ -50,6 +62,34 @@ namespace Analytics
                 new ObjectParameter("Delimiter", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<Split_Result>("[shortenURLEntities].[Split](@String, @Delimiter)", stringParameter, delimiterParameter);
+        }
+    
+        [DbFunction("shortenURLEntities", "Split_cte")]
+        public virtual IQueryable<Split_cte_Result> Split_cte(string list, string delimiter)
+        {
+            var listParameter = list != null ?
+                new ObjectParameter("List", list) :
+                new ObjectParameter("List", typeof(string));
+    
+            var delimiterParameter = delimiter != null ?
+                new ObjectParameter("Delimiter", delimiter) :
+                new ObjectParameter("Delimiter", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<Split_cte_Result>("[shortenURLEntities].[Split_cte](@List, @Delimiter)", listParameter, delimiterParameter);
+        }
+    
+        [DbFunction("shortenURLEntities", "Split1")]
+        public virtual IQueryable<Split1_Result> Split1(string @string, string delimiter)
+        {
+            var stringParameter = @string != null ?
+                new ObjectParameter("String", @string) :
+                new ObjectParameter("String", typeof(string));
+    
+            var delimiterParameter = delimiter != null ?
+                new ObjectParameter("Delimiter", delimiter) :
+                new ObjectParameter("Delimiter", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<Split1_Result>("[shortenURLEntities].[Split1](@String, @Delimiter)", stringParameter, delimiterParameter);
         }
     
         public virtual int InsertintoUIDRID(string typediff, Nullable<int> uidorrid)
@@ -172,6 +212,109 @@ namespace Analytics
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertUIDData", fk_ridParameter, fk_clientidParameter, referencenumberParameter, longurlParameter, mobilenumberParameter);
         }
     
+        public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            var versionParameter = version.HasValue ?
+                new ObjectParameter("version", version) :
+                new ObjectParameter("version", typeof(int));
+    
+            var definitionParameter = definition != null ?
+                new ObjectParameter("definition", definition) :
+                new ObjectParameter("definition", typeof(byte[]));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_alterdiagram", diagramnameParameter, owner_idParameter, versionParameter, definitionParameter);
+        }
+    
+        public virtual int sp_creatediagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            var versionParameter = version.HasValue ?
+                new ObjectParameter("version", version) :
+                new ObjectParameter("version", typeof(int));
+    
+            var definitionParameter = definition != null ?
+                new ObjectParameter("definition", definition) :
+                new ObjectParameter("definition", typeof(byte[]));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_creatediagram", diagramnameParameter, owner_idParameter, versionParameter, definitionParameter);
+        }
+    
+        public virtual int sp_dropdiagram(string diagramname, Nullable<int> owner_id)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_dropdiagram", diagramnameParameter, owner_idParameter);
+        }
+    
+        public virtual ObjectResult<sp_helpdiagramdefinition_Result> sp_helpdiagramdefinition(string diagramname, Nullable<int> owner_id)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_helpdiagramdefinition_Result>("sp_helpdiagramdefinition", diagramnameParameter, owner_idParameter);
+        }
+    
+        public virtual ObjectResult<sp_helpdiagrams_Result> sp_helpdiagrams(string diagramname, Nullable<int> owner_id)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_helpdiagrams_Result>("sp_helpdiagrams", diagramnameParameter, owner_idParameter);
+        }
+    
+        public virtual int sp_renamediagram(string diagramname, Nullable<int> owner_id, string new_diagramname)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            var new_diagramnameParameter = new_diagramname != null ?
+                new ObjectParameter("new_diagramname", new_diagramname) :
+                new ObjectParameter("new_diagramname", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_renamediagram", diagramnameParameter, owner_idParameter, new_diagramnameParameter);
+        }
+    
+        public virtual int sp_upgraddiagrams()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
+        }
+    
         public virtual ObjectResult<spGetALLCOUNTS_Result> spGetALLCOUNTS(Nullable<int> filterBy, Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo)
         {
             var filterByParameter = filterBy.HasValue ?
@@ -204,6 +347,15 @@ namespace Analytics
                 new ObjectParameter("rid", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetALLCOUNTS1_Result>("spGetALLCOUNTS1", dateFromParameter, dateToParameter, ridParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> spGetCampaignSummary(string rid)
+        {
+            var ridParameter = rid != null ?
+                new ObjectParameter("rid", rid) :
+                new ObjectParameter("rid", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("spGetCampaignSummary", ridParameter);
         }
     
         public virtual ObjectResult<Nullable<int>> spGetDashBoardSummary(Nullable<int> fkClientId)

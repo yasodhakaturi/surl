@@ -24,10 +24,5 @@ namespace Analytics
         public string CreatedBy { get; set; }
         public string Status { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
-    
-        public virtual BatchUploadData BatchUploadData1 { get; set; }
-        public virtual BatchUploadData BatchUploadData2 { get; set; }
-        public virtual Client Client { get; set; }
-        public virtual RIDDATA RIDDATA { get; set; }
     }
 }

@@ -45,8 +45,9 @@ namespace Analytics
         public Nullable<int> FK_City_Master_id { get; set; }
     
         public virtual Client Client { get; set; }
-        public virtual Client Client1 { get; set; }
         public virtual RIDDATA RIDDATA { get; set; }
+        public virtual SHORTURLDATA SHORTURLDATA1 { get; set; }
+        public virtual SHORTURLDATA SHORTURLDATA2 { get; set; }
         public virtual UIDDATA UIDDATA { get; set; }
     }
 }

@@ -4,24 +4,24 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="a6d7d295c16c4111b8690a2ffb3dd895" Name="Diagram1">
-        <EntityTypeShape EntityType="shortenURLModel.BatchUploadData" Width="1.5" PointX="5.25" PointY="10" IsExpanded="true" />
-        <EntityTypeShape EntityType="shortenURLModel.Client" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="shortenURLModel.ErrorLog" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="shortenURLModel.LoginHistory" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="shortenURLModel.RIDDATA" Width="1.5" PointX="3" PointY="12.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="shortenURLModel.SHORTURLDATA" Width="1.5" PointX="10.5" PointY="8.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="shortenURLModel.UIDDATA" Width="1.5" PointX="8.25" PointY="10" IsExpanded="true" />
-        <AssociationConnector Association="shortenURLModel.FK_BatchUploadData_BatchUploadData" ManuallyRouted="false" />
-        <AssociationConnector Association="shortenURLModel.FK_BatchUploadData_Client" ManuallyRouted="false" />
-        <AssociationConnector Association="shortenURLModel.FK_BatchUploadData_RIDDATA" ManuallyRouted="false" />
+      <Diagram DiagramId="016fe667bf5a4a4187ce389f0decca92" Name="Diagram1">
+        <EntityTypeShape EntityType="shortenURLModel.BatchUploadData" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="shortenURLModel.Client" Width="1.5" PointX="0.75" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="shortenURLModel.ErrorLog" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="shortenURLModel.LoginHistory" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="shortenURLModel.RIDDATA" Width="1.5" PointX="3" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="shortenURLModel.SHORTURLDATA" Width="1.5" PointX="5.25" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="shortenURLModel.sysdiagram" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="shortenURLModel.UIDDATA" Width="1.5" PointX="8.25" PointY="5.625" IsExpanded="true" />
         <AssociationConnector Association="shortenURLModel.FK_RIDDATA_Client" ManuallyRouted="false" />
-        <AssociationConnector Association="shortenURLModel.FK_SHORTURLDATA_SHORTURLDATA" ManuallyRouted="false" />
-        <AssociationConnector Association="shortenURLModel.FK_SHORTURLDATA_SHORTURLDATA1" ManuallyRouted="false" />
+        <AssociationConnector Association="shortenURLModel.FK_SHORTURLDATA_Client" ManuallyRouted="false" />
         <AssociationConnector Association="shortenURLModel.FK_UIDDATA_Client" ManuallyRouted="false" />
         <AssociationConnector Association="shortenURLModel.FK_SHORTURLDATA_RIDDATA" ManuallyRouted="false" />
         <AssociationConnector Association="shortenURLModel.FK_UIDDATA_RIDDATA" ManuallyRouted="false" />
+        <AssociationConnector Association="shortenURLModel.FK_SHORTURLDATA_SHORTURLDATA" ManuallyRouted="false" />
         <AssociationConnector Association="shortenURLModel.FK_SHORTURLDATA_UIDDATA" ManuallyRouted="false" />
+        <AssociationConnector Association="shortenURLModel.FK_UIDDATA_UIDDATA" ManuallyRouted="false" />
+        <AssociationConnector Association="shortenURLModel.FK_UIDDATA_UIDDATA1" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

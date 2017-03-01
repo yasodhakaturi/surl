@@ -13,6 +13,14 @@ namespace Analytics.Models
 
           
     }
+
+    public class BatchInput
+    {
+        public string ReferenceNumber { get; set; }
+        public string MobileNumber { get; set; }
+        public string LongUrl { get; set; }
+        public string type { get; set; }
+    }
     public class exportDataModel
     {
         public string Status { get; set; }
