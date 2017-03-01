@@ -553,7 +553,7 @@ namespace Analytics.Controllers
         [System.Web.Http.HttpPost]
          public JsonResult UploadData(string[] MobileNumbers, string LongURL, string ReferenceNumber, string type)
        {
-               //<add key="aspnet:MaxJsonDeserializerMembers" value="15000000" />
+               
             try
             {
                 int clientid = 0; int rid = 0;
