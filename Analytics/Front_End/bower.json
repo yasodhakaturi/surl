@@ -36,7 +36,10 @@
     "angular-daterangepicker": "^0.2.2",
     "highcharts-ng": "^0.0.13",
     "lodash": "^4.17.4",
-    "clipboard": "^1.6.0"
+    "clipboard": "^1.6.0",
+    "angular-notify": "^2.5.1",
+    "angular-web-notification": "^1.2.7",
+    "simple-web-notification": "^1.0.6"
   },
   "resolutions": {
     "jquery": "3.1.1",

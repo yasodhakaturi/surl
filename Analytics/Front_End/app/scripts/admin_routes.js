@@ -14,7 +14,9 @@ angular.module('routes', [
   'highcharts-ng',
   'bitraz.rid',
   "bitraz.template",
-  "bitraz.dashboard"
+  "bitraz.dashboard",
+  "angular-web-notification",
+  "cgNotify"
 ]).config(["$stateProvider", "$httpProvider", "$compileProvider",
     "$urlRouterProvider", "$urlMatcherFactoryProvider",
     function ($stateProvider, $httpProvider, $compileProvider, $urlRouterProvider,

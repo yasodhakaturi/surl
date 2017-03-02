@@ -47,14 +47,14 @@
 
                                     <div class="col-sm-9">
                                 <input type="text" ng-required="true" name="mobileNumber" type="number"
-                                       ng-minlength="10" ng-maxlength="10" placeholder="Mobile Number"
+                                       ng-minlength="10" ng-maxlength="12" placeholder="Mobile Number"
                                           class="form-control" ng-model="$ctrl.campaign.generator['simple'].mobileNumbers"/>
                                         <small>Note: mobile number with country code only, no '+' before number.</small>
                                         <small class="form-text text-muted text-danger block" style="display: block"
                                                ng-if="$ctrl.campaignForm['simple'].mobileNumber.$invalid && $ctrl.campaignForm['simple'].mobileNumber.$touched">
                                             <span ng-if="$ctrl.campaignForm['simple'].mobileNumber.$error.required">mobile number are required</span>
                                             <span ng-if="(($ctrl.campaignForm['simple'].mobileNumber.$error.minlength || $ctrl.campaignForm['simple'].mobileNumber.$error.maxlength)  &&
-                                                $ctrl.campaignForm['simple'].mobileNumber.$dirty)">mobile number are required</span>
+                                                $ctrl.campaignForm['simple'].mobileNumber.$dirty)">mobile number is invalid</span>
                                         </small>
                                     </div>
 
@@ -109,16 +109,19 @@
                                 </div>
                                 <div class="form-group" ng-show="$ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.BatchID">
                                     <div class="col-sm-9 text-center">
-                                        <h4 ng-if="$ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status != 'Completed'">
+                                        <h5 ng-if="($ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status != 'Completed') || $ctrl.generation">
                                             We're Processing Your Request. <span><i class="fa fa-spinner fa-spin"></i> </span>
-                                        </h4>
-                                        <h4 ng-if="$ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status == 'Completed'">
+                                            <br/><small>You can close this modal if required, later you can download the generated xls file from the download tab.</small>
+                                        </h5>
+                                        <h5 ng-if="$ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status == 'Completed'">
                                             Successfully Processed.
-                                        </h4>
+                                        </h5>
+
                                     </div>
 
                                     <div class="col-sm-3 text-right">
                                         <div class="btn btn-success btn-small right" ng-if="$ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status == 'Completed'" ng-click="$ctrl.campaignForm['advanced'].Batch.download()">Download</div>
+                                        <!--<div class="btn btn-success btn-small right" ng-if="($ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status != 'Completed')" ng-click="$ctrl.enableNotification()">Notify Me!</div>-->
                                     </div>
 
                                 </div>
@@ -138,7 +141,8 @@
                 <small class="text-danger" ng-if="$ctrl.saveError">Error: {{$ctrl.saveError}}</small>
                 <button class="btn btn-default" type="submit" ng-click="cancel()">Cancel</button>
                 <button class="btn btn-primary" type="submit" ng-class="{'disabled': !$ctrl.campaignForm[$ctrl.activeTab].$valid}"
-                        ng-disabled="!$ctrl.campaignForm[$ctrl.activeTab].$valid" ng-click="generate($ctrl.campaign.generator[$ctrl.activeTab], $ctrl.activeTab)">Generate
+                        ng-disabled="!$ctrl.campaignForm[$ctrl.activeTab].$valid || $ctrl.generation" ng-click="generate($ctrl.campaign.generator[$ctrl.activeTab], $ctrl.activeTab)">
+                        Generate <i class="fa fa-spinner fa-spin" ng-if="$ctrl.generation"></i>
                 </button>
             </div>
             <div class="modal-footer" ng-show="$ctrl.activeTab == 'list'">

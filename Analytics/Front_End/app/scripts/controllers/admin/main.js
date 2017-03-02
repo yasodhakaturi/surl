@@ -5,7 +5,7 @@
  */
 
 angular
-  .module('bitraz.controllers', ['bitraz.auth', 'bitraz.common.controllers', 'bitraz.campaigns'])
+  .module('bitraz.controllers', ['bitraz.auth', 'bitraz.common.controllers', 'bitraz.campaigns', "angular-web-notification"])
   .controller('appCtrl', appCtrl)
   .controller('AppController', AppController)
   .controller('HeaderController', HeaderController)
@@ -50,7 +50,8 @@ function HomeController($http, $scope, $rootScope) {
 
 }
 
-function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollectionModel, CampaignsCollectionModel, CampaignModel) {
+function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollectionModel, CampaignsCollectionModel,
+                             CampaignModel, notify, webNotification) {
     $scope.campaignListOptions = {
         enableSorting: true,
         columnDefs: [
@@ -200,7 +201,7 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
           size: 'lg',
           backdrop: 'static',
           keyboard: false,
-          controller: function($scope, campaign, $interval, $timeout) {
+          controller: function($scope, campaign, $interval, $timeout, webNotification) {
             var $ctrl = this;
             var timer;
             $ctrl.campaign = campaign;
@@ -232,11 +233,35 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
 
             };
 
+            $scope.enableNotification = ()=>{
+              webNotification.showNotification('Example Notification', {
+                body: 'Notification Text...',
+                icon: '/dist/images/logo-short.png',
+                onClick: function onNotificationClicked() {
+                  console.log('Notification clicked.');
+                },
+                autoClose: 4000 //auto close the notification after 4 seconds (you can manually close it via hide function)
+              }, function onShow(error, hide) {
+                if (error) {
+                  window.alert('Unable to show notification: ' + error.message);
+                } else {
+                  console.log('Notification Shown.');
+
+                  setTimeout(function hideNotification() {
+                    console.log('Hiding notification....');
+                    hide(); //manually close the notification (you can skip this if you use the autoClose option)
+                  }, 5000);
+                }
+              });
+            }
+
             $scope.sanitizeMobileNumbers = (mobileNumbers, type) => {
               if(type == 'advanced'){
-                return (mobileNumbers.replace(/\r\n|\n/g,",").replace(/\s/g, '').split(',').filter(function(n){ return n != undefined && n != '' })).join(',');
+                return (mobileNumbers.replace(/\r\n|\n/g,",").replace(/\s/g, '').split(',').filter(function(n){ return n != undefined && n != '' }));
               }else if(type == 'simple'){
-                return mobileNumbers;
+                return [mobileNumbers];
+              }else{
+                return [];
               }
 
             };

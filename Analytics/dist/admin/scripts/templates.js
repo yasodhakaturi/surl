@@ -243,14 +243,14 @@ angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$te
     "\n" +
     "                                    <div class=\"col-sm-9\">\n" +
     "                                <input type=\"text\" ng-required=\"true\" name=\"mobileNumber\" type=\"number\"\n" +
-    "                                       ng-minlength=\"10\" ng-maxlength=\"10\" placeholder=\"Mobile Number\"\n" +
+    "                                       ng-minlength=\"10\" ng-maxlength=\"12\" placeholder=\"Mobile Number\"\n" +
     "                                          class=\"form-control\" ng-model=\"$ctrl.campaign.generator['simple'].mobileNumbers\"/>\n" +
     "                                        <small>Note: mobile number with country code only, no '+' before number.</small>\n" +
     "                                        <small class=\"form-text text-muted text-danger block\" style=\"display: block\"\n" +
     "                                               ng-if=\"$ctrl.campaignForm['simple'].mobileNumber.$invalid && $ctrl.campaignForm['simple'].mobileNumber.$touched\">\n" +
     "                                            <span ng-if=\"$ctrl.campaignForm['simple'].mobileNumber.$error.required\">mobile number are required</span>\n" +
     "                                            <span ng-if=\"(($ctrl.campaignForm['simple'].mobileNumber.$error.minlength || $ctrl.campaignForm['simple'].mobileNumber.$error.maxlength)  &&\n" +
-    "                                                $ctrl.campaignForm['simple'].mobileNumber.$dirty)\">mobile number are required</span>\n" +
+    "                                                $ctrl.campaignForm['simple'].mobileNumber.$dirty)\">mobile number is invalid</span>\n" +
     "                                        </small>\n" +
     "                                    </div>\n" +
     "\n" +
@@ -305,16 +305,19 @@ angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$te
     "                                </div>\n" +
     "                                <div class=\"form-group\" ng-show=\"$ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.BatchID\">\n" +
     "                                    <div class=\"col-sm-9 text-center\">\n" +
-    "                                        <h4 ng-if=\"$ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status != 'Completed'\">\n" +
+    "                                        <h5 ng-if=\"($ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status != 'Completed') || $ctrl.generation\">\n" +
     "                                            We're Processing Your Request. <span><i class=\"fa fa-spinner fa-spin\"></i> </span>\n" +
-    "                                        </h4>\n" +
-    "                                        <h4 ng-if=\"$ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status == 'Completed'\">\n" +
+    "                                            <br/><small>You can close this modal if required, later you can download the generated xls file from the download tab.</small>\n" +
+    "                                        </h5>\n" +
+    "                                        <h5 ng-if=\"$ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status == 'Completed'\">\n" +
     "                                            Successfully Processed.\n" +
-    "                                        </h4>\n" +
+    "                                        </h5>\n" +
+    "\n" +
     "                                    </div>\n" +
     "\n" +
     "                                    <div class=\"col-sm-3 text-right\">\n" +
     "                                        <div class=\"btn btn-success btn-small right\" ng-if=\"$ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status == 'Completed'\" ng-click=\"$ctrl.campaignForm['advanced'].Batch.download()\">Download</div>\n" +
+    "                                        <!--<div class=\"btn btn-success btn-small right\" ng-if=\"($ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status != 'Completed')\" ng-click=\"$ctrl.enableNotification()\">Notify Me!</div>-->\n" +
     "                                    </div>\n" +
     "\n" +
     "                                </div>\n" +
@@ -334,7 +337,8 @@ angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$te
     "                <small class=\"text-danger\" ng-if=\"$ctrl.saveError\">Error: {{$ctrl.saveError}}</small>\n" +
     "                <button class=\"btn btn-default\" type=\"submit\" ng-click=\"cancel()\">Cancel</button>\n" +
     "                <button class=\"btn btn-primary\" type=\"submit\" ng-class=\"{'disabled': !$ctrl.campaignForm[$ctrl.activeTab].$valid}\"\n" +
-    "                        ng-disabled=\"!$ctrl.campaignForm[$ctrl.activeTab].$valid\" ng-click=\"generate($ctrl.campaign.generator[$ctrl.activeTab], $ctrl.activeTab)\">Generate\n" +
+    "                        ng-disabled=\"!$ctrl.campaignForm[$ctrl.activeTab].$valid || $ctrl.generation\" ng-click=\"generate($ctrl.campaign.generator[$ctrl.activeTab], $ctrl.activeTab)\">\n" +
+    "                        Generate <i class=\"fa fa-spinner fa-spin\" ng-if=\"$ctrl.generation\"></i>\n" +
     "                </button>\n" +
     "            </div>\n" +
     "            <div class=\"modal-footer\" ng-show=\"$ctrl.activeTab == 'list'\">\n" +
@@ -1048,7 +1052,7 @@ angular.module("views/common/header-dashboard.html", []).run(["$templateCache", 
 
 angular.module("views/common/login.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/common/login.html",
-    "<div class=\"login-container\"> <div class=\"row\" ng-if=\"!($root.userInfo && $root.userInfo.user_id)\"> <div class=\"col-md-12\"> <div class=\"text-center m-b-md\" style=\"border: 1px solid transparent\"> <h3>LOGIN</h3> <!-- <small> This is the best app ever!</small> --> </div> <div class=\"hpanel\"> <div class=\"panel-body\"> <form name=\"loginForm\" id=\"loginForm\" novalidate ng-submit=\"login(loginForm)\"> <div class=\"form-group\"> <label class=\"control-label\" for=\"username\">Username</label> <input type=\"text\" placeholder=\"name@your_domain.com\" title=\"Please enter you username\" ng-model=\"uname\" ng-required=\"true\" value=\"\" name=\"username\" id=\"username\" class=\"form-control\"> </div> <span ng-if=\"loginForm.username.$touched && loginForm.username.$error.required\" class=\"text-danger\">Name is required</span> <div class=\"form-group\"> <label class=\"control-label\" for=\"password\">Password</label> <input type=\"password\" title=\"Please enter your password\" ng-required=\"true\" ng-model=\"pswd\" name=\"password\" id=\"password\" class=\"form-control\"> </div> <span ng-if=\"loginForm.password.$touched && loginForm.password.$error.required\" class=\"text-danger\">Password is required</span> <button class=\"btn btn-success btn-block\" type=\"submit\"><span ng-show=\"!loading\">Login</span><span ng-show=\"loading\"><i class=\"fa fa-refresh fa-spin\"></i> </span></button> <span class=\"text-danger\" ng-if=\"loginError\" class=\"text-danger\">Error: {{loginError}} </span> </form> </div> </div> </div> </div> <div class=\"row\" ng-if=\"$root.userInfo && $root.userInfo.user_id\"> <div class=\"col-md-12\" style=\"padding-top: 40px\"> <div class=\"hpanel\"> <div class=\"panel-body\"> <div> <button class=\"btn btn-success btn-block\" ng-click=\"redirectUser()\" ng-if=\"$root.userInfo.isAdmin\">Go to Admin</button> </div> <div> <button class=\"btn btn-success btn-block\" ng-click=\"redirectUser()\" ng-if=\"!$root.userInfo.isAdmin\">Go to Analytics</button> </div> </div> </div> </div> </div> </div>");
+    "<div class=\"login-container\"> <div class=\"row\" ng-if=\"!($root.userInfo && $root.userInfo.user_id)\"> <div class=\"col-md-12\"> <div class=\"text-center m-b-md\" style=\"border: 1px solid transparent\"> <h3>LOGIN</h3> <!-- <small> This is the best app ever!</small> --> </div> <div class=\"hpanel\"> <div class=\"panel-body\"> <form name=\"loginForm\" id=\"loginForm\" novalidate ng-submit=\"login(loginForm)\"> <div class=\"form-group\"> <label class=\"control-label\" for=\"username\">Username</label> <input type=\"text\" placeholder=\"name@your_domain.com\" title=\"Please enter you username\" ng-model=\"uname\" ng-required=\"true\" value=\"\" name=\"username\" id=\"username\" class=\"form-control\"> </div> <span ng-if=\"loginForm.username.$touched && loginForm.username.$error.required\" class=\"text-danger\">Name is required</span> <div class=\"form-group\"> <label class=\"control-label\" for=\"password\">Password</label> <input type=\"password\" title=\"Please enter your password\" ng-required=\"true\" ng-model=\"pswd\" name=\"password\" id=\"password\" class=\"form-control\"> </div> <span ng-if=\"loginForm.password.$touched && loginForm.password.$error.required\" class=\"text-danger\">Password is required</span> <button class=\"btn btn-success btn-block\" type=\"submit\"><span ng-show=\"!loading\">Login</span><span ng-show=\"loading\"><i class=\"fa fa-spinner fa-spin\"></i> </span></button> <span class=\"text-danger\" ng-if=\"loginError\" class=\"text-danger\">Error: {{loginError}} </span> </form> </div> </div> </div> </div> <div class=\"row\" ng-if=\"$root.userInfo && $root.userInfo.user_id\"> <div class=\"col-md-12\" style=\"padding-top: 40px\"> <div class=\"hpanel\"> <div class=\"panel-body\"> <div> <button class=\"btn btn-success btn-block\" ng-click=\"redirectUser()\" ng-if=\"$root.userInfo.isAdmin\">Go to Admin</button> </div> <div> <button class=\"btn btn-success btn-block\" ng-click=\"redirectUser()\" ng-if=\"!$root.userInfo.isAdmin\">Go to Analytics</button> </div> </div> </div> </div> </div> </div>");
 }]);
 
 angular.module("views/common/navigation.html", []).run(["$templateCache", function ($templateCache) {

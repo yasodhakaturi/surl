@@ -30,11 +30,12 @@ function LoginController($rootScope, $scope, AuthService, appConfig, $state, $lo
             }
           }
         }
-
+        $scope.loading = false;
       }, (err)=>{
         $scope.loginError =  err.error && err.error.message;
+        $scope.loading = false;
       });
-      $scope.loading = false;
+
     }else{
       if (loginForm.$invalid) {
         angular.forEach(loginForm.$error, function (field) {

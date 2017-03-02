@@ -21,7 +21,7 @@
                                    name="password" id="password" class="form-control">
                         </div>
                         <span ng-if="loginForm.password.$touched && loginForm.password.$error.required" class="text-danger">Password is required</span>
-                        <button class="btn btn-success btn-block" type="submit"><span ng-show="!loading">Login</span><span ng-show="loading"><i class="fa fa-refresh fa-spin"></i> </span></button>
+                        <button class="btn btn-success btn-block" type="submit"><span ng-show="!loading">Login</span><span ng-show="loading"><i class="fa fa-spinner fa-spin"></i> </span></button>
                         <span class="text-danger" ng-if="loginError" class="text-danger">Error: {{loginError}} </span>
                     </form>
                 </div>
