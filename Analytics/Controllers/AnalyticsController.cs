@@ -453,7 +453,7 @@ namespace Analytics.Controllers
                             objr = (from r in activity
                                     select new DayWiseData()
                                     {
-                                        RequestedDate = r.RequestedDate.Value.ToString("yyyy-MM-ddThh:mm:ss"),
+                                        RequestedDate = r.RequestedDate.Value.ToString("yyyy-MM-ddTHH:mm:ss"),
                                         RequestCount = r.RequestCount
                                         //r.crd.Value.ToString("yyyy-MM-ddThh:mm:ss"),
 
