@@ -12,10 +12,29 @@
         </button>
         <div class="collapse mobile-navbar" id="mobile-collapse">
             <ul class="nav navbar-nav">
-                <li ng-class="{'active':active == 'home'}"><a class="page-scroll" href="#page-top">Home</a></li>
-                <li ng-class="{'active':active == 'analytics'}"><a class="page-scroll" page-scroll href="#analytics">Analytics</a></li>
-                <li ng-class="{'active':active == 'security'}"><a class="page-scroll" page-scroll href="#security">Security </a></li>
-                <li><a class="page-scroll" page-scroll ng-click="logout()">Logout</a></li>
+                <li ng-class="{'active':active == 'home'}"><a class="page-scroll" ui-sref="bitraz.main.index"><i class="pe-7s-home"></i> Home</a></li>
+                <li>
+                    <a ui-sref="bitraz.main.analytics">
+                        <i class="pe pe-7s-graph1 text-danger"></i> Analytics
+                    </a>
+                </li>
+                <li>
+                    <a ui-sref="bitraz.main.campaigns">
+                        <i class="pe pe-7s-portfolio text-info"></i> Campaigns
+                    </a>
+                </li>
+                <li>
+                    <a ui-sref="bitraz.main.users">
+                        <i class="pe pe-7s-users text-success"></i> Users
+                    </a>
+                </li>
+                <!--<li>-->
+                    <!--<a ui-sref="bitraz.main.archieves">-->
+                        <!--<i class="pe pe-7s-box1 text-success"></i> Archieve-->
+                    <!--</a>-->
+                <!--</li>-->
+                <li ng-class="{'active':active == 'security'}"><a class="page-scroll" page-scroll ui-sref="bitraz.main.settings"><i class="pe-7s-config"></i> Settings </a></li>
+                <li><a class="page-scroll" page-scroll ng-click="logout()"><i class="pe-7s-power"></i> Logout</a></li>
             </ul>
         </div>
     </div>

@@ -413,7 +413,7 @@ angular.module("views/common/directives/analytics_layout.html", []).run(["$templ
     "            <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
     "                <div class=\"panel panel-default\">\n" +
     "                    <div class=\"panel-body\">\n" +
-    "                        <div class=\"col-md-6 col-sm-6 col-xs-6\">\n" +
+    "                        <div class=\"col-lg-6 col-md-12 col-sm-12 col-xs-12\">\n" +
     "                            <div class=\"dashboard_graph \">\n" +
     "\n" +
     "                                <div class=\"row x_title\">\n" +
@@ -433,7 +433,7 @@ angular.module("views/common/directives/analytics_layout.html", []).run(["$templ
     "                                <div class=\"clearfix\"></div>\n" +
     "                            </div>\n" +
     "                        </div>\n" +
-    "                        <div class=\"col-md-6 col-sm-6 col-xs-6\">\n" +
+    "                        <div class=\"col-lg-6 col-md-12 col-sm-12 col-xs-12\">\n" +
     "                            <div class=\"dashboard_graph \">\n" +
     "\n" +
     "                                <div class=\"row x_title\">\n" +
