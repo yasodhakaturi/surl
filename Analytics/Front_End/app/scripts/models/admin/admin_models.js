@@ -183,7 +183,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
 
           }else{
             //update
-            var data = {CampaignName: this.CampaignName, ReferenceNumber: this.ReferenceNumber,  IsActive: this.IsActive};
+            var data = {CampaignName: this.CampaignName, ReferenceNumber: this.ReferenceNumber, CreatedUserId: this.CreatedUserId, IsActive: this.IsActive};
             if(this.EditPassword && this.RemovePassword){
               data.Pwd = '';
             }else if(this.EditPassword && this.Password !=''){
