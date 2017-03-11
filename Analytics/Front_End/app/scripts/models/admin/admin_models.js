@@ -241,7 +241,6 @@ angular.module('bitraz.models', ['bitraz.models.common', "ngFileUpload"])
             url: appConfig.apiEndPoint + '/Campaign/UploadData',
             data: data
           }).then(function (campaignObj) {
-            console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
             if(campaignObj.data.ShortenUrl){
               refDefer.resolve(campaignObj.data);
             }else if(campaignObj.data.BatchID){
