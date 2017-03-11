@@ -229,7 +229,7 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
                 }else if(type == 'upload'){
                   $ctrl.generation = true;
                   if ($ctrl.campaignForm[type].$valid) {
-                    $ctrl.campaign.generateFromFile({LongUrl: form.longurl, File: $ctrl.campaignForm[type].file}, type)
+                    $ctrl.campaign.generateFromFile({LongUrl: $ctrl.campaign.generator['upload'].longurl, File: $ctrl.campaignForm[type].file}, type)
                       .then((resp)=>{
                         $ctrl.generation = false;
                         if(resp.ShortenUrl){

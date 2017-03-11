@@ -255,7 +255,7 @@ angular.module('bitraz.models', ['bitraz.models.common', "ngFileUpload"])
           }, function (evt) {
             refDefer.notify(evt);
              var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-             console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+             console.log('progress: ',evt);
           });
 
           // $http({
