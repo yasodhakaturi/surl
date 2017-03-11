@@ -24,5 +24,6 @@ namespace Analytics
         public string CreatedBy { get; set; }
         public string Status { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<int> BatchCount { get; set; }
     }
 }

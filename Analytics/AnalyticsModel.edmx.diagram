@@ -22,6 +22,7 @@
         <AssociationConnector Association="shortenURLModel.FK_SHORTURLDATA_UIDDATA" ManuallyRouted="false" />
         <AssociationConnector Association="shortenURLModel.FK_UIDDATA_UIDDATA" ManuallyRouted="false" />
         <AssociationConnector Association="shortenURLModel.FK_UIDDATA_UIDDATA1" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="shortenURLModel.HashIDList" Width="1.5" PointX="9.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

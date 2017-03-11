@@ -78,200 +78,200 @@ namespace Analytics.Controllers
 
         }
       
-        public string Validate(string email,string password, string chkRemember)
-        {
-            try
-            {
-                Client obj=(from c in dc.Clients
-                                where c.Email==email && c.Password==password
-                                select c).SingleOrDefault();
-                if(obj!=null)
-                return "Success~/../Admin/Index";
-                else
-                return "Failed~Wrong Credentials";
+    //    public string Validate(string email,string password, string chkRemember)
+    //    {
+    //        try
+    //        {
+    //            Client obj=(from c in dc.Clients
+    //                            where c.Email==email && c.Password==password
+    //                            select c).SingleOrDefault();
+    //            if(obj!=null)
+    //            return "Success~/../Admin/Index";
+    //            else
+    //            return "Failed~Wrong Credentials";
 
-            }
-             catch (Exception ex)
-            {
-                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
-                return new HttpStatusCodeResult(400, ex.Message).ToString();
-            }
-         }
+    //        }
+    //         catch (Exception ex)
+    //        {
+    //            ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+    //            return new HttpStatusCodeResult(400, ex.Message).ToString();
+    //        }
+    //     }
       
-        //public ActionResult Index()
-        // {
-        //     //ADDClientView obj = new ADDClientView();
-        //     List<Client> objc = (from c in dc.Clients
-        //                          select c).ToList();
-        //     //obj.clientLst = objc;
+    //    //public ActionResult Index()
+    //    // {
+    //    //     //ADDClientView obj = new ADDClientView();
+    //    //     List<Client> objc = (from c in dc.Clients
+    //    //                          select c).ToList();
+    //    //     //obj.clientLst = objc;
 
-        //     return View(objc);
-        // }
+    //    //     return View(objc);
+    //    // }
 
-        public JsonResult Users(ClientView objclient, int? id)
+    //    public JsonResult Users(ClientView objclient, int? id)
     
-        {
-            try
-            {
-                Client obj1 = new Client();
+    //    {
+    //        try
+    //        {
+    //            Client obj1 = new Client();
 
-                if (objclient == null ||objclient.Email==null)
-                {
-                    //get all client detials
-                    List<ClientView> objc = (from c in dc.Clients
-                                             select new ClientView
-                                             {
-                                                 id=c.PK_ClientID,
-                                                 UserName = c.UserName,
-                                                 Email = c.Email,
-                                                 IsActive=c.IsActive
-                                                 //Password = c.Password
-                                             }).ToList();
-                    HttpContext.Response.AppendHeader("Content-Length", objc.ToString());
-                    return Json(objc, JsonRequestBehavior.AllowGet);
-                }
-                else if (objclient != null && objclient.Email!=null)
-                {
-                    bool isEmailExists = new OperationsBO().CheckClientEmail1(objclient.Email);
-                    if (isEmailExists == false)
-                    {
-                        //add client details
-                        string ApiKey = new OperationsBO().GetApiKey();
-                        obj1.UserName = objclient.UserName;
-                        obj1.Email = objclient.Email;
-                        obj1.Password = objclient.Password;
-                        obj1.APIKey = ApiKey;
-                        dc.Clients.Add(obj1);
-                        dc.SaveChanges();
-                    }
-                    return Json(obj1, JsonRequestBehavior.AllowGet);
-                }
-                if (id != 0 && id != null && objclient != null)
-                {
-                    //update cleint detials
-                    bool isEmailExists = new OperationsBO().CheckClientEmail1(objclient.Email);
-                    if(isEmailExists==true)
-                    new OperationsBO().UpdateClient(objclient.UserName, objclient.Email,objclient.IsActive);
-                    return Json(objclient, JsonRequestBehavior.AllowGet);
-                }
+    //            if (objclient == null ||objclient.Email==null)
+    //            {
+    //                //get all client detials
+    //                List<ClientView> objc = (from c in dc.Clients
+    //                                         select new ClientView
+    //                                         {
+    //                                             id=c.PK_ClientID,
+    //                                             UserName = c.UserName,
+    //                                             Email = c.Email,
+    //                                             IsActive=c.IsActive
+    //                                             //Password = c.Password
+    //                                         }).ToList();
+    //                HttpContext.Response.AppendHeader("Content-Length", objc.ToString());
+    //                return Json(objc, JsonRequestBehavior.AllowGet);
+    //            }
+    //            else if (objclient != null && objclient.Email!=null)
+    //            {
+    //                bool isEmailExists = new OperationsBO().CheckClientEmail1(objclient.Email);
+    //                if (isEmailExists == false)
+    //                {
+    //                    //add client details
+    //                    string ApiKey = new OperationsBO().GetApiKey();
+    //                    obj1.UserName = objclient.UserName;
+    //                    obj1.Email = objclient.Email;
+    //                    obj1.Password = objclient.Password;
+    //                    obj1.APIKey = ApiKey;
+    //                    dc.Clients.Add(obj1);
+    //                    dc.SaveChanges();
+    //                }
+    //                return Json(obj1, JsonRequestBehavior.AllowGet);
+    //            }
+    //            if (id != 0 && id != null && objclient != null)
+    //            {
+    //                //update cleint detials
+    //                bool isEmailExists = new OperationsBO().CheckClientEmail1(objclient.Email);
+    //                if(isEmailExists==true)
+    //                new OperationsBO().UpdateClient(objclient.UserName, objclient.Email,objclient.IsActive);
+    //                return Json(objclient, JsonRequestBehavior.AllowGet);
+    //            }
 
-                return Json("wrong input");
-            }
-            catch (Exception ex)
-            {
+    //            return Json("wrong input");
+    //        }
+    //        catch (Exception ex)
+    //        {
 
-                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
-                return Json(ex.StackTrace, ex.InnerException.ToString());
-            }
-    }
+    //            ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+    //            return Json(ex.StackTrace, ex.InnerException.ToString());
+    //        }
+    //}
 
-        public JsonResult Campaigns(CampaignView obj, int? cid)
-        {
-            try
-            {
-                CampaignView objc = new CampaignView();
-                //CampaignModel objm = new CampaignModel();
+    //    public JsonResult Campaigns(CampaignView obj, int? cid)
+    //    {
+    //        try
+    //        {
+    //            CampaignView objc = new CampaignView();
+    //            //CampaignModel objm = new CampaignModel();
                 
-                if (obj == null || obj.ReferenceNumber==null)
-                {
-                    //get all Campaigns
-                    List<CampaignView> listcamps = (from r in dc.RIDDATAs
-                                                    select new CampaignView
-                                                    {
-                                                        id=r.PK_Rid,
-                                                        ReferenceNumber = r.ReferenceNumber,
-                                                        pwd = r.Pwd,
-                                                        isactive = r.IsActive
-                                                    }).ToList();
+    //            if (obj == null || obj.ReferenceNumber==null)
+    //            {
+    //                //get all Campaigns
+    //                List<CampaignView> listcamps = (from r in dc.RIDDATAs
+    //                                                select new CampaignView
+    //                                                {
+    //                                                    id=r.PK_Rid,
+    //                                                    ReferenceNumber = r.ReferenceNumber,
+    //                                                    pwd = r.Pwd,
+    //                                                    isactive = r.IsActive
+    //                                                }).ToList();
                     
-                    return Json(listcamps, JsonRequestBehavior.AllowGet);
-                }
-                else if (obj != null)
-                {
-                    RIDDATA objr = new RIDDATA();
-                    bool isReferenceNumberExists = new OperationsBO().CheckReferenceNumber(obj.ReferenceNumber);
-                    if (isReferenceNumberExists == false)
-                    {
-                        //add campaign details
-                        objr.ReferenceNumber = obj.ReferenceNumber;
-                        objr.Pwd = obj.pwd;
-                        objr.IsActive = obj.isactive;
-                        dc.RIDDATAs.Add(objr);
-                        dc.SaveChanges();
-                    }
-                    return Json(objr, JsonRequestBehavior.AllowGet);
-                }
-                if (cid != 0 && cid != null && obj != null)
-                {
-                    //update campaign detials
-                    bool isReferenceNumberExists = new OperationsBO().CheckReferenceNumber(obj.ReferenceNumber);
-                    if (isReferenceNumberExists == true)
-                    new OperationsBO().UpdateCampaign("", obj.ReferenceNumber, obj.pwd, obj.isactive);
-                    return Json(obj, JsonRequestBehavior.AllowGet);
-                }
-                return Json("wrong input");
-            }
-            catch (Exception ex)
-            {
+    //                return Json(listcamps, JsonRequestBehavior.AllowGet);
+    //            }
+    //            else if (obj != null)
+    //            {
+    //                RIDDATA objr = new RIDDATA();
+    //                bool isReferenceNumberExists = new OperationsBO().CheckReferenceNumber(obj.ReferenceNumber);
+    //                if (isReferenceNumberExists == false)
+    //                {
+    //                    //add campaign details
+    //                    objr.ReferenceNumber = obj.ReferenceNumber;
+    //                    objr.Pwd = obj.pwd;
+    //                    objr.IsActive = obj.isactive;
+    //                    dc.RIDDATAs.Add(objr);
+    //                    dc.SaveChanges();
+    //                }
+    //                return Json(objr, JsonRequestBehavior.AllowGet);
+    //            }
+    //            if (cid != 0 && cid != null && obj != null)
+    //            {
+    //                //update campaign detials
+    //                bool isReferenceNumberExists = new OperationsBO().CheckReferenceNumber(obj.ReferenceNumber);
+    //                if (isReferenceNumberExists == true)
+    //                new OperationsBO().UpdateCampaign(0,"", obj.ReferenceNumber, obj.pwd, obj.isactive);
+    //                return Json(obj, JsonRequestBehavior.AllowGet);
+    //            }
+    //            return Json("wrong input");
+    //        }
+    //        catch (Exception ex)
+    //        {
 
-                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
-                return Json(ex.StackTrace, ex.InnerException.ToString());
-            }
-        }
+    //            ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+    //            return Json(ex.StackTrace, ex.InnerException.ToString());
+    //        }
+    //    }
 
-        public JsonResult Login(ClientView obj)
-        {
-            try
-            {
-                Client objc = (from c in dc.Clients
-                               where c.Email == obj.Email && c.Password == obj.Password
-                               select c).SingleOrDefault();
-                Session["Clientid"] = objc.PK_ClientID;
-                if (objc != null)
-                    return Json(objc, JsonRequestBehavior.AllowGet);
-                else
-                    return Json("User Not Found");
-            }
-            catch (Exception ex)
-            {
+    //    public JsonResult Login(ClientView obj)
+    //    {
+    //        try
+    //        {
+    //            Client objc = (from c in dc.Clients
+    //                           where c.Email == obj.Email && c.Password == obj.Password
+    //                           select c).SingleOrDefault();
+    //            Session["Clientid"] = objc.PK_ClientID;
+    //            if (objc != null)
+    //                return Json(objc, JsonRequestBehavior.AllowGet);
+    //            else
+    //                return Json("User Not Found");
+    //        }
+    //        catch (Exception ex)
+    //        {
 
-                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
-                return Json(ex.StackTrace, ex.InnerException.ToString());
-            }
-        }
+    //            ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+    //            return Json(ex.StackTrace, ex.InnerException.ToString());
+    //        }
+    //    }
        
-        public void AddClient(string username, string email, string password)
-    {
-        try
-        {
-            string ApiKey = new OperationsBO().GetApiKey();
-            Client obj = new Client();
-            obj.UserName = username;
-            obj.Email = email;
-            obj.Password = password;
-            obj.APIKey = ApiKey;
-            dc.Clients.Add(obj);
-            dc.SaveChanges();
+    //    public void AddClient(string username, string email, string password)
+    //{
+    //    try
+    //    {
+    //        string ApiKey = new OperationsBO().GetApiKey();
+    //        Client obj = new Client();
+    //        obj.UserName = username;
+    //        obj.Email = email;
+    //        obj.Password = password;
+    //        obj.APIKey = ApiKey;
+    //        dc.Clients.Add(obj);
+    //        dc.SaveChanges();
 
-            Response.Redirect("/Admin/Index");
-        }
-        catch (Exception ex)
-        {
+    //        Response.Redirect("/Admin/Index");
+    //    }
+    //    catch (Exception ex)
+    //    {
 
-            ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
-        }
-       // return RedirectToAction("Index","Admin");
-    }
+    //        ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+    //    }
+    //   // return RedirectToAction("Index","Admin");
+    //}
 
 
-        public void UpdateClient(string username, string email, string password,bool? isactive)
-    {
-        bool isEmailExists = new OperationsBO().CheckClientEmail1(email);
+    //    public void UpdateClient(string username, string email, string password,bool? isactive)
+    //{
+    //    bool isEmailExists = new OperationsBO().CheckClientEmail1(email);
 
-        new OperationsBO().UpdateClient(username,email,isactive);
+    //    new OperationsBO().UpdateClient(username,email,isactive);
 
-        Response.Redirect("/Admin/Index");
-    }
+    //    Response.Redirect("/Admin/Index");
+    //}
 
 
     }

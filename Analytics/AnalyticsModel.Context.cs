@@ -20,9 +20,6 @@ namespace Analytics
         public shortenURLEntities()
             : base("name=shortenURLEntities")
         {
-            var adapter = (IObjectContextAdapter)this;
-            var objectContext = adapter.ObjectContext;
-            objectContext.CommandTimeout = 4 * 60;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -38,6 +35,7 @@ namespace Analytics
         public virtual DbSet<SHORTURLDATA> SHORTURLDATAs { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<UIDDATA> UIDDATAs { get; set; }
+        public virtual DbSet<HashIDList> HashIDLists { get; set; }
     
         [DbFunction("shortenURLEntities", "fnSplitStringAsTable")]
         public virtual IQueryable<fnSplitStringAsTable_Result> fnSplitStringAsTable(string inputString, string delimiter)

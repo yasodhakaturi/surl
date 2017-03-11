@@ -14,6 +14,7 @@
           <Property Name="Longurl" Type="nvarchar(max)" />
           <Property Name="MobileNumber" Type="nvarchar(max)" />
           <Property Name="BatchName" Type="nvarchar(max)" />
+          <Property Name="BatchCount" Type="int" />
           <Property Name="FK_RID" Type="int" />
           <Property Name="FK_ClientID" Type="int" />
           <Property Name="CreatedBy" Type="nvarchar(max)" />
@@ -44,6 +45,13 @@
           <Property Name="DateCreated" Type="datetime" />
           <Property Name="StackTrace" Type="nvarchar(max)" />
           <Property Name="ErrorMessage" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="HashIDList">
+          <Key>
+            <PropertyRef Name="PK_Hash_ID" />
+          </Key>
+          <Property Name="PK_Hash_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HashID" Type="nvarchar" MaxLength="450" />
         </EntityType>
         <EntityType Name="LoginHistory">
           <Key>
@@ -374,6 +382,7 @@
           <EntitySet Name="BatchUploadData" EntityType="Self.BatchUploadData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ErrorLog" EntityType="Self.ErrorLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HashIDList" EntityType="Self.HashIDList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LoginHistory" EntityType="Self.LoginHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RIDDATA" EntityType="Self.RIDDATA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SHORTURLDATA" EntityType="Self.SHORTURLDATA" Schema="dbo" store:Type="Tables" />
@@ -448,6 +457,7 @@
           <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="BatchCount" Type="Int32" />
         </EntityType>
         <EntityType Name="Client">
           <Key>
@@ -828,6 +838,7 @@
           <FunctionImport Name="spGetDashBoardSummary1" ReturnType="Collection(Int32)">
           <Parameter Name="FkClientId" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="HashIDLists" EntityType="shortenURLModel.HashIDList" />
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -848,6 +859,13 @@
           <Property Type="DateTime" Name="RequestedDate" Nullable="true" Precision="23" />
           <Property Type="Int32" Name="RequestCount" Nullable="true" />
         </ComplexType>
+        <EntityType Name="HashIDList">
+          <Key>
+            <PropertyRef Name="PK_Hash_ID" />
+          </Key>
+          <Property Name="PK_Hash_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HashID" Type="String" MaxLength="450" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -857,6 +875,7 @@
           <EntitySetMapping Name="BatchUploadDatas">
             <EntityTypeMapping TypeName="shortenURLModel.BatchUploadData">
               <MappingFragment StoreEntitySet="BatchUploadData">
+                <ScalarProperty Name="BatchCount" ColumnName="BatchCount" />
                 <ScalarProperty Name="PK_Batchid" ColumnName="PK_Batchid" />
                 <ScalarProperty Name="ReferenceNumber" ColumnName="ReferenceNumber" />
                 <ScalarProperty Name="Longurl" ColumnName="Longurl" />
@@ -1064,6 +1083,14 @@
           <FunctionImportMapping FunctionImportName="spGetCampaignSummary" FunctionName="shortenURLModel.Store.spGetCampaignSummary" />
           <FunctionImportMapping FunctionImportName="spGetDashBoardSummary" FunctionName="shortenURLModel.Store.spGetDashBoardSummary" />
           <FunctionImportMapping FunctionImportName="spGetDashBoardSummary1" FunctionName="shortenURLModel.Store.spGetDashBoardSummary1" />
+          <EntitySetMapping Name="HashIDLists">
+            <EntityTypeMapping TypeName="shortenURLModel.HashIDList">
+              <MappingFragment StoreEntitySet="HashIDList">
+                <ScalarProperty Name="HashID" ColumnName="HashID" />
+                <ScalarProperty Name="PK_Hash_ID" ColumnName="PK_Hash_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
