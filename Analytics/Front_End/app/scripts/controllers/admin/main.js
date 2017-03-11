@@ -228,7 +228,7 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
                   });
                 }else if(type == 'upload'){
                   $ctrl.generation = true;
-                  if ($ctrl.campaignForm[type].$valid && $ctrl.campaignForm[type].file.$valid && $scope.file) {
+                  if ($ctrl.campaignForm[type].$valid) {
                     $ctrl.campaign.generateFromFile({LongUrl: form.longurl, File: $ctrl.campaignForm[type].file}, type)
                       .then((resp)=>{
                         $ctrl.generation = false;
