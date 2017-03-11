@@ -329,13 +329,30 @@ angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$te
     "                        <div style=\"min-height: 250px;padding-top: 20px;\">\n" +
     "                            <p>Generate Urls by a file upload.</p>\n" +
     "                            <ng-form class=\"form-horizontal\" name=\"$ctrl.campaignForm['upload']\" novalidate>\n" +
-    "                                <div class=\"button btn btn-primary\" ngf-select ng-model=\"$ctrl.campaignForm['upload'].file\" name=\"file\" ngf-pattern=\"'.csv,.tsv,.txt,.xls,.xlsx'\"\n" +
-    "                                     ngf-accept=\"'.csv,.tsv,.txt,.xls,.xlsx'\" ngf-max-size=\"2MB\" ngf-min-height=\"100\"\n" +
-    "                                     ngf-resize=\"{width: 100, height: 100}\">click here to select a file</div>\n" +
-    "                                <small class=\"form-text text-muted text-danger block\" style=\"display: block\"\n" +
-    "                                       ng-if=\"$ctrl.campaignForm['upload'].$dirty && $ctrl.campaignForm['upload'].$invalid\">\n" +
-    "                                    <span ng-if=\"$ctrl.campaignForm['upload'].$error.pattern\">Invalid file type. accepts only txt, csv, tsv, xlx, xlsx files</span>\n" +
-    "                                </small>\n" +
+    "                                <div class=\"form-group\">\n" +
+    "                                    <label class=\"col-sm-3 control-label\">Long Url</label>\n" +
+    "\n" +
+    "                                    <div class=\"col-sm-9\">\n" +
+    "                                        <input type=\"url\" ng-required=\"true\" name=\"longurl\" placeholder=\"Long Url\"\n" +
+    "                                               class=\"form-control\" ng-model=\"$ctrl.campaign.generator['upload'].longurl\"/>\n" +
+    "                                        <small class=\"form-text text-muted text-danger\"\n" +
+    "                                               ng-if=\"$ctrl.campaignForm['upload'].longurl.$invalid && $ctrl.campaignForm['upload'].longurl.$touched\">\n" +
+    "                                            <span ng-if=\"$ctrl.campaignForm['upload'].longurl.$error.required\">Long Url is required</span>\n" +
+    "                                            <span ng-if=\"$ctrl.campaignForm['upload'].longurl.$error.url\">Long Url is not valid.</span>\n" +
+    "                                        </small>\n" +
+    "                                    </div>\n" +
+    "\n" +
+    "                                </div>\n" +
+    "                                <div class=\"form-group\">\n" +
+    "                                    <label class=\"col-sm-3 control-label\">Upload File</label>\n" +
+    "                                    <div class=\"button btn btn-primary\" ngf-select ng-model=\"$ctrl.campaignForm['upload'].file\" name=\"file\" ngf-pattern=\"'.csv,.tsv,.txt,.xls,.xlsx'\"\n" +
+    "                                         ngf-accept=\"'.csv,.tsv,.txt,.xls,.xlsx'\" ngf-max-size=\"2MB\" ngf-min-height=\"100\"\n" +
+    "                                         ngf-resize=\"{width: 100, height: 100}\">click here to select a file</div>\n" +
+    "                                    <small class=\"form-text text-muted text-danger block\" style=\"display: block\"\n" +
+    "                                           ng-if=\"$ctrl.campaignForm['upload'].$dirty && $ctrl.campaignForm['upload'].$invalid\">\n" +
+    "                                        <span ng-if=\"$ctrl.campaignForm['upload'].$error.pattern\">Invalid file type. accepts only txt, csv, tsv, xlx, xlsx files</span>\n" +
+    "                                    </small>\n" +
+    "                                </div>\n" +
     "                            </ng-form>\n" +
     "                        </div>\n" +
     "\n" +
