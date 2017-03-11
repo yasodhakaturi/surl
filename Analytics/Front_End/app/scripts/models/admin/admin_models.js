@@ -236,7 +236,7 @@ angular.module('bitraz.models', ['bitraz.models.common', "ngFileUpload"])
 
           var refDefer = $q.defer();
           var data = {ReferenceNumber:this.ReferenceNumber, CampaignID: this.Id, LongUrl: form.LongUrl, UploadFile: form.File, type:type};
-
+          var _that = this;
           Upload.upload({
             url: appConfig.apiEndPoint + '/Campaign/UploadData',
             data: data
@@ -245,7 +245,10 @@ angular.module('bitraz.models', ['bitraz.models.common', "ngFileUpload"])
               refDefer.resolve(campaignObj.data);
             }else if(campaignObj.data.BatchID){
               var batch = new BatchModel(campaignObj.data);
-              this.batchList.push(batch);
+              if(!_that.batchList){
+                _that.batchList = [];
+              }
+              _that.batchList.push(batch);
               refDefer.resolve(batch);
             }
           }, function (err) {
