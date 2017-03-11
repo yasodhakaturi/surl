@@ -1,4 +1,4 @@
-angular.module('bitraz.models', ['bitraz.models.common'])
+angular.module('bitraz.models', ['bitraz.models.common', "ngFileUpload"])
   .factory('UsersCollectionModel', ['$http', '$q', 'appConfig', 'UserModel', function($http, $q, appConfig, UserModel) {
     "use strict";
     class Users {
@@ -140,7 +140,7 @@ angular.module('bitraz.models', ['bitraz.models.common'])
 
     return new Campaigns();
   }])
-  .factory('CampaignModel', ['$http', '$q', 'appConfig', 'BatchModel', function($http, $q, appConfig, BatchModel) {
+  .factory('CampaignModel', ['$http', '$q', 'appConfig', 'BatchModel', 'Upload', function($http, $q, appConfig, BatchModel, Upload) {
       class Campaign {
         constructor(data) {
           this.Id = data.Id || null;
@@ -228,6 +228,53 @@ angular.module('bitraz.models', ['bitraz.models.common'])
             console.log('campaign generation failed', err);
             refDefer.reject(err);
           });
+          return refDefer.promise;
+        }
+
+
+        generateFromFile(form, type) {
+
+          var refDefer = $q.defer();
+          var data = {ReferenceNumber:this.ReferenceNumber, CampaignID: this.Id, LongUrl: form.LongUrl, file: form.File, type:type};
+
+          Upload.upload({
+            url: appConfig.apiEndPoint + '/Campaign/UploadData',
+            data: data
+          }).then(function (campaignObj) {
+            console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+            if(campaignObj.data.ShortenUrl){
+              refDefer.resolve(campaignObj.data);
+            }else if(campaignObj.data.BatchID){
+              var batch = new BatchModel(campaignObj.data);
+              this.batchList.push(batch);
+              refDefer.resolve(batch);
+            }
+          }, function (err) {
+            console.log('campaign generation failed', err);
+            refDefer.reject(err);
+          }, function (evt) {
+            refDefer.notify(evt);
+             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+             console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+          });
+
+          // $http({
+          //   method: 'POST',
+          //   url: appConfig.apiEndPoint + '/Campaign/UploadData',
+          //   data: data
+          // }).then((campaignObj) => {
+          //   if(campaignObj.data.ShortenUrl){
+          //     refDefer.resolve(campaignObj.data);
+          //   }else if(campaignObj.data.BatchID){
+          //     var batch = new BatchModel(campaignObj.data);
+          //     this.batchList.push(batch);
+          //     refDefer.resolve(batch);
+          //   }
+          //
+          // }, (err) => {
+          //   console.log('campaign generation failed', err);
+          //   refDefer.reject(err);
+          // });
           return refDefer.promise;
         }
 

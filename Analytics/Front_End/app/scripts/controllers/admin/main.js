@@ -201,7 +201,7 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
           size: 'lg',
           backdrop: 'static',
           keyboard: false,
-          controller: function($scope, campaign, $interval, $timeout, webNotification) {
+          controller: function($scope, campaign, $interval, $timeout, webNotification, Upload) {
             var $ctrl = this;
             var timer;
             $ctrl.campaign = campaign;
@@ -227,6 +227,24 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
                     $ctrl.saveError = err && err.message || "Failed to generate batch.";
                   });
                 }else if(type == 'upload'){
+                  $ctrl.generation = true;
+                  if ($ctrl.campaignForm[type].$valid && $ctrl.campaignForm[type].file.$valid && $scope.file) {
+                    $ctrl.campaign.generateFromFile({LongUrl: form.longurl, File: $ctrl.campaignForm[type].file}, type)
+                      .then((resp)=>{
+                        $ctrl.generation = false;
+                        if(resp.ShortenUrl){
+                          $ctrl.campaignForm[type].ShortenUrl = resp.ShortenUrl;
+                          var clipboard = new Clipboard('.url-copy-button');
+                        }else if(resp.BatchID){
+                          $ctrl.campaignForm[type].Batch = resp;
+                        }
+                      }, (err)=>{
+                        $ctrl.generation = false;
+                        $ctrl.saveError = err && err.message || "Failed to generate batch.";
+                      }, (change)=>{
+                        $ctrl.uploading = true;
+                      })
+                  }
                   //todo
                 }
               }

@@ -132,6 +132,15 @@
                         <h3>Upload</h3>
                         <div style="min-height: 250px;padding-top: 20px;">
                             <p>Generate Urls by a file upload.</p>
+                            <ng-form class="form-horizontal" name="$ctrl.campaignForm['upload']" novalidate>
+                                <div class="button btn btn-primary" ngf-select ng-model="$ctrl.campaignForm['upload'].file" name="file" ngf-pattern="'.csv,.tsv,.txt,.xls,.xlsx'"
+                                     ngf-accept="'.csv,.tsv,.txt,.xls,.xlsx'" ngf-max-size="2MB" ngf-min-height="100"
+                                     ngf-resize="{width: 100, height: 100}">click here to select a file</div>
+                                <small class="form-text text-muted text-danger block" style="display: block"
+                                       ng-if="$ctrl.campaignForm['upload'].$dirty && $ctrl.campaignForm['upload'].$invalid">
+                                    <span ng-if="$ctrl.campaignForm['upload'].$error.pattern">Invalid file type. accepts only txt, csv, tsv, xlx, xlsx files</span>
+                                </small>
+                            </ng-form>
                         </div>
 
                     </div>
@@ -139,7 +148,7 @@
             </div>
             <div class="modal-footer" ng-show="$ctrl.activeTab == 'upload' || $ctrl.activeTab == 'simple' || $ctrl.activeTab == 'advanced'">
                 <small class="text-danger" ng-if="$ctrl.saveError">Error: {{$ctrl.saveError}}</small>
-                <button class="btn btn-default" type="submit" ng-click="cancel()">Cancel</button>
+                <button class="btn btn-default"  ng-click="cancel()">Cancel</button>
                 <button class="btn btn-primary" type="submit" ng-class="{'disabled': !$ctrl.campaignForm[$ctrl.activeTab].$valid}"
                         ng-disabled="!$ctrl.campaignForm[$ctrl.activeTab].$valid || $ctrl.generation" ng-click="generate($ctrl.campaign.generator[$ctrl.activeTab], $ctrl.activeTab)">
                         Generate <i class="fa fa-spinner fa-spin" ng-if="$ctrl.generation"></i>

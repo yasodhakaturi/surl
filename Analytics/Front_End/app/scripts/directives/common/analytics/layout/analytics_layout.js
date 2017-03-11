@@ -160,7 +160,6 @@ angular.module("bitraz")
               allowPointSelect: true,
               cursor: 'pointer',
               dataLabels: {
-                crop:true,
                 enabled: true,
                 format: '<b>{point.name}</b>: {point.percentage:.1f} %',
                 style: {
@@ -182,36 +181,40 @@ angular.module("bitraz")
         options: {
           chart: {
             plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
+            plotBorderWidth: 0,
+            plotShadow: false
           },
           title: {
-            text: ''
+            text: '',
+            align: 'center',
+            verticalAlign: 'middle',
+            y: 40
           },
           tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
           },
           plotOptions: {
             pie: {
-              size:'75%',
-              allowPointSelect: true,
-              cursor: 'pointer',
               dataLabels: {
                 enabled: true,
-                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                distance: -30,
                 style: {
-                  color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                  fontWeight: 'bold',
+                  color: 'white'
                 }
               },
-              showInLegend: false
+              startAngle: -90,
+              endAngle: 90,
+              center: ['50%', '75%']
             }
           }
+
         },
         series: [{
-          name: 'Brands',
-          colorByPoint: true,
-          data: $scope.data.platforms
+          type: 'pie',
+          name: 'Browser',
+          innerSize: '50%',
+          data: []
         }]
       };
 
@@ -219,8 +222,8 @@ angular.module("bitraz")
 
         options: {
 
-          colors: ['rgba(19,64,117,0.05)', 'rgba(19,64,117,0.2)', 'rgba(19,64,117,0.4)',
-            'rgba(19,64,117,0.5)', 'rgba(19,64,117,0.6)', 'rgba(19,64,117,0.8)', 'rgba(19,64,117,1)'],
+          colors: ['rgba(31,35,124,0.05)', 'rgba(31,35,124,0.2)', 'rgba(31,35,124,0.4)',
+            'rgba(31,35,124,0.5)', 'rgba(31,35,124,0.6)', 'rgba(31,35,124,0.8)', 'rgba(31,35,124,1)'],
 
           title: {
             text: ''

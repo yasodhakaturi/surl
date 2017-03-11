@@ -328,6 +328,15 @@ angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$te
     "                        <h3>Upload</h3>\n" +
     "                        <div style=\"min-height: 250px;padding-top: 20px;\">\n" +
     "                            <p>Generate Urls by a file upload.</p>\n" +
+    "                            <ng-form class=\"form-horizontal\" name=\"$ctrl.campaignForm['upload']\" novalidate>\n" +
+    "                                <div class=\"button btn btn-primary\" ngf-select ng-model=\"$ctrl.campaignForm['upload'].file\" name=\"file\" ngf-pattern=\"'.csv,.tsv,.txt,.xls,.xlsx'\"\n" +
+    "                                     ngf-accept=\"'.csv,.tsv,.txt,.xls,.xlsx'\" ngf-max-size=\"2MB\" ngf-min-height=\"100\"\n" +
+    "                                     ngf-resize=\"{width: 100, height: 100}\">click here to select a file</div>\n" +
+    "                                <small class=\"form-text text-muted text-danger block\" style=\"display: block\"\n" +
+    "                                       ng-if=\"$ctrl.campaignForm['upload'].$dirty && $ctrl.campaignForm['upload'].$invalid\">\n" +
+    "                                    <span ng-if=\"$ctrl.campaignForm['upload'].$error.pattern\">Invalid file type. accepts only txt, csv, tsv, xlx, xlsx files</span>\n" +
+    "                                </small>\n" +
+    "                            </ng-form>\n" +
     "                        </div>\n" +
     "\n" +
     "                    </div>\n" +
@@ -335,7 +344,7 @@ angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$te
     "            </div>\n" +
     "            <div class=\"modal-footer\" ng-show=\"$ctrl.activeTab == 'upload' || $ctrl.activeTab == 'simple' || $ctrl.activeTab == 'advanced'\">\n" +
     "                <small class=\"text-danger\" ng-if=\"$ctrl.saveError\">Error: {{$ctrl.saveError}}</small>\n" +
-    "                <button class=\"btn btn-default\" type=\"submit\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "                <button class=\"btn btn-default\"  ng-click=\"cancel()\">Cancel</button>\n" +
     "                <button class=\"btn btn-primary\" type=\"submit\" ng-class=\"{'disabled': !$ctrl.campaignForm[$ctrl.activeTab].$valid}\"\n" +
     "                        ng-disabled=\"!$ctrl.campaignForm[$ctrl.activeTab].$valid || $ctrl.generation\" ng-click=\"generate($ctrl.campaign.generator[$ctrl.activeTab], $ctrl.activeTab)\">\n" +
     "                        Generate <i class=\"fa fa-spinner fa-spin\" ng-if=\"$ctrl.generation\"></i>\n" +
