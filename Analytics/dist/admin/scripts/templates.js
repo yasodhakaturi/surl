@@ -353,6 +353,24 @@ angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$te
     "                                        <span ng-if=\"$ctrl.campaignForm['upload'].$error.pattern\">Invalid file type. accepts only txt, csv, tsv, xlx, xlsx files</span>\n" +
     "                                    </small>\n" +
     "                                </div>\n" +
+    "                                <div class=\"form-group\" ng-show=\"$ctrl.campaignForm['upload'].Batch && $ctrl.campaignForm['upload'].Batch.BatchID\">\n" +
+    "                                    <div class=\"col-sm-9 text-center\">\n" +
+    "                                        <h5 ng-if=\"($ctrl.campaignForm['upload'].Batch && $ctrl.campaignForm['upload'].Batch.Status != 'Completed') || $ctrl.generation\">\n" +
+    "                                            We're Processing Your Request. <span><i class=\"fa fa-spinner fa-spin\"></i> </span>\n" +
+    "                                            <br/><small>You can close this modal if required, later you can download the generated xls file from the download tab.</small>\n" +
+    "                                        </h5>\n" +
+    "                                        <h5 ng-if=\"$ctrl.campaignForm['upload'].Batch && $ctrl.campaignForm['upload'].Batch.Status == 'Completed'\">\n" +
+    "                                            Successfully Processed.\n" +
+    "                                        </h5>\n" +
+    "\n" +
+    "                                    </div>\n" +
+    "\n" +
+    "                                    <div class=\"col-sm-3 text-right\">\n" +
+    "                                        <div class=\"btn btn-success btn-small right\" ng-if=\"$ctrl.campaignForm['upload'].Batch && $ctrl.campaignForm['upload'].Batch.Status == 'Completed'\" ng-click=\"$ctrl.campaignForm['upload'].Batch.download()\">Download</div>\n" +
+    "                                        <!--<div class=\"btn btn-success btn-small right\" ng-if=\"($ctrl.campaignForm['advanced'].Batch && $ctrl.campaignForm['advanced'].Batch.Status != 'Completed')\" ng-click=\"$ctrl.enableNotification()\">Notify Me!</div>-->\n" +
+    "                                    </div>\n" +
+    "\n" +
+    "                                </div>\n" +
     "                            </ng-form>\n" +
     "                        </div>\n" +
     "\n" +
