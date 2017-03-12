@@ -843,6 +843,16 @@ namespace Analytics.Controllers
 
 
                             }
+                            else if(result==null)
+                            {
+                                dc.BatchUploadDatas.Remove(objb);
+                                dc.SaveChanges();
+                                Error erobj = new Error();
+                                Errormessage ermessage = new Errormessage();
+                                ermessage.message = "File already uploaded.";
+                                erobj.error = ermessage;
+                                return Json(erobj, JsonRequestBehavior.AllowGet);
+                            }
                             if ((System.IO.File.Exists(path)))
                             {
                                 System.IO.File.Delete(path);
