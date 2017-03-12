@@ -426,9 +426,33 @@ namespace Analytics.Controllers
                     //       select rid).SingleOrDefault();
                     // bool isReferenceNumberExists = new OperationsBO().CheckReferenceNumber(ReferenceNumber);
                     if (obj != null)
-                        new OperationsBO().UpdateCampaign(CreatedUserId,ReferenceNumber, CampaignName, Pwd, IsActive);
-                    else
-                        obj = obj1;
+                    {
+                        RIDDATA objr=new RIDDATA();
+                        if (obj.FK_ClientId == CreatedUserId)
+                        {
+                            new OperationsBO().UpdateCampaign(CreatedUserId, ReferenceNumber, CampaignName, Pwd, IsActive);
+
+                        }
+                        else if (obj.FK_ClientId != CreatedUserId)
+                        {
+                            objr = dc.RIDDATAs.Where(r => r.CampaignName == CampaignName && r.FK_ClientId == CreatedUserId).SingleOrDefault();
+                            if (objr == null)
+                                new OperationsBO().UpdateCampaign(CreatedUserId, ReferenceNumber, CampaignName, Pwd, IsActive);
+                            else
+                            {
+                                Error obj_err = new Error();
+                                Errormessage errmesobj = new Errormessage();
+                                errmesobj.message = "CampaignName Already Exists for this Client.";
+                                obj_err.error = errmesobj;
+                                Response.StatusCode = 401;
+                                return Json(obj_err, JsonRequestBehavior.AllowGet);
+                            }
+                        }
+                    }
+                    //else
+                    // obj = obj1;
+                       
+                   
                     objc = (from c in dc.RIDDATAs
                             join c1 in dc.Clients on c.FK_ClientId equals c1.PK_ClientID
                             where c.ReferenceNumber == ReferenceNumber
@@ -750,11 +774,12 @@ namespace Analytics.Controllers
                     }
 
                 }
-                else if (type.ToLower() == "fileupload"  && objrid != null)
-              //else if (type.ToLower() == "fileupload" && UploadFile != null && UploadFile.ContentLength > 0 && objrid != null)
+                else if (type.ToLower() == "upload"  && objrid != null)
+              //else if (type.ToLower() == "upload" && UploadFile != null && UploadFile.ContentLength > 0 && objrid != null)
                 {
                     string path = Path.Combine(Server.MapPath("~/UploadFiles"),
-                                       Path.GetFileName(UploadFile.FileName) + Path.GetExtension(UploadFile.FileName));
+                                       Path.GetFileName(UploadFile.FileName));
+                   // + Path.GetExtension(UploadFile.FileName)
                     UploadFile.SaveAs(path);
                     //string path = Server.MapPath("~/UploadFiles/971505878339_5K_MANGED1.txt");
                     FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
@@ -795,27 +820,39 @@ namespace Analytics.Controllers
                             dc.SaveChanges();
                             BatchUploadData objo = dc.BatchUploadDatas.Where(x => x.BatchName == batchname).SingleOrDefault();
                             string result =new OperationsBO().BulkUploadUIDDATA(ReferenceNumber, LongURL, objo.PK_Batchid, objrid, SplitedData);
-                            if (result != null)
+                            if (result == "Successfully Uploaded.")
                             {
                                 objo.Status = "Completed";
                                 dc.SaveChanges();
                                 if (objo != null)
                                 {
-                                    obje.Status = objo.BatchName + " Created.Revert Back to you once upload has done.";
+                                    //obje.Status = objo.BatchName + " Created.Revert Back to you once upload has done.";
+                                    obje.Status = objo.BatchName + " Completed.";
                                     obje.BatchID = objo.PK_Batchid;
                                     obje.CreatedDate = objo.CreatedDate;
-                                    if ((System.IO.File.Exists(path)))
-                                    {
-                                        System.IO.File.Delete(Path.GetFileName(UploadFile.FileName) + Path.GetExtension(UploadFile.FileName));
-                                    }
+                                    
                                 }
+                            }
+                            else if (result == "File already uploaded.")
+                            {
+                                Error erobj = new Error();
+                                Errormessage ermessage = new Errormessage();
+                                ermessage.message = "File already uploaded.";
+                                erobj.error = ermessage;
+                                return Json(erobj, JsonRequestBehavior.AllowGet);
+
+
+                            }
+                            if ((System.IO.File.Exists(path)))
+                            {
+                                System.IO.File.Delete(path);
                             }
                         }
                         else
                         {
                             if ((System.IO.File.Exists(path)))
                             {
-                                System.IO.File.Delete(Path.GetFileName(UploadFile.FileName) + Path.GetExtension(UploadFile.FileName));
+                                System.IO.File.Delete(path);
                             }
                             Error erobj = new Error();
                             Errormessage ermessage = new Errormessage();
@@ -828,7 +865,7 @@ namespace Analytics.Controllers
                     {
                         if ((System.IO.File.Exists(path)))
                         {
-                            System.IO.File.Delete(Path.GetFileName(UploadFile.FileName) + Path.GetExtension(UploadFile.FileName));
+                            System.IO.File.Delete(path);
                         }
                         Error erobj = new Error();
                         Errormessage ermessage = new Errormessage();

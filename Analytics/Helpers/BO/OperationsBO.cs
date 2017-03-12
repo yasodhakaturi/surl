@@ -529,61 +529,69 @@ namespace Analytics.Helpers.BO
             {
                 MobileNumbers = MobileNumbers.Except(objc).ToList();
             }
-            DataTable dt = new DataTable();
-            dt.Columns.Add("PK_Uid");
-            dt.Columns.Add("FK_RID");
-            dt.Columns.Add("FK_ClientID");
-            dt.Columns.Add("ReferenceNumber");
-            dt.Columns.Add("Longurl");
-            dt.Columns.Add("MobileNumber");
-            dt.Columns.Add("CreatedDate", typeof(DateTime));
-            dt.Columns.Add("UpdatedDate", typeof(DateTime));
-            dt.Columns.Add("UniqueNumber");
-            dt.Columns.Add("CreatedBy");
-            dt.Columns.Add("FK_Batchid");
-
-            int uid_ID = GetNEXTAutoIncrementedID();
-            int uid_ID_start = uid_ID + 1;
-            int MobilenumberCount = MobileNumbers.Count();
-            int uid_ID_end = uid_ID + MobilenumberCount;
-            List<HashIDList> objh = dc.HashIDLists.Where(h => h.PK_Hash_ID >= uid_ID_start && h.PK_Hash_ID <= uid_ID_end).Select(x => x).ToList();
-            if (MobileNumbers.Count() == objh.Count())
+            if (MobileNumbers.Count() > 0)
             {
-                foreach (string m in MobileNumbers)
+                DataTable dt = new DataTable();
+                dt.Columns.Add("PK_Uid");
+                dt.Columns.Add("FK_RID");
+                dt.Columns.Add("FK_ClientID");
+                dt.Columns.Add("ReferenceNumber");
+                dt.Columns.Add("Longurl");
+                dt.Columns.Add("MobileNumber");
+                dt.Columns.Add("CreatedDate", typeof(DateTime));
+                dt.Columns.Add("UpdatedDate", typeof(DateTime));
+                dt.Columns.Add("UniqueNumber");
+                dt.Columns.Add("CreatedBy");
+                dt.Columns.Add("FK_Batchid");
+
+                int uid_ID = GetNEXTAutoIncrementedID();
+                int uid_ID_start = uid_ID + 1;
+                int MobilenumberCount = MobileNumbers.Count();
+                int uid_ID_end = uid_ID + MobilenumberCount;
+                List<HashIDList> objh = dc.HashIDLists.Where(h => h.PK_Hash_ID >= uid_ID_start && h.PK_Hash_ID <= uid_ID_end).Select(x => x).ToList();
+                if (MobileNumbers.Count() == objh.Count())
                 {
-
-                    DataRow dr = dt.NewRow();
-                    dr["PK_Uid"] = uid_ID_start;
-                    dr["MobileNumber"] = m;
-                    dr["UniqueNumber"] = objh.Where(h => h.PK_Hash_ID == uid_ID_start).Select(x => x.HashID).SingleOrDefault();
-                    dr["CreatedDate"] = (DateTime)DateTime.UtcNow;
-                    dt.Rows.Add(dr);
-                    uid_ID_start = uid_ID_start + 1;
-                }
-                string LongUrlEXPR = "'" + LongUrl + "'";
-                //DateTime utctime = DateTime.UtcNow;
-                dt.Columns["FK_RID"].Expression = objrid.PK_Rid.ToString();
-                dt.Columns["FK_ClientID"].Expression = objrid.FK_ClientId.ToString();
-                dt.Columns["ReferenceNumber"].Expression = ReferenceNumber;
-                dt.Columns["Longurl"].Expression = LongUrlEXPR.ToString();
-                //dt.Columns["CreatedDate"].Expression = utctime;
-                dt.Columns["CreatedBy"].Expression = Helper.CurrentUserId.ToString();
-                dt.Columns["FK_Batchid"].Expression = Convert.ToString(batchid);
-
-
-
-                if (dt.Rows.Count > 0)
-                {
-                    string connStr = ConfigurationManager.ConnectionStrings["shortenURLConnectionString"].ConnectionString;
-
-                    using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connStr))
+                    foreach (string m in MobileNumbers)
                     {
-                        bulkCopy.BulkCopyTimeout = 10000; // in seconds
-                        bulkCopy.DestinationTableName = "UIDDATA";
-                        bulkCopy.WriteToServer(dt);
+
+                        DataRow dr = dt.NewRow();
+                        dr["PK_Uid"] = uid_ID_start;
+                        dr["MobileNumber"] = m;
+                        dr["UniqueNumber"] = objh.Where(h => h.PK_Hash_ID == uid_ID_start).Select(x => x.HashID).SingleOrDefault();
+                        dr["CreatedDate"] = (DateTime)DateTime.UtcNow;
+                        dt.Rows.Add(dr);
+                        uid_ID_start = uid_ID_start + 1;
                     }
+                    string LongUrlEXPR = "'" + LongUrl + "'";
+                    //DateTime utctime = DateTime.UtcNow;
+                    dt.Columns["FK_RID"].Expression = objrid.PK_Rid.ToString();
+                    dt.Columns["FK_ClientID"].Expression = objrid.FK_ClientId.ToString();
+                    dt.Columns["ReferenceNumber"].Expression = ReferenceNumber;
+                    dt.Columns["Longurl"].Expression = LongUrlEXPR.ToString();
+                    //dt.Columns["CreatedDate"].Expression = utctime;
+                    dt.Columns["CreatedBy"].Expression = Helper.CurrentUserId.ToString();
+                    dt.Columns["FK_Batchid"].Expression = Convert.ToString(batchid);
+
+
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        string connStr = ConfigurationManager.ConnectionStrings["shortenURLConnectionString"].ConnectionString;
+
+                        using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connStr))
+                        {
+                            bulkCopy.BulkCopyTimeout = 10000; // in seconds
+                            bulkCopy.DestinationTableName = "UIDDATA";
+                            bulkCopy.WriteToServer(dt);
+                        }
+                    }
+                    return "Successfully Uploaded.";
                 }
-                return "Successfully Uploaded.";
+            }
+            else
+            {
+                return "File already uploaded.";
+
             }
             return null;
         }
