@@ -7,7 +7,7 @@ angular.module("views/analytics/analytics.html", []).run(["$templateCache", func
 
 angular.module("views/analytics/archieves.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/analytics/archieves.html",
-    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12 text-center m-t-md\"> <h2> Welcome to biTRAZ archieves </h2> <p>Special <strong>Analytic Trace Application</strong> for your mobile marketing campaigns.</p> </div> </div> </div> </div>");
+    "<!-- Main Wrapper --> <div id=\"wrapper\"> <div class=\"content\" animate-panel effect=\"zoomIn\"> <div class=\"row\"> <div class=\"col-lg-12 text-center m-t-md\"> <h2> Welcome to biTraz archieves </h2> <p>Special <strong>Analytic Trace Application</strong> for your mobile marketing campaigns.</p> </div> </div> </div> </div>");
 }]);
 
 angular.module("views/analytics/campaigns.html", []).run(["$templateCache", function ($templateCache) {
