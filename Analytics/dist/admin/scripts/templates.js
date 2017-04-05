@@ -344,10 +344,12 @@ angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$te
     "\n" +
     "                                </div>\n" +
     "                                <div class=\"form-group\">\n" +
-    "                                    <label class=\"col-sm-3 control-label\">Upload File</label>\n" +
+    "                                    <label class=\"col-sm-3 control-label\">Upload File <br/><small>(txt, csv, tsv, xlx, xlsx)</small></label>\n" +
+    "\n" +
     "                                    <div class=\"button btn btn-primary\" ngf-select ng-model=\"$ctrl.campaignForm['upload'].file\" name=\"file\" ngf-pattern=\"'.csv,.tsv,.txt,.xls,.xlsx'\"\n" +
     "                                         ngf-accept=\"'.csv,.tsv,.txt,.xls,.xlsx'\" ngf-max-size=\"5MB\" ngf-min-height=\"100\"\n" +
     "                                         ngf-resize=\"{width: 100, height: 100}\">click here to select a file</div> {{$ctrl.campaignForm['upload'].file.name }}\n" +
+    "\n" +
     "                                    <small class=\"form-text text-muted text-danger block\" style=\"display: block\"\n" +
     "                                           ng-if=\"$ctrl.campaignForm['upload'].$dirty && $ctrl.campaignForm['upload'].$invalid\">\n" +
     "                                        <span ng-if=\"$ctrl.campaignForm['upload'].$error.pattern\">Invalid file type. accepts only txt, csv, tsv, xlx, xlsx files</span>\n" +
