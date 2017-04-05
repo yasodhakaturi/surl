@@ -10,6 +10,7 @@ using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
@@ -619,22 +620,55 @@ namespace Analytics.Controllers
                                                 ShortUrl=host+u.UniqueNumber
                                                 //ShortUrl="https://g0.pe/" + u.UniqueNumber
                                             }).ToList();
-                var grid = new System.Web.UI.WebControls.GridView();
+                //var grid = new System.Web.UI.WebControls.GridView();
                 string filename = objb.BatchName;
-                grid.DataSource = objd;
-                grid.DataBind();
-                Response.ClearContent();
-                //Response.AddHeader("content-disposition", "attachment; filename="+filename +".xls");
-                Response.AddHeader("content-disposition", "attachment; filename=" + filename + ".csv");
+                //grid.DataSource = objd;
+                //grid.DataBind();
+                //Response.ClearContent();
+                //Response.AddHeader("content-disposition", "attachment; filename=" + filename + ".xls");
                 //Response.ContentType = "application/excel";
-                Response.ContentType = "text/csv";
-                StringWriter sw = new StringWriter();
-                HtmlTextWriter htw = new HtmlTextWriter(sw);
-                grid.RenderControl(htw);
-                Response.Write(sw.ToString());
-                Response.End();
+                //StringWriter sw = new StringWriter();
+                //HtmlTextWriter htw = new HtmlTextWriter(sw);
+                //grid.RenderControl(htw);
+                //Response.Write(sw.ToString());
+                //Response.End();
+
+                string attachment = "attachment; filename=" + filename + ".csv";
+                HttpContext.Response.Clear();
+                HttpContext.Response.ClearHeaders();
+                HttpContext.Response.ClearContent();
+                HttpContext.Response.AddHeader("content-disposition", attachment);
+                HttpContext.Response.ContentType = "text/csv";
+                HttpContext.Response.AddHeader("Pragma", "public");
+                WriteColumnName();
+                foreach (BatchDownload person in objd )
+                {
+                    WriteUserInfo(person);
+                }
+                HttpContext.Response.End();
             }
 
+        }
+        private  void WriteUserInfo(BatchDownload person)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            AddComma(person.Mobilenumber, stringBuilder);
+            AddComma(person.ShortUrl, stringBuilder);
+            HttpContext.Response.Write(stringBuilder.ToString());
+            HttpContext.Response.Write(Environment.NewLine);
+        }
+
+        private static void AddComma(string value, StringBuilder stringBuilder)
+        {
+            stringBuilder.Append(value.Replace(',', ' '));
+            stringBuilder.Append(", ");
+        }
+
+        private  void WriteColumnName()
+        {
+            string columnNames = "MobileNumber, ShortUrl";
+            HttpContext.Response.Write(columnNames);
+            HttpContext.Response.Write(Environment.NewLine);
         }
         protected override JsonResult Json(object data, string contentType, System.Text.Encoding contentEncoding, JsonRequestBehavior behavior)
         {
