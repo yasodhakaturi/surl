@@ -624,8 +624,10 @@ namespace Analytics.Controllers
                 grid.DataSource = objd;
                 grid.DataBind();
                 Response.ClearContent();
-                Response.AddHeader("content-disposition", "attachment; filename="+filename +".xls");
-                Response.ContentType = "application/excel";
+                //Response.AddHeader("content-disposition", "attachment; filename="+filename +".xls");
+                Response.AddHeader("content-disposition", "attachment; filename=" + filename + ".csv");
+                //Response.ContentType = "application/excel";
+                Response.ContentType = "text/csv";
                 StringWriter sw = new StringWriter();
                 HtmlTextWriter htw = new HtmlTextWriter(sw);
                 grid.RenderControl(htw);
