@@ -20,6 +20,8 @@ namespace Analytics
         public shortenURLEntities()
             : base("name=shortenURLEntities")
         {
+            var objectContext = (this as IObjectContextAdapter).ObjectContext;
+            objectContext.CommandTimeout = 480;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

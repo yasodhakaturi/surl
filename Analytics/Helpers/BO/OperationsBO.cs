@@ -520,13 +520,22 @@ namespace Analytics.Helpers.BO
         {
             try
             {
-                List<string> objc = (from u in dc.UIDDATAs
-                                     where u.ReferenceNumber == ReferenceNumber
-                                     && u.Longurl == LongUrl
-                                     && u.FK_ClientID == objrid.FK_ClientId
-                                     && u.FK_RID == objrid.PK_Rid
-                                     && MobileNumbers.Contains(u.MobileNumber)
-                                     select u.MobileNumber).ToList();
+                List<string> objc;
+                //objc = (from u in dc.UIDDATAs
+                //                    where u.ReferenceNumber == ReferenceNumber
+                //                    && u.Longurl == LongUrl
+                //                    && u.FK_ClientID == objrid.FK_ClientId
+                //                    && u.FK_RID == objrid.PK_Rid
+                //                    && MobileNumbers.Contains(u.MobileNumber)
+                //                    select u.MobileNumber).ToList();
+                objc = (from u in dc.UIDDATAs
+                        where u.ReferenceNumber == ReferenceNumber
+                        && u.Longurl == LongUrl
+                        && u.FK_ClientID == objrid.FK_ClientId
+                        && u.FK_RID == objrid.PK_Rid
+
+                        select u.MobileNumber).ToList();
+                objc = MobileNumbers.Intersect(objc).ToList();
                 if (objc.Count > 0)
                 {
                     MobileNumbers = MobileNumbers.Except(objc).ToList();
@@ -550,7 +559,8 @@ namespace Analytics.Helpers.BO
                     int uid_ID_start = uid_ID + 1;
                     int MobilenumberCount = MobileNumbers.Count();
                     int uid_ID_end = uid_ID + MobilenumberCount;
-                    List<HashIDList> objh = dc.HashIDLists.Where(h => h.PK_Hash_ID >= uid_ID_start && h.PK_Hash_ID <= uid_ID_end).Select(x => x).ToList();
+                    List<string> objh = dc.HashIDLists.Where(h => h.PK_Hash_ID >= uid_ID_start && h.PK_Hash_ID <= uid_ID_end).Select(x => x.HashID).ToList();
+                    List<int> pkuids = Enumerable.Range(uid_ID_start, MobilenumberCount).ToList();
                     if (MobileNumbers.Count() == objh.Count())
                     {
                         foreach (string m in MobileNumbers)
@@ -559,10 +569,17 @@ namespace Analytics.Helpers.BO
                             DataRow dr = dt.NewRow();
                             dr["PK_Uid"] = uid_ID_start;
                             dr["MobileNumber"] = m;
-                            dr["UniqueNumber"] = objh.Where(h => h.PK_Hash_ID == uid_ID_start).Select(x => x.HashID).SingleOrDefault();
+                            //dr["UniqueNumber"] = objh.Where(h => h.PK_Hash_ID == uid_ID_start).Select(x => x.HashID).SingleOrDefault();
                             dr["CreatedDate"] = (DateTime)DateTime.UtcNow;
                             dt.Rows.Add(dr);
                             uid_ID_start = uid_ID_start + 1;
+                        }
+                        int j = 0;
+                        foreach (string i in objh)
+                        {
+
+                            dt.Rows[j]["UniqueNumber"] = i;
+                            j++;
                         }
                         string LongUrlEXPR = "'" + LongUrl + "'";
                         //DateTime utctime = DateTime.UtcNow;
