@@ -484,7 +484,7 @@ angular.module("views/common/dashboard/total_users_tmpl.html", []).run(["$templa
     "            <div class=\"progress m-t-xs full progress-small\">\n" +
     "\n" +
     "                <div style=\"width: {{($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1) * 100}}%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"{{($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1) * 100}}\"\n" +
-    "                     role=\"progressbar\" class=\" progress-bar progress-bar-success\" tooltip-popup-delay='500' tooltip-placement=\"bottom\" uib-tooltip=\"{{((($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1)) * 100) | number}}%\">\n" +
+    "                     role=\"progressbar\" class=\" progress-bar progress-bar-success\" tooltip-popup-delay='500' tooltip-placement=\"bottom\" uib-tooltip=\"{{($ctrl.data.uniqueUsers + ' of ' + $ctrl.data.total + ' - ')}}{{((($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1)) * 100) | number}}%\">\n" +
     "                    <span class=\"sr-only\">{{($ctrl.data.uniqueUsers || 0)/($ctrl.data.total || 1) * 100}}% Unique Users</span>\n" +
     "                </div>\n" +
     "            </div>\n" +
@@ -492,17 +492,17 @@ angular.module("views/common/dashboard/total_users_tmpl.html", []).run(["$templa
     "            <div class=\"row\">\n" +
     "                <div class=\"col-xs-4\">\n" +
     "                    <small class=\"stats-label\">Today </small>\n" +
-    "                    <h4><span tooltip-popup-delay='500' tooltip-placement=\"bottom\" uib-tooltip=\"{{($ctrl.data.uniqueUsersToday || 0)}} Unique Users of {{$ctrl.data.usersToday || 0}} total\">{{$ctrl.data.uniqueUsersToday || 0}}/<span class=\"text-success\">{{$ctrl.data.usersToday || 0}}</span> </span></h4>\n" +
+    "                    <h6><span tooltip-popup-delay='500' tooltip-placement=\"bottom\" uib-tooltip=\"{{($ctrl.data.uniqueUsersToday || 0)}} Unique Users of {{$ctrl.data.usersToday || 0}} total\">{{$ctrl.data.uniqueUsersToday || 0}}/<span class=\"text-success\">{{$ctrl.data.usersToday || 0}}</span> </span></h6>\n" +
     "                </div>\n" +
     "\n" +
     "                <div class=\"col-xs-4\">\n" +
     "                    <small class=\"stats-label\">Yesterday</small>\n" +
-    "                    <h4><span tooltip-popup-delay='500' tooltip-placement=\"bottom\" uib-tooltip=\"{{($ctrl.data.usersYesterday || 0)}} Unique Users of {{$ctrl.data.usersYesterday || 0}} total\">{{$ctrl.data.usersYesterday || 0}}/<span class=\"text-success\">{{$ctrl.data.usersYesterday || 0}}</span></span></h4>\n" +
+    "                    <h6><span tooltip-popup-delay='500' tooltip-placement=\"bottom\" uib-tooltip=\"{{($ctrl.data.usersYesterday || 0)}} Unique Users of {{$ctrl.data.usersYesterday || 0}} total\">{{$ctrl.data.usersYesterday || 0}}/<span class=\"text-success\">{{$ctrl.data.usersYesterday || 0}}</span></span></h6>\n" +
     "                </div>\n" +
     "\n" +
     "                <div class=\"col-xs-4\">\n" +
     "                    <small class=\"stats-label\">Last 7 Days</small>\n" +
-    "                    <h4><span tooltip-popup-delay='500' tooltip-placement=\"bottom\" uib-tooltip=\"{{($ctrl.data.uniqueUsersLast7days || 0)}} Unique Users of {{$ctrl.data.usersLast7days || 0}} total\">{{$ctrl.data.uniqueUsersLast7days || 0}}/<span class=\"text-success\">{{$ctrl.data.usersLast7days || 0}}</span></span></h4>\n" +
+    "                    <h6><span tooltip-popup-delay='500' tooltip-placement=\"bottom\" uib-tooltip=\"{{($ctrl.data.uniqueUsersLast7days || 0)}} Unique Users of {{$ctrl.data.usersLast7days || 0}} total\">{{$ctrl.data.uniqueUsersLast7days || 0}}/<span class=\"text-success\">{{$ctrl.data.usersLast7days || 0}}</span></span></h6>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "        </div>\n" +
@@ -528,7 +528,7 @@ angular.module("views/common/dashboard/total_visits_tmpl.html", []).run(["$templ
     "\n" +
     "            <div class=\"progress m-t-xs full progress-small\" >\n" +
     "                <div style=\"width: {{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100)}}%\" aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\"{{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100)}}\"\n" +
-    "                     role=\"progressbar\" class=\" progress-bar progress-bar-success\" tooltip-popup-delay='500' tooltip-placement=\"bottom\" uib-tooltip=\"{{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100) | number}}%\">\n" +
+    "                     role=\"progressbar\" class=\" progress-bar progress-bar-success\" tooltip-popup-delay='500' tooltip-placement=\"bottom\" uib-tooltip=\"{{($ctrl.data.uniqueVisits + ' of ' + $ctrl.data.total + ' - ')}}{{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100) | number}}%\">\n" +
     "                    <span class=\"sr-only\">{{(($ctrl.data.uniqueVisits || 0) / ($ctrl.data.total || 1) * 100)}}% Unique Visits</span>\n" +
     "                </div>\n" +
     "            </div>\n" +
@@ -536,17 +536,17 @@ angular.module("views/common/dashboard/total_visits_tmpl.html", []).run(["$templ
     "            <div class=\"row\">\n" +
     "                <div class=\"col-xs-4\">\n" +
     "                    <small class=\"stats-label\">Today </small>\n" +
-    "                    <h4><span tooltip-popup-delay='500' tooltip-placement=\"bottom\" uib-tooltip=\"{{($ctrl.data.uniqueVisitsToday || 0)}} Unique visits of {{$ctrl.data.visitsToday || 0}} total\">{{$ctrl.data.uniqueVisitsToday || 0}}/<span class=\"text-success\">{{$ctrl.data.visitsToday || 0}}</span></span></h4>\n" +
+    "                    <h6><span tooltip-popup-delay='500' tooltip-placement=\"bottom\" uib-tooltip=\"{{($ctrl.data.uniqueVisitsToday || 0)}} Unique visits of {{$ctrl.data.visitsToday || 0}} total\">{{$ctrl.data.uniqueVisitsToday || 0}}/<span class=\"text-success\">{{$ctrl.data.visitsToday || 0}}</span></span></h6>\n" +
     "                </div>\n" +
     "\n" +
     "                <div class=\"col-xs-4\">\n" +
     "                    <small class=\"stats-label\">Yesterday</small>\n" +
-    "                    <h4><span tooltip-popup-delay='500' tooltip-placement=\"bottom\" uib-tooltip=\"{{($ctrl.data.uniqueVisitsYesterday || 0)}} Unique visits of {{$ctrl.data.visitsToday || 0}} total\">{{$ctrl.data.visitsYesterday || 0}}/<span class=\"text-success\">{{$ctrl.data.visitsYesterday || 0}}</span></span></h4>\n" +
+    "                    <h6><span tooltip-popup-delay='500' tooltip-placement=\"bottom\" uib-tooltip=\"{{($ctrl.data.uniqueVisitsYesterday || 0)}} Unique visits of {{$ctrl.data.visitsToday || 0}} total\">{{$ctrl.data.visitsYesterday || 0}}/<span class=\"text-success\">{{$ctrl.data.visitsYesterday || 0}}</span></span></h6>\n" +
     "                </div>\n" +
     "\n" +
     "                <div class=\"col-xs-4\">\n" +
     "                    <small class=\"stats-label\">Last 7 Days</small>\n" +
-    "                    <h4><span tooltip-popup-delay='500' tooltip-placement=\"bottom\" uib-tooltip=\"{{($ctrl.data.uniqueVisitsLast7days || 0)}} Unique visits of {{$ctrl.data.visitsLast7days || 0}} total\">{{$ctrl.data.uniqueVisitsLast7days || 0}}/<span class=\"text-success\">{{$ctrl.data.visitsLast7days || 0}}</span></span></h4>\n" +
+    "                    <h6><span tooltip-popup-delay='500' tooltip-placement=\"bottom\" uib-tooltip=\"{{($ctrl.data.uniqueVisitsLast7days || 0)}} Unique visits of {{$ctrl.data.visitsLast7days || 0}} total\">{{$ctrl.data.uniqueVisitsLast7days || 0}}/<span class=\"text-success\">{{$ctrl.data.visitsLast7days || 0}}</span></span></h6>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "        </div>\n" +
