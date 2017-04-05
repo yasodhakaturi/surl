@@ -215,7 +215,7 @@ angular.module("views/admin/campaigns/generate_campaign_url.html", []).run(["$te
     "                        <div style=\"min-height: 250px;padding-top: 20px;\">\n" +
     "                            <div class=\"row\">\n" +
     "                                <div class=\"col-lg-8 col-md-10 col-sm-12\">\n" +
-    "                                    <div id=\"{{'batchList-'+$ctrl.campaign.Id}}\" ui-grid=\"batchListOptions\" class=\"grid\"></div>\n" +
+    "                                    <div id=\"{{'batchList-'+$ctrl.campaign.Id}}\" ui-grid=\"batchListOptions\" class=\"grid\" ng-if=\"$ctrl.activeTab == 'list'\" ui-grid-auto-resize></div>\n" +
     "                                </div>\n" +
     "                            </div>\n" +
     "                        </div>\n" +
