@@ -1215,8 +1215,8 @@ exports.getCounts = function(query){
 
 
 exports.getGeo = function(){
-  return  chance.n(function () {
-    return { "Latitude" : chance.latitude({fixed: 7}), "Longitude": chance.longitude({fixed: 7}) }
-  }, 1000);
-
+  // return  chance.n(function () {
+  //   return { "Latitude" : chance.latitude({fixed: 7}), "Longitude": chance.longitude({fixed: 7}) }
+  // }, 1000);
+return [{"Latitude":"37.590699799999996","Longitude":"-122.0212583","MobileNumber":"8331877566","createdOn":"2017-03-31T18:32:49","ShortUrl":"http://localhost:8080/EG2lA"},{"Latitude":"37.5907151","Longitude":"-122.0212677","MobileNumber":"8331877566","createdOn":"2017-03-31T18:33:53","ShortUrl":"http://localhost:8080/EG2lA"},{"Latitude":"37.5907142","Longitude":"-122.02126689999999","MobileNumber":"8331877566","createdOn":"2017-03-31T20:01:37","ShortUrl":"http://localhost:8080/EG2lA"},{"Latitude":"37.5907081","Longitude":"-122.0212722","MobileNumber":"8331877566","createdOn":"2017-03-31T20:06:50","ShortUrl":"http://localhost:8080/EG2lA"},{"Latitude":"37.5907236","Longitude":"-122.02126360000001","MobileNumber":"8331877566","createdOn":"2017-03-31T20:09:05","ShortUrl":"http://localhost:8080/EG2lA"},{"Latitude":"37.5907189","Longitude":"-122.0212819","MobileNumber":"8331877566","createdOn":"2017-04-04T18:55:30","ShortUrl":"http://localhost:8080/EG2lA"}]
 };
