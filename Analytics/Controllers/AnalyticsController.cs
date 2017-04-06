@@ -415,7 +415,7 @@ namespace Analytics.Controllers
                     if(objg1!=null)
                     {
                         objg = (from g in objg1
-                                where g.createdOn1>=DateFrom.Date && g.createdOn1<=DateTo.Date
+                                where g.createdOn1.Value.Date>=DateFrom.Date && g.createdOn1.Value.Date<=DateTo.Date
                                 select new GeoLocationsData()
                                 {
                                     Latitude = g.Latitude,
