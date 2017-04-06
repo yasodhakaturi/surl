@@ -357,7 +357,7 @@ angular.module("bitraz")
           $ctrl.dynMarkers = [];
           NgMap.getMap().then(function(map) {
             for (var i=0; i<resp.length; i++) {
-              var latLng = new google.maps.LatLng(resp[i].latitude, resp[i].longitude);
+              var latLng = new google.maps.LatLng(resp[i].Latitude, resp[i].Longitude);
               $ctrl.dynMarkers.push(new google.maps.Marker({position:latLng}));
             }
             $ctrl.markerClusterer = new MarkerClusterer(map, $ctrl.dynMarkers, {});
