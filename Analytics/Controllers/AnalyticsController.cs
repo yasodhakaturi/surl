@@ -391,7 +391,56 @@ namespace Analytics.Controllers
             }
 
         }
+        public JsonResult GETGeoLocations(string rid, DateTime DateFrom, DateTime DateTo)
+        {
+            try
+            {
+                RIDDATA objr=dc.RIDDATAs.Where(r=>r.ReferenceNumber==rid).SingleOrDefault();
+                List<GeoLocationsData> objg = new List<GeoLocationsData>();
+                List<GeoLocationsData1> objg1=new List<GeoLocationsData1>();
+                if ( objr != null && Session["id"] != null)
+                {
+                    
+                    objg1 = (from s in dc.SHORTURLDATAs
+                                                   join u in dc.UIDDATAs on s.FK_Uid equals u.PK_Uid
+                                                   where s.FK_RID == objr.PK_Rid && u.FK_RID==objr.PK_Rid && s.CreatedDate>=DateFrom.Date && s.CreatedDate<=DateTo.Date
+                                                   select new GeoLocationsData1()
+                                                   {
+                                                      Latitude=s.Latitude,
+                                                      Longitude=s.Longitude,
+                                                       MobileNumber=u.MobileNumber,
+                                                       createdOn1 = s.CreatedDate,
+                                                       ShortUrl=s.Req_url
+                                                   }).ToList();
+                    if(objg1!=null)
+                    {
+                        objg = (from g in objg1
+                                select new GeoLocationsData()
+                                {
+                                    Latitude = g.Latitude,
+                                    Longitude = g.Longitude,
+                                    MobileNumber = g.MobileNumber,
+                                    createdOn = g.createdOn1.Value.ToString("yyyy-MM-ddTHH:mm:ss"),
+                                    ShortUrl = g.ShortUrl
 
+                                }).ToList();
+                    }
+
+                }
+                return Json(objg, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+                Error obj_err = new Error();
+                Errormessage errmesobj = new Errormessage();
+                errmesobj.message = "Exception Occured.";
+                obj_err.error = errmesobj;
+
+                return Json(obj_err, JsonRequestBehavior.AllowGet);
+            }
+        }
         public JsonResult GETAllCounts(string rid, string DateFrom, string DateTo)
         {
             try

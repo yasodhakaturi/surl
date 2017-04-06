@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.ServiceModel.Web;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 
@@ -516,6 +517,77 @@ namespace Analytics.Helpers.BO
             }
             return (id);
         }
+       public void WriteUserInfo_Download(BatchDownload person)
+       {
+           StringBuilder stringBuilder = new StringBuilder();
+           AddComma_Download(person.Mobilenumber, stringBuilder);
+           AddComma_Download(person.ShortUrl, stringBuilder);
+           HttpContext.Current.Response.Write(stringBuilder.ToString());
+           HttpContext.Current.Response.Write(Environment.NewLine);
+       }
+
+       public static void AddComma_Download(string value, StringBuilder stringBuilder)
+       {
+           if(value!=null)
+           stringBuilder.Append(value.Replace(',', ' '));
+           stringBuilder.Append(", ");
+       }
+
+       public void WriteColumnName_Download()
+       {
+           string columnNames = "MobileNumber, ShortUrl";
+           HttpContext.Current.Response.Write(columnNames);
+           HttpContext.Current.Response.Write(Environment.NewLine);
+       }
+
+       public void WriteUserInfo_Export(ExportAnalyticsData export)
+       {
+           StringBuilder stringBuilder = new StringBuilder();
+           AddComma_Export(export.CampaignName, stringBuilder);
+           AddComma_Export(export.Mobilenumber, stringBuilder);
+           AddComma_Export(export.ShortURL, stringBuilder);
+           AddComma_Export(export.LongUrl, stringBuilder);
+           //AddComma_Export(export.GoogleMapUrl, stringBuilder);
+           stringBuilder.Append(""+export.GoogleMapUrl+"");
+           stringBuilder.Append(",");
+           AddComma_Export(export.IPAddress, stringBuilder);
+           AddComma_Export(export.Browser, stringBuilder);
+           AddComma_Export(export.BrowserVersion, stringBuilder);
+           AddComma_Export(export.City, stringBuilder);
+           AddComma_Export(export.Region, stringBuilder);
+           AddComma_Export(export.Country, stringBuilder);
+           AddComma_Export(export.CountryCode, stringBuilder);
+           AddComma_Export(export.PostalCode, stringBuilder);
+           AddComma_Export(export.Lattitude, stringBuilder);
+           AddComma_Export(export.Longitude, stringBuilder);
+           AddComma_Export(export.MetroCode, stringBuilder);
+           AddComma_Export(export.DeviceName, stringBuilder);
+           AddComma_Export(export.DeviceBrand, stringBuilder);
+           AddComma_Export(export.OS_Name, stringBuilder);
+           AddComma_Export(export.OS_Version, stringBuilder);
+           AddComma_Export(export.IsMobileDevice, stringBuilder);
+           AddComma_Export(export.CreatedDate, stringBuilder);
+           AddComma_Export(export.ClientName, stringBuilder);
+
+           HttpContext.Current.Response.Write(stringBuilder.ToString());
+           HttpContext.Current.Response.Write(Environment.NewLine);
+       }
+
+       public static void AddComma_Export(string value, StringBuilder stringBuilder)
+       {
+           if (value != null)
+               stringBuilder.Append(value.Replace(',', ' '));
+           stringBuilder.Append(",");
+       }
+
+       public void WriteColumnName_Export()
+       {
+           string columnNames = "CampaignName, Mobilenumber,ShortURL,LongUrl,GoogleMapUrl,IPAddress,Browser,BrowserVersion,City,Region,Country,CountryCode,PostalCode,Lattitude,Longitude,MetroCode,DeviceName,DeviceBrand,OS_Name,OS_Version,IsMobileDevice,CreatedDate,ClientName";
+           HttpContext.Current.Response.Write(columnNames);
+           HttpContext.Current.Response.Write(Environment.NewLine);
+       }
+
+
         public string BulkUploadUIDDATA(string ReferenceNumber, string LongUrl, int batchid, RIDDATA objrid, List<string> MobileNumbers)
         {
             try

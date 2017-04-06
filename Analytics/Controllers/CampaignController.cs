@@ -23,7 +23,7 @@ namespace Analytics.Controllers
     public class CampaignController : Controller
     {
         shortenURLEntities dc = new shortenURLEntities();
-
+        OperationsBO objbo = new OperationsBO();
         // GET: Campaign
         public JsonResult Index(string id)
         {
@@ -431,14 +431,14 @@ namespace Analytics.Controllers
                         RIDDATA objr=new RIDDATA();
                         if (obj.FK_ClientId == CreatedUserId)
                         {
-                            new OperationsBO().UpdateCampaign(CreatedUserId, ReferenceNumber, CampaignName, Pwd, IsActive);
+                            objbo.UpdateCampaign(CreatedUserId, ReferenceNumber, CampaignName, Pwd, IsActive);
 
                         }
                         else if (obj.FK_ClientId != CreatedUserId)
                         {
                             objr = dc.RIDDATAs.Where(r => r.CampaignName == CampaignName && r.FK_ClientId == CreatedUserId).SingleOrDefault();
                             if (objr == null)
-                                new OperationsBO().UpdateCampaign(CreatedUserId, ReferenceNumber, CampaignName, Pwd, IsActive);
+                                objbo.UpdateCampaign(CreatedUserId, ReferenceNumber, CampaignName, Pwd, IsActive);
                             else
                             {
                                 Error obj_err = new Error();
@@ -576,38 +576,114 @@ namespace Analytics.Controllers
         }
         public JsonResult GetBatchIDs(string ReferenceNumber)
         {
-            List<BatchIDList> objbs = new List<BatchIDList>();
-            List<BatchUploadData> objb = new List<BatchUploadData>();
-
-            if(Session["userdata"]!=null)
+            try
             {
-                int currentuserid = Helper.CurrentUserId;
-                string role = Helper.CurrentUserRole;
-                if(role.ToLower()=="admin")
-                {
-                    objb = dc.BatchUploadDatas.Where(x => x.ReferenceNumber == ReferenceNumber).ToList();
+                List<BatchIDList> objbs = new List<BatchIDList>();
+                List<BatchUploadData> objb = new List<BatchUploadData>();
 
-                }
-                else 
-                objb = dc.BatchUploadDatas.Where(x => x.FK_ClientID == currentuserid && x.ReferenceNumber == ReferenceNumber).ToList();
-                if(objb.Count!=0)
+                if (Session["userdata"] != null)
                 {
-                    objbs = (from b in objb
-                             select new BatchIDList()
-                             {
-                                 CreatedDate = b.CreatedDate.Value.ToString("yyyy-MM-ddThh:mm:ss"),
-                                 BatchID = b.PK_Batchid,
-                                 BatchName=b.BatchName,
-                                 Status=b.Status
-                             }).ToList();
+                    int currentuserid = Helper.CurrentUserId;
+                    string role = Helper.CurrentUserRole;
+                    if (role.ToLower() == "admin")
+                    {
+                        objb = dc.BatchUploadDatas.Where(x => x.ReferenceNumber == ReferenceNumber).ToList();
+
+                    }
+                    else
+                        objb = dc.BatchUploadDatas.Where(x => x.FK_ClientID == currentuserid && x.ReferenceNumber == ReferenceNumber).ToList();
+                    if (objb.Count != 0)
+                    {
+                        objbs = (from b in objb
+                                 select new BatchIDList()
+                                 {
+                                     CreatedDate = b.CreatedDate.Value.ToString("yyyy-MM-ddThh:mm:ss"),
+                                     BatchID = b.PK_Batchid,
+                                     BatchName = b.BatchName,
+                                     Status = b.Status
+                                 }).ToList();
+                    }
+                    return Json(objbs, JsonRequestBehavior.AllowGet);
                 }
                 return Json(objbs, JsonRequestBehavior.AllowGet);
             }
-            return Json(objbs, JsonRequestBehavior.AllowGet);
+             
+            catch (Exception ex)
+            {
+                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+                Error obj_err = new Error();
+                Errormessage errmesobj = new Errormessage();
+                errmesobj.message = "Exception Occured";
+                obj_err.error = errmesobj;
+
+                return Json(obj_err, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public void ExportAnalytics(string ReferenceNumber)
+        {
+            try
+            {
+            RIDDATA objr = dc.RIDDATAs.Where(r => r.ReferenceNumber == ReferenceNumber).SingleOrDefault();
+            if(objr!=null)
+            {
+                List<ExportAnalyticsData> objexport = (from s in dc.SHORTURLDATAs
+                                                       join u in dc.UIDDATAs on s.FK_Uid equals u.PK_Uid
+                                                       join r in dc.RIDDATAs on u.FK_RID equals r.PK_Rid
+                                                       join c in dc.Clients on r.FK_ClientId equals c.PK_ClientID
+                                                       where s.FK_RID == objr.PK_Rid && s.FK_ClientID == objr.FK_ClientId
+                                                       select new ExportAnalyticsData()
+                                                       {
+                                          CampaignName=r.CampaignName,
+                                          Mobilenumber=u.MobileNumber,
+                                          ShortURL=s.Req_url,
+                                          LongUrl=u.Longurl,
+                                          GoogleMapUrl = "https://www.google.com/maps?q=loc:"+s.Latitude+","+s.Longitude,
+                                          IPAddress=s.Ipv4,
+                                          Browser=s.Browser,
+                                          BrowserVersion=s.Browser_version,
+                                          City=s.City,
+                                          Region=s.Region,
+                                          Country=s.Country,
+                                          CountryCode=s.CountryCode,
+                                          PostalCode=s.PostalCode,
+                                          Lattitude=s.Latitude,
+                                          Longitude=s.Longitude,
+                                          MetroCode=s.MetroCode,
+                                          DeviceName=s.DeviceName,
+                                          DeviceBrand=s.DeviceBrand,
+                                          OS_Name=s.OS_Name,
+                                          OS_Version=s.OS_Version,
+                                          IsMobileDevice=s.IsMobileDevice,
+                                          CreatedDate=s.CreatedDate.ToString(),
+                                          ClientName=c.UserName
+
+
+                                                       }
+                                                         ).ToList();
+                string filename = objr.CampaignName + DateTime.UtcNow;
+                string attachment = "attachment; filename=" + filename + ".csv";
+                HttpContext.Response.Clear();
+                HttpContext.Response.ClearHeaders();
+                HttpContext.Response.ClearContent();
+                HttpContext.Response.AddHeader("content-disposition", attachment);
+                HttpContext.Response.ContentType = "text/csv";
+                HttpContext.Response.AddHeader("Pragma", "public");
+                objbo.WriteColumnName_Export();
+                foreach (ExportAnalyticsData export in objexport)
+                {
+                    objbo.WriteUserInfo_Export(export);
+                }
+                HttpContext.Response.End();
+            }
+             }
+            catch (Exception ex)
+            {
+                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+            }
         }
         public void GetBatchDownloadedFile(int BatchID)
         {
-            
+            try { 
              BatchUploadData objb = dc.BatchUploadDatas.Where(x => x.PK_Batchid == BatchID).SingleOrDefault();
             if (objb != null)
             {
@@ -622,6 +698,7 @@ namespace Analytics.Controllers
                                             }).ToList();
                 //var grid = new System.Web.UI.WebControls.GridView();
                 string filename = objb.BatchName;
+                //export data in excel format
                 //grid.DataSource = objd;
                 //grid.DataBind();
                 //Response.ClearContent();
@@ -633,6 +710,7 @@ namespace Analytics.Controllers
                 //Response.Write(sw.ToString());
                 //Response.End();
 
+                //export data in csv format
                 string attachment = "attachment; filename=" + filename + ".csv";
                 HttpContext.Response.Clear();
                 HttpContext.Response.ClearHeaders();
@@ -640,36 +718,20 @@ namespace Analytics.Controllers
                 HttpContext.Response.AddHeader("content-disposition", attachment);
                 HttpContext.Response.ContentType = "text/csv";
                 HttpContext.Response.AddHeader("Pragma", "public");
-                WriteColumnName();
+                objbo.WriteColumnName_Download();
                 foreach (BatchDownload person in objd )
                 {
-                    WriteUserInfo(person);
+                    objbo.WriteUserInfo_Download(person);
                 }
                 HttpContext.Response.End();
             }
-
+            }
+            catch (Exception ex)
+            {
+                ErrorLogs.LogErrorData(ex.StackTrace, ex.InnerException.ToString());
+            }
         }
-        private  void WriteUserInfo(BatchDownload person)
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            AddComma(person.Mobilenumber, stringBuilder);
-            AddComma(person.ShortUrl, stringBuilder);
-            HttpContext.Response.Write(stringBuilder.ToString());
-            HttpContext.Response.Write(Environment.NewLine);
-        }
-
-        private static void AddComma(string value, StringBuilder stringBuilder)
-        {
-            stringBuilder.Append(value.Replace(',', ' '));
-            stringBuilder.Append(", ");
-        }
-
-        private  void WriteColumnName()
-        {
-            string columnNames = "MobileNumber, ShortUrl";
-            HttpContext.Response.Write(columnNames);
-            HttpContext.Response.Write(Environment.NewLine);
-        }
+        
         protected override JsonResult Json(object data, string contentType, System.Text.Encoding contentEncoding, JsonRequestBehavior behavior)
         {
             return new JsonResult()
@@ -758,7 +820,7 @@ namespace Analytics.Controllers
                         UIDDATA objuid = dc.UIDDATAs.Where(u => u.MobileNumber == mobilenumber && u.ReferenceNumber == ReferenceNumber && u.Longurl == LongURL).SingleOrDefault();
                         //Hashid = Helper.GetHashID(objuid.PK_Uid);
                         Hashid = dc.HashIDLists.Where(h => h.PK_Hash_ID == objuid.PK_Uid).Select(x => x.HashID).SingleOrDefault();
-                        new OperationsBO().UpdateHashid(objuid.PK_Uid, Hashid);
+                        objbo.UpdateHashid(objuid.PK_Uid, Hashid);
                         obje.MobileNumber = mobilenumber;
                         //obje.ShortenUrl = "https://g0.pe/" + Hashid;
                         obje.ShortenUrl = ConfigurationManager.AppSettings["ShortenurlHost"].ToString() + Hashid;
@@ -796,7 +858,7 @@ namespace Analytics.Controllers
                         dc.BatchUploadDatas.Add(objb);
                         dc.SaveChanges();
                     BatchUploadData objo = dc.BatchUploadDatas.Where(x => x.BatchName == batchname).SingleOrDefault();
-                    string result =new OperationsBO().BulkUploadUIDDATA(ReferenceNumber, LongURL, objo.PK_Batchid, objrid, MobileNumbers_List);
+                    string result = objbo.BulkUploadUIDDATA(ReferenceNumber, LongURL, objo.PK_Batchid, objrid, MobileNumbers_List);
                     if (result != null)
                     {
                         objo.Status = "Completed";
@@ -855,7 +917,7 @@ namespace Analytics.Controllers
                             dc.BatchUploadDatas.Add(objb);
                             dc.SaveChanges();
                             BatchUploadData objo = dc.BatchUploadDatas.Where(x => x.BatchName == batchname).SingleOrDefault();
-                            string result =new OperationsBO().BulkUploadUIDDATA(ReferenceNumber, LongURL, objo.PK_Batchid, objrid, SplitedData);
+                            string result = objbo.BulkUploadUIDDATA(ReferenceNumber, LongURL, objo.PK_Batchid, objrid, SplitedData);
                             if (result == "Successfully Uploaded.")
                             {
                                 objo.Status = "Completed";
@@ -980,7 +1042,7 @@ namespace Analytics.Controllers
                     {
                         Hashid = "";
                         Hashid = Helper.GetHashID(uid);
-                        new OperationsBO().UpdateHashid(uid, Hashid);
+                        objbo.UpdateHashid(uid, Hashid);
                         // shorturls.Add("https://g0.pe/" + Hashid);
                     }
                 }

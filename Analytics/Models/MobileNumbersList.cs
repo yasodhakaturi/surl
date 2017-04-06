@@ -48,4 +48,30 @@ namespace Analytics.Models
         public string Mobilenumber { get; set; }
         public string ShortUrl { get; set; }
     }
+    public class ExportAnalyticsData
+    {
+        public string CampaignName { get; set; }
+        public string Mobilenumber { get; set; }
+        public string ShortURL { get; set; }
+        public string LongUrl { get; set; }
+        public string GoogleMapUrl { get; set; }
+        public string IPAddress { get; set; }
+        public string Browser { get; set; }
+        public string BrowserVersion { get; set; }
+        public string City { get; set; }
+        public string Region { get; set; }
+        public string Country { get; set; }
+        public string CountryCode { get; set; }
+        public string PostalCode { get; set; }
+        public string Lattitude { get; set; }
+        public string Longitude { get; set; }
+        public string MetroCode { get; set; }
+        public string DeviceName { get; set; }
+        public string DeviceBrand { get; set; }
+        public string OS_Name { get; set; }
+        public string OS_Version { get; set; }
+        public string IsMobileDevice { get; set; }
+        public string CreatedDate { get; set; }
+        public string ClientName { get; set; }
+    }
 }
