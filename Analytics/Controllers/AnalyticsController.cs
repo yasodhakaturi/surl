@@ -403,7 +403,7 @@ namespace Analytics.Controllers
                     
                     objg1 = (from s in dc.SHORTURLDATAs
                                                    join u in dc.UIDDATAs on s.FK_Uid equals u.PK_Uid
-                                                   where s.FK_RID == objr.PK_Rid && u.FK_RID==objr.PK_Rid && s.CreatedDate>=DateFrom.Date && s.CreatedDate<=DateTo.Date
+                                                   where s.FK_RID == objr.PK_Rid && u.FK_RID==objr.PK_Rid 
                                                    select new GeoLocationsData1()
                                                    {
                                                       Latitude=s.Latitude,
@@ -415,6 +415,7 @@ namespace Analytics.Controllers
                     if(objg1!=null)
                     {
                         objg = (from g in objg1
+                                where g.createdOn1>=DateFrom.Date && g.createdOn1<=DateTo.Date
                                 select new GeoLocationsData()
                                 {
                                     Latitude = g.Latitude,
