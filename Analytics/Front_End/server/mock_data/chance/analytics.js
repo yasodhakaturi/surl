@@ -1216,7 +1216,7 @@ exports.getCounts = function(query){
 
 exports.getGeo = function(){
   return  chance.n(function () {
-    return { "position" : [chance.latitude({fixed: 7}), chance.longitude({fixed: 7})] }
+    return { "latitude" : chance.latitude({fixed: 7}), "longitude": chance.longitude({fixed: 7}) }
   }, 1000);
 
 };
