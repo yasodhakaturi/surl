@@ -676,7 +676,7 @@ angular.module("views/common/dashboard/activities_tmpl.html", []).run(["$templat
 
 angular.module("views/common/dashboard/dashboard_tmpl.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("views/common/dashboard/dashboard_tmpl.html",
-    "<div class=\"dashboard-container\" ng-if=\"$ctrl.config && $ctrl.config.type == 'all'\">\n" +
+    "<div class=\"dashboard-container col-sm-12\" ng-if=\"$ctrl.config && $ctrl.config.type == 'all'\">\n" +
     "    <div class=\"row\">\n" +
     "        <div class=\"col-lg-3 col-md-6\">\n" +
     "            <urls-generated data=\"$ctrl.data.totalUrls\" is-campaign=\"!!$ctrl.config.campaignId\"></urls-generated>\n" +
@@ -711,7 +711,7 @@ angular.module("views/common/dashboard/dashboard_tmpl.html", []).run(["$template
     "    </div>\n" +
     "</div>\n" +
     "\n" +
-    "<div class=\"dashboard-container\" ng-if=\"$ctrl.config && $ctrl.config.type == 'campaign'\">\n" +
+    "<div class=\"dashboard-container col-sm-12\" ng-if=\"$ctrl.config && $ctrl.config.type == 'campaign'\">\n" +
     "    <div class=\"row\">\n" +
     "        <div class=\"col-lg-3 col-md-6\">\n" +
     "            <urls-generated data=\"$ctrl.data.totalUrls\" is-campaign=\"!!$ctrl.config.campaignId\"></urls-generated>\n" +
@@ -1034,6 +1034,20 @@ angular.module("views/common/directives/analytics_layout.html", []).run(["$templ
     "                </div>\n" +
     "            </div>\n" +
     "        </div>\n" +
+    "        <div class=\"row\">\n" +
+    "            <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
+    "                <div class=\"panel panel-default\">\n" +
+    "                    <div map-lazy-load=\"https://maps.google.com/maps/api/js\" map-lazy-load-params=\"{{$ctrl.googleMapsUrl}}\">\n" +
+    "                    <ng-map center=\"24.1009901,54.1816353\" zoom=\"3\" min-zoom=\"2\" max-zoom=\"12\" style=\"height: 450px;\" zoom-to-include-markers=\"true\" pan-control=\"true\"\n" +
+    "                                map-type-control=\"true\"\n" +
+    "                                map-type-control-options=\"{style:'DROPDOWN_MENU'}\"\n" +
+    "                                zoom-control=\"true\"\n" +
+    "                                zoom-control-options=\"{style:'SMALL'}\" street-view-control=\"false\"></ng-map>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "\n" +
     "        <div class=\"row\">\n" +
     "            <div class=\"col-md-12 col-sm-12 col-xs-12\">\n" +
     "                <div class=\"panel panel-default\">\n" +

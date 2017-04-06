@@ -1,5 +1,5 @@
 angular
-  .module('bitraz.common.controllers', ['bitraz.auth'])
+  .module('bitraz.common.controllers', ['bitraz.auth', 'ngMap'])
   .controller('LoginController', LoginController)
   .controller('AnalyticsController', AnalyticsController);
 

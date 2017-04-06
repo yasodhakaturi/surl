@@ -1210,7 +1210,13 @@ exports.getCounts = function(query){
       }
     ]
   };
-
   return data;
 };
 
+
+exports.getGeo = function(){
+  return  chance.n(function () {
+    return { "position" : [chance.latitude({fixed: 7}), chance.longitude({fixed: 7})] }
+  }, 1000);
+
+};

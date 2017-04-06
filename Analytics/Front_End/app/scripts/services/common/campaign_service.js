@@ -6,10 +6,13 @@ angular.module('bitraz.campaigns', ["ngResource"])
         url: appConfig.apiEndPoint + '/Campaign/Search',
         isArray: true
       },
-
       getDetails: {
         method: 'get',
         url: appConfig.apiEndPoint + '/Analytics/GETAllCampaigns/:id',
+      },
+      exportAnalytics: {
+        method: 'get',
+        url: appConfig.apiEndPoint + '/Campaign/ExportAnalytics',
       }
     }, {
       stripTrailingSlashes: false

@@ -16,6 +16,11 @@ angular.module('bitraz.rid', ["ngResource"])
         getCounts: {
           method: 'GET',
           url: appConfig.apiEndPoint + '/Analytics/GETAllCounts'
+        },
+        getGeoLocations: {
+          method: 'GET',
+          url: appConfig.apiEndPoint + '/Analytics/GETGeoLocations',
+          isArray:true
         }
       }, {
         stripTrailingSlashes: false

@@ -1,4 +1,4 @@
-<div class="dashboard-container" ng-if="$ctrl.config && $ctrl.config.type == 'all'">
+<div class="dashboard-container col-sm-12" ng-if="$ctrl.config && $ctrl.config.type == 'all'">
     <div class="row">
         <div class="col-lg-3 col-md-6">
             <urls-generated data="$ctrl.data.totalUrls" is-campaign="!!$ctrl.config.campaignId"></urls-generated>
@@ -33,7 +33,7 @@
     </div>
 </div>
 
-<div class="dashboard-container" ng-if="$ctrl.config && $ctrl.config.type == 'campaign'">
+<div class="dashboard-container col-sm-12" ng-if="$ctrl.config && $ctrl.config.type == 'campaign'">
     <div class="row">
         <div class="col-lg-3 col-md-6">
             <urls-generated data="$ctrl.data.totalUrls" is-campaign="!!$ctrl.config.campaignId"></urls-generated>

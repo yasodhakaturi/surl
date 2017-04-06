@@ -71,7 +71,10 @@ app.all("*", function (req, res, next) {
    res.json( rid.getSummary() );
  }
 
- else if( /\/Analytics\/GETAllCounts/.exec(p)){
+ else if( /\/Analytics\/GETGeoLocations/.exec(p)){
+   var rid = require("./mock_data/chance/analytics");
+   res.json( rid.getGeo() );
+ }else if( /\/Analytics\/GETAllCounts/.exec(p)){
    var rid = require("./mock_data/chance/analytics");
    res.json( rid.getCounts() );
  }else if( /\/Analytics\/GETAllCampaigns/.exec(p)){

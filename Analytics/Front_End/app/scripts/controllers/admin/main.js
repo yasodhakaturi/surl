@@ -78,6 +78,10 @@ function CampaignsController($scope, $rootScope, $http, $uibModal, UsersCollecti
                       '&nbsp;&nbsp;&nbsp;' +
                       '<a ui-sref="bitraz.main.analytics({rid:row.entity.ReferenceNumber})" >View</a>' +
                       '</div>'
+          },
+          { name:'Export', cellTemplate:'<div>' +
+          '<a target="_blank" href="/campaign/ExportAnalytics?ReferenceNumber={{row.entity.ReferenceNumber}}">Export</a>' +
+          '</div>'
           }
         ],
         data : []

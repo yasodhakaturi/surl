@@ -100,9 +100,13 @@
 <script src="bower_components/simple-web-notification/web-notification.js"></script>
 <script src="bower_components/angular-web-notification/angular-web-notification.js"></script>
 <script src="bower_components/ng-file-upload/ng-file-upload-all.js"></script>
-
+<script src="bower_components/ngmap/build/scripts/ng-map.js"></script>
+<script src="bower_components/ngmap/testapp/scripts/markerclusterer.js"></script>
 <!-- endbuild -->
-
+<script>
+  MarkerClusterer.prototype.MARKER_CLUSTER_IMAGE_PATH_
+    = 'images/clusters/m';  //changed image path
+</script>
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
 <script src="scripts/utils/utils.js"></script>
 <script src="scripts/app.js"></script>

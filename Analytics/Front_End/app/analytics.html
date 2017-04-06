@@ -98,9 +98,13 @@
 <script src="bower_components/angular-daterangepicker/js/angular-daterangepicker.js"></script>
 <script src="bower_components/highcharts/modules/map.js"></script>
 <script src="bower_components/clipboard/dist/clipboard.js"></script>
-
+<script src="bower_components/ngmap/build/scripts/ng-map.js"></script>
+<script src="bower_components/ngmap/testapp/scripts/markerclusterer.js"></script>
 <!-- endbuild -->
-
+<script>
+  MarkerClusterer.prototype.MARKER_CLUSTER_IMAGE_PATH_
+    = 'images/clusters/m';  //changed image path
+</script>
 
 
 <!-- build:js({.tmp,app}) scripts/scripts.js -->

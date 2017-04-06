@@ -4,7 +4,7 @@ angular.module("bitraz")
     bindings: {
       campaignId: "<"
     },
-    controller: ["$scope", "$rootScope", "$uibModal", "$timeout", "highchartsNG", "RidService", "$interval", function ($scope, $rootScope, $uibModal, $timeout, highchartsNG, RidService, $interval) {
+    controller: ["$scope", "$rootScope", "$uibModal", "$timeout", "highchartsNG", "RidService", "$interval", "NgMap", function ($scope, $rootScope, $uibModal, $timeout, highchartsNG, RidService, $interval, NgMap) {
       let $ctrl = this;
 
       $rootScope.pageLoading = true;
@@ -151,7 +151,7 @@ angular.module("bitraz")
             text: ''
           },
           tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            pointFormat: '{series.name}: <b>({point.y}) - {point.percentage:.1f}%</b>'
           },
           plotOptions: {
 
@@ -191,7 +191,7 @@ angular.module("bitraz")
             y: 40
           },
           tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            pointFormat: '{series.name}: <b>({point.y}) - {point.percentage:.1f}%</b>'
           },
           plotOptions: {
             pie: {
@@ -293,6 +293,8 @@ angular.module("bitraz")
                 }
         ]
       };
+
+
       var timer;
       $ctrl.$onInit = () => {
         $ctrl.params = {rid: $ctrl.campaignId, DateFrom: $scope.date.startDate.format('YYYY-MM-DD'), DateTo: $scope.date.endDate.format('YYYY-MM-DD')};
@@ -331,6 +333,7 @@ angular.module("bitraz")
           $scope.data = resp;
 
           $rootScope.pageLoading = false;
+          $ctrl.fetchGeoPositions(params);
           $ctrl.refreshCharts();
           $ctrl.reflow();
           timer = $interval(function(){
@@ -346,6 +349,24 @@ angular.module("bitraz")
         });
         // $timeout($ctrl.tick, tickInterval);
       };
+      $ctrl.dynMarkers = [];
+
+      $ctrl.fetchGeoPositions = (params) => {
+        $rootScope.geoLoading = true;
+        RidService.getGeoLocations(params).$promise.then((resp)=>{
+          $ctrl.dynMarkers = [];
+          NgMap.getMap().then(function(map) {
+            for (var i=0; i<resp.length; i++) {
+              var latLng = new google.maps.LatLng(resp[i].position[0], resp[i].position[1]);
+              $ctrl.dynMarkers.push(new google.maps.Marker({position:latLng}));
+            }
+            $ctrl.markerClusterer = new MarkerClusterer(map, $ctrl.dynMarkers, {});
+          });
+        },(err)=>{
+          console.log("failed to load positions", err);
+          $rootScope.geoLoading = false;
+        });
+      }
 
       $ctrl.reflow = () => {
         _.forEach( Highcharts.charts, function(chart){
@@ -354,6 +375,8 @@ angular.module("bitraz")
           }
         });
       };
+
+      $ctrl.googleMapsUrl="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIYe5VvCNxbrPr-Sg7dJpTgsSHK5SI0a4";
 
 
 
